@@ -5,6 +5,29 @@ from django.http import HttpResponseRedirect, JsonResponse
 from login.models import User
 import hashlib
 
+from rest_framework import permissions, viewsets, views
+from .serializers import UserSerializer
+
+class UserViewDemo1(views.APIView):
+    def get(self, request):
+        query_set = User.objects.all()
+        return JsonResponse({'status': 1, 'msg': '获取成功', 'data': list(query_set.values())})
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    GET /users/ 获取所有用户
+    GET /users/1/ 获取id=1的用户
+    POST /users/ 创建一个新用户并返回该用户
+    PUT /users/1/ 更新id=1的用户并返回该用户
+    PATCH /users/1/ 局部更新id=1的用户并返回该用户
+    DELETE /users/1/ 删除id=1的用户
+    """
+    # 指定结果集并设置排序
+    queryset = User.objects.all()
+    # 指定序列化的类
+    serializer_class = UserSerializer
+    # 指定权限类
+    # permission_classes = [permissions.IsAuthenticated] # 只有登录用户才能访问
 
 
 # 退出登录 switch_user
