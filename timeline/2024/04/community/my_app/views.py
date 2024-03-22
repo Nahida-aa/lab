@@ -428,7 +428,9 @@ def index(request):
     #TODO 右侧最新评论
     latest_comment = Comment.objects.all().order_by('-create_time')[:5]
     context['latest_comment'] = latest_comment
-    return render(request, 'index.html', context=context)
+    return render(request, 'index.html'
+                #   , context=context
+                  )
 
 def my_index(request):
     # 每日一句

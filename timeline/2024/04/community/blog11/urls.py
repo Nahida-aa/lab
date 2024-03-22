@@ -19,12 +19,23 @@ from django.urls import path, include
 # from django.conf import settings
 # from django.conf.urls.static import static
 
+from rest_framework.documentation import include_docs_urls
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from login.views import LoginAPI
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path('login/', include('login.urls')),
-    path('api/', include('login.urls')),
+    path('login_api', LoginAPI.as_view(), name='login_api'), # 生成token(用户名+密码登录)
+    # path('api/', include('login.urls')),
     # path('api/', include('rest_framework.urls', namespace='rest_framework')),
+    path('docs/', include_docs_urls(title='My API Docs', description='API接口文档')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # 生成token(用户名+密码登录)
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),# 刷新token
     path("", include("my_app.urls")),
 ]
 

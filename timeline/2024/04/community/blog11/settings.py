@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'my_app',
     'rest_framework',
+    'rest_framework_simplejwt',
     # 'DjangoUeditor',
     # 'django_ckeditor_5', # pip install django-ckeditor-5
     'ckeditor', # pip install django-ckeditor
@@ -64,9 +67,25 @@ ROOT_URLCONF = "blog11.urls"
 
 TEMPLATES = [
     {
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True, # 为True时，会在每个app下的templates文件夹中查找模板文件
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                # 因Jinja2不能直接使用context_processors中的内容
+            ],
+            # 补充Jinja2模板引擎的环境变量
+            "environment": "blog11.utils.jinja2_env.environment",
+        },
+    },
+    {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [Path.joinpath(BASE_DIR, "templates")],
-        "APP_DIRS": True,
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True, # 为True时，会在每个app下的templates文件夹中查找模板文件
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -129,22 +148,26 @@ USE_TZ = True # False 时为东八区时间(即显示时间=标准时间+8)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 if un_release:
-    # STATICFILES_DIRS = [Path.joinpath(BASE_DIR, "static")]
+    # 开发环境下，静态文件路径
+    STATICFILES_DIRS = [
+        BASE_DIR / 'static',
+    ]
     STATIC_URL = 'static/'
-    STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
+    # 生产环境下，静态文件路径
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'static') # collectstatic 复制到的文件夹
 
     # Media files
     MEDIA_URL = 'media/' # 不能在static文件夹下(django 某个版本之后的要求)
-    MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media') # .../blog/media
-    THUMB_DIR = Path.joinpath(BASE_DIR, 'media/thumb')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # .../blog/media
+    THUMB_DIR = os.path.join(BASE_DIR, 'media/thumb')
 else:
     # 部署之后的静态文件路径
     STATIC_ROOT = '/var/www/blog/static/'
     STATIC_URL = 'static/'
     # 上传的文件路径需要修改成部署之后的静态文件夹路径
-    MEDIA_ROOT = Path.joinpath(STATIC_ROOT, "media")
+    MEDIA_ROOT = os.path.join(STATIC_ROOT, "media")
     MEDIA_URL = 'media/'
-    THUMB_DIR = Path.joinpath(STATIC_ROOT, 'media/thumb/')
+    THUMB_DIR = os.path.join(STATIC_ROOT, 'media/thumb/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -247,7 +270,7 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 HAYSTACK_CONNECTIONS = {
     "default": {
         "ENGINE": "haystack.backends.whoosh_cn_backend.WhooshEngine",
-        "PATH": Path.joinpath(BASE_DIR, "whoosh_index"),
+        "PATH": os.path.join(BASE_DIR, "whoosh_index"),
     },
 }
 # 当添加、修改、删除数据时，自动更新索引
@@ -259,3 +282,46 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_DB = 0
+
+# rest_framework
+REST_FRAMEWORK = {
+    # api 文档
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    # 分页
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10 # 每页显示的数据条数
+    # 默认认证方式
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication', # jwt认证
+        # 如果第一个认证出现bug,则会使用第二个认证
+        # 'rest_framework.authentication.BasicAuthentication', # 基本认证
+        # 'rest_framework.authentication.SessionAuthentication', # session认证
+    ],
+    # 默认权限 不建议使用，对非登录视图都会生效，这样会导致接口文档无法访问，当然也可以改写接口文档的权限或视图
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated', # 必须登录才能访问
+    # ],
+    # 限流
+    # 'DEFAULT_THROTTLE_CLASSES': (
+    #     'rest_framework.throttling.AnonRateThrottle', # 匿名用户{其实是根据ip限量}
+    #     'rest_framework.throttling.UserRateThrottle' # 认证用户
+    # ),
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '2/minute',
+    #     'user': '1000/day'
+    # }
+}
+
+# rest_framework_simplejwt
+SIMPLE_JWT = {
+    # access token 的 有效时间
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    # 修改认证结果(token和access_token)
+}
+
+# 如果要使用自定义的用户模型，需要在 settings.py 中添加 AUTH_USER_MODEL 配置项，指定自定义的用户模型
+# AUTH_USER_MODEL = 'login.User'
+
+# 指定自定义的用户认证后端(不使用默认的认证后端)
+# AUTHENTICATION_BACKENDS = []

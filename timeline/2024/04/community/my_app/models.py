@@ -128,15 +128,20 @@ class Article(models.Model):
     # )
     # classify = models.CharField('分类', max_length=20, choices=choices, default='2')
     # category = models.ForeignKey(Category, verbose_name='分类', null=True, blank=True)
-    category_s = models.ManyToManyField(Category, verbose_name='分类', null=True, blank=True)
+    category_s = models.ManyToManyField(Category, verbose_name='分类', blank=True)
     def category_s_(self):
         return ','.join([category.name for category in self.category_s.all()])
     category_s_.short_description = '分类'
-    author = models.ForeignKey(User, verbose_name='作者', null=True, blank=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, verbose_name='作者', blank=True, on_delete=models.SET_NULL, null=True)
     def author_(self):
         return self.author
     author_.short_description = '作者'
-    tags = models.ManyToManyField(Tag, verbose_name='标签', null=True, blank=True)
+    tags = models.ManyToManyField(Tag, verbose_name='标签', blank=True)
+    """
+    你的错误信息指出, null 在 ManyToManyField 上没有效果。
+    在 Django 中, ManyToManyField 不支持 null=True, 因为它们的设计就是可以为空的。
+    如果没有任何关联对象，那么它们就是空的。
+    """
     def tags_(self):
         return ','.join([tag.name for tag in self.tags.all()])
     tags_.short_description = '标签'
