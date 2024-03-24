@@ -28,6 +28,9 @@ class LoginUser(models.Model):
         verbose_name_plural = verbose_name
 
 class MyUser(AbstractUser):
+    phone_num = models.CharField(max_length=11, verbose_name='手机号', null=True, blank=True
+                                #  , unique=True
+                                 )
     groups = models.ManyToManyField(
         Group,
         verbose_name=_('groups'),
@@ -51,6 +54,9 @@ class MyUser(AbstractUser):
         db_table = 'my_user'
         # verbose_name = _("user")
         # verbose_name_plural = _("users")
+    
+    def __str__(self):
+        return self.username
 
 class JobChoices(models.TextChoices):
     """枚举类"""

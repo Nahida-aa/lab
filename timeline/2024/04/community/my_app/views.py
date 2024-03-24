@@ -381,7 +381,7 @@ class Index(ListView):
         context['latest_comment'] = latest_comment
         return context
 
-def index(request):
+def index_my(request):
     #TODO 每日一句
     sentence_all = Sentence.objects.all()
     sentence = random.choice(sentence_all)
@@ -428,23 +428,24 @@ def index(request):
     #TODO 右侧最新评论
     latest_comment = Comment.objects.all().order_by('-create_time')[:5]
     context['latest_comment'] = latest_comment
-    return render(request, 'index.html'
+    return render(request, 'index_my.html'
                 #   , context=context
                   )
 
-def my_index(request):
+def index(request):
     # 每日一句
-    sentence_all = Sentence.objects.all()
-    sentence = random.choice(sentence_all)
+    # sentence_all = Sentence.objects.all()
+    # sentence = random.choice(sentence_all)
 
     # 文章
     article_all = Article.objects.all()
 
     context={
-        'sentence': sentence,
+        # 'sentence': sentence,
         'article_all': article_all,
         }
-    return render(request, 'my_index.html', context=context)
+    # return render(request, 'index.html', context=context)
+    return render(request, 'index1.html', context=context)
 
 def commentbox(request):
     # 评论

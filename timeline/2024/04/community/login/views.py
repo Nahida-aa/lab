@@ -302,9 +302,14 @@ def check_username(request):
         return JsonResponse({'status': 0, 'msg': '用户名已存在'})
     return JsonResponse({'status': 1, 'msg': '用户名可用'})
 
+class RegisterTest(View):
+    def get(self, request):
+        return render(request, 'login/reg_test.html')
+
 class Register(View):
     def get(self, request):
         return render(request, 'login/reg.html')
+        # return render(request, 'login/register_mg.html')
     def post(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')

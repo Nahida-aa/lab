@@ -14,9 +14,9 @@ router.register(r'dept', DeptModelViewSet)
 
 # 将request的url映射到视图函数
 urlpatterns = [
-    path('reg/', Register.as_view(), name='register'),
-    path('reg_api', RegisterAPI.as_view(), name='register_api'),
-    path('', Login.as_view(), name='login'),
+    # path('reg/', Register.as_view(), name='reg'),
+    path('reg_api', RegisterAPI.as_view(), name='reg_api'),
+    # path('', Login.as_view(), name='login'),
     # path('../login_api', TokenObtainPairView.as_view(), name='login_api')
     path('check_username/', check_username, name='check_username'),
     path('logout/', logout, name='logout'),

@@ -24,11 +24,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from login.views import LoginAPI
+from login.views import LoginAPI, Register, RegisterTest
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("register/", Register.as_view(), name="register"), # 注册
+    path("register_test/", RegisterTest.as_view(), name="register_test"), # 注册测试
     path('login/', include('login.urls')),
     path('login_api', LoginAPI.as_view(), name='login_api'), # 生成token(用户名+密码登录)
     # path('api/', include('login.urls')),

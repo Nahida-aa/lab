@@ -15,7 +15,7 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent # .../blog11
 un_release = True
 
 # Quick-start development settings - unsuitable for production
@@ -103,13 +103,24 @@ WSGI_APPLICATION = "blog11.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# sqlite3
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+# mysql
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'blog11', # 数据库名
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -282,6 +293,32 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_DB = 0
+# django-redis
+CACHES = {
+    "default": { # 默认
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    "session": { # session
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    "verify_code": { # 验证码
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "session"
 
 # rest_framework
 REST_FRAMEWORK = {
@@ -321,7 +358,49 @@ SIMPLE_JWT = {
 }
 
 # 如果要使用自定义的用户模型，需要在 settings.py 中添加 AUTH_USER_MODEL 配置项，指定自定义的用户模型
-# AUTH_USER_MODEL = 'login.User'
+# AUTH_USER_MODEL = 'login.MyUser'
 
 # 指定自定义的用户认证后端(不使用默认的认证后端)
 # AUTHENTICATION_BACKENDS = []
+
+# 配置项⽬⽇志
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # 是否禁⽤已经存在的⽇志器
+    'formatters': {  # ⽇志信息显示的格式
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(module)s %(lineno)d %(message)s'
+        },
+    },
+    'filters': {  # 对⽇志进⾏过滤
+        'require_debug_true': {  # django在debug模式下才输出⽇志
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {  # ⽇志处理⽅法
+        'console': {  # 向终端中输出⽇志
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {  # 向⽂件中输出⽇志
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'blog11/logs/blog11.log'),  # ⽇志⽂件的位置
+            'maxBytes': 300 * 1024 * 1024,
+            'backupCount': 10,
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {  # ⽇志器
+        'django': {  # 定义了⼀个名为django的⽇志器
+            'handlers': ['console', 'file'],  # 可以同时向终端与⽂件中输出⽇志
+            'propagate': True,  # 是否继续传递⽇志信息
+            'level': 'INFO',  # ⽇志器接收的最低⽇志级别
+        },
+    }
+}
