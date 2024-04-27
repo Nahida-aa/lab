@@ -1,0 +1,253 @@
+﻿{% load static %}
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block head %}
+    <title>个人技术博客</title>
+  {% endblock %}
+  {% comment %} <link href="static/css/bootstrap.min.css" type="text/css" rel="stylesheet"> {% endcomment %}
+  <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
+  {% comment %} <link href="static/css/style.css" type="text/css" rel="stylesheet"> {% endcomment %}
+  <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+  {% comment %} <link type="text/css" href="static/css/nprogress.css" rel="stylesheet"> {% endcomment %}
+  <link type="text/css" href="{% static 'css/nprogress.css' %}" rel="stylesheet">
+  <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js" type="text/javascript"></script>
+    <script src="static/js/respond.min.js" type="text/javascript"></script>
+    <script src="static/js/selectivizr-min.js" type="text/javascript"></script>
+<![endif]-->
+  {% comment %} <link rel="apple-touch-icon-precomposed" href="static/images/icon/icon.png"> {% endcomment %}
+  <link rel="apple-touch-icon-precomposed" href="{% static 'images/icon/icon.png' %}">
+  {% comment %} <link rel="shortcut icon" href="static/images/icon/favicon.ico"> {% endcomment %}
+  <link rel="shortcut icon" href="{% static 'images/icon/favicon.ico' %}">
+  <meta name="Keywords" content="" />
+  <meta name="description" content="" />
+  <script type="text/javascript">
+
+    //判断浏览器是否支持HTML5
+    /*window.onload = function() {
+      if (!window.applicationCache) {
+        window.location.href="ie.html";
+      }
+    }*/
+  </script>
+
+  <style>
+    .login_username {
+      /* color: #fff; */
+      /* font-size: 16px; */
+      /* font-weight: bold; */
+      text-align: center;
+      background-color: greenyellow;
+      width: 80%;
+      /* padding: 10px; */
+      margin: 10px auto;
+      border-radius: 25%;
+    }
+    .login_btn1 {
+      text-align: center;
+      background-color: yellow;
+      width: 50%;
+      margin: 10px auto;
+      border-radius: 50%;
+    }
+    li.login_btn2 {
+      display: inline-block;
+      text-align: center;
+      background-color: yellow;
+      width: 40%;
+      margin: 10px auto;
+      border-radius: 50%;
+    }
+    #login_btn2_on {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="container user-select">
+    <header>
+      <div class="hidden-xs header"><!--超小屏幕不显示-->
+        <h1 class="logo"> <a href="index.html" title="个人技术博客"></a> </h1>
+        <ul class="nav hidden-xs-nav">
+          {% if request.session.username %}
+          <li class="login_username">欢迎你，
+            <strong>{{ request.session.username }}</strong>
+          </li>
+          <li class="login_btn1"><a href="/login/logout">退出</a></li>
+          {% else %}
+          <li class="login_username">欢迎你，
+            <span>游客</span>
+          </li>
+          <li id="login_btn2_on">
+            <ul>
+              <li class="login_btn2"><a href="/login">登录</a></li>
+              <li class="login_btn2"><a href="login/register">注册</a></li>
+            </ul>
+          </li>
+          {% endif %}
+        
+          <li class="active">
+            <a href="/">
+              <span class="glyphicon glyphicon-home"></span>网站首页
+            </a>
+          </li>
+          <li><a href="/category/qian_duan"><span class="glyphicon glyphicon-erase"></span>网站前端</a></li>
+          <li><a href="/category/hou_duan"><span class="glyphicon glyphicon-inbox"></span>后端技术</a></li>
+          <li><a href="admin" target="_blank"><span class="glyphicon glyphicon-globe"></span>管理系统</a></li>
+          <li><a href="about.html"><span class="glyphicon glyphicon-user"></span>关于我们</a></li>
+          <li><a href="friendly.html"><span class="glyphicon glyphicon-tags"></span>友情链接</a></li>
+        </ul>
+        <div class="feeds"> <a class="feed feed-xlweibo" href="" target="_blank"><i></i>新浪微博</a> <a
+            class="feed feed-txweibo" href="" target="_blank"><i></i>腾讯微博</a> <a class="feed feed-rss" href=""
+            target="_blank"><i></i>订阅本站</a> <a class="feed feed-weixin" data-toggle="popover" data-trigger="hover"
+            title="微信扫一扫" data-html="true" data-content="<img src='/static/images/weixin.jpg' alt=''>" href="javascript:;"
+            target="_blank"><i></i>关注微信</a> </div>
+        <div class="wall"><a href="readerWall.html" target="_blank">读者墙</a> | <a href="tags.html"
+            target="_blank">标签云</a></div>
+      </div>
+      <!--/超小屏幕不显示-->
+      <!-- 左侧 -->
+      <div class="visible-xs header-xs"><!--超小屏幕可见-->
+        <div class="navbar-header header-xs-logo">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-xs-menu"
+            aria-expanded="false" aria-controls="navbar"><span
+              class="glyphicon glyphicon-menu-hamburger"></span></button>
+        </div>
+        <div id="header-xs-menu" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav header-xs-nav">
+            <li class="active"><a href="index.html"><span class="glyphicon glyphicon-home"></span>网站首页</a></li>
+            <li><a href=""><span class="glyphicon glyphicon-erase"></span>网站前端</a></li>
+            <li><a href=""><span class="glyphicon glyphicon-inbox"></span>后端技术</a></li>
+            <li><a href=""><span class="glyphicon glyphicon-globe"></span>管理系统</a></li>
+            <li><a href="about.html"><span class="glyphicon glyphicon-user"></span>关于我们</a></li>
+            <li><a href="friendly.html"><span class="glyphicon glyphicon-tags"></span>友情链接</a></li>
+          </ul>
+          <form class="navbar-form" action="search.php" method="post" style="padding:0 25px;">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="请输入关键字">
+              <span class="input-group-btn">
+                <button class="btn btn-default btn-search" type="submit">搜索</button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </header>
+    <!--/超小屏幕可见-->
+    {% block content %}
+
+    
+    {% endblock %}
+    <!--/内容-->
+    <!-- 右侧 -->
+    <aside class="sidebar visible-lg"><!--右侧>992px显示-->
+      {% comment %} 每日一句 {% endcomment %}
+      <div class="sentence"> <strong>每日一句</strong>
+        <!-- <h2>2015年11月1日 星期日</h2> -->
+        <h2 id="TimeDiv" style="font-size: 16px;"></h2>
+        <!-- <p>你是我人生中唯一的主角，我却只能是你故事中的一晃而过得路人甲。</p> -->
+        <p>{{ sentence.content }}</p>
+      </div>
+      <!-- 搜素 -->
+      <div id="search" class="sidebar-block search" role="search">
+        <h2 class="title"><strong>搜索</strong></h2>
+        <form class="navbar-form" action="/search/" method="get">
+          <div class="input-group">
+            <input type="text" class="form-control" size="35" placeholder="请输入关键字" name="q">
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-search" type="submit">搜索</button>
+              {% comment %} 
+                type="submit" 会自动提交给 action="/search/" 
+                onclick="window.location.href='/search/?q='+document.getElementById('search').value"
+                onclick="return search()" :
+                onclick="return false :就会阻止默认行为"
+              {% endcomment %}
+            </span>
+          </div>
+        </form>
+      </div>
+      {% comment %} 热门推荐 {% endcomment %}
+      <div class="sidebar-block recommend">
+        <h2 class="title"><strong>热门推荐</strong></h2>
+        <ul>
+          {% for article_hot in article_hot_all %}
+            <li>
+              <a target="_blank" href="{{ article_hot.name_en }}/"> 
+                <span class="thumb">
+                  <img src="{{ article_hot.thumb }}" alt="">
+                </span> 
+                <span
+                  class="text"> {{ article_hot.title|truncatechars:20 }} 
+                </span> 
+                <span class="text-muted ">阅读({{ article_hot.look_num }})
+                </span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="sidebar-block comment">
+        <h2 class="title"><strong>最新评论</strong></h2>
+        <ul>
+          {% for comment in latest_comment %}
+            <li data-toggle="tooltip" data-placement="top" title="{{ comment.name }}的评论">
+              <a target="_blank" href="">
+                <span class="face"><img src="/static/images/icon/icon.png" alt=""></span> 
+                <span class="text">
+                  <strong>{{ comment.name }}</strong> ({{ comment.create_time }}) 说：<br />
+                  {{ comment.content|truncatechars:30 }}
+                </span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </aside>
+    <!--/右侧>992px显示-->
+
+  </section>
+  <div><a href="javascript:;" class="gotop" style="display:none;"></a></div>
+  <!--/返回顶部-->
+  {% comment %} <script src="static/js/jquery-2.1.4.min.js" type="text/javascript"></script> {% endcomment %}
+  <script src="{% static 'js/jquery-2.1.4.min.js' %}" type="text/javascript"></script>
+  {% comment %} <script src="static/js/nprogress.js" type="text/javascript"></script> {% endcomment %}
+  <script src="{% static 'js/nprogress.js' %}" type="text/javascript"></script>
+  {% comment %} <script src="static/js/bootstrap.min.js" type="text/javascript"></script> {% endcomment %}
+  <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
+  <!--  -->
+  {% block script %}
+  
+
+  {% endblock %}
+  <!-- //每日一句 -->
+  <script type="text/javascript">
+    
+    window.onload = function () {
+      function getDate() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var week = date.getDay();
+        var weeks = ["日", "一", "二", "三", "四", "五", "六"];
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        // var time = year + "年" + month + "月" + day + "日" + " 星期" + weeks[week] + " " + hour + ":" + minute + ":" + second;
+        var time = year + "年" + month + "月" + day + "日" + " 星期" + weeks[week] + " " + hour.toString().padStart(2, 0) + ":" + minute + ":" + second;
+        document.getElementById("TimeDiv").innerHTML = time;
+      }
+      getDate();
+      setInterval(getDate, 1000); //每隔1秒运行一次
+    }
+  </script>
+</body>
+
+</html>

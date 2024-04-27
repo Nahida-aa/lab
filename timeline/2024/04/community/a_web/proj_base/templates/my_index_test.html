@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="modal fade" id="argon_search_modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <!-- 模态对话框的对话框容器 -->
+        <!-- 类名modal-dialog modal-dialog-centered modal-sm来自Bootstrap用于应用对话框的样式和位置。 -->
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <!-- 模态对话框的内容容器，类名modal-content来自Bootstrap用于应用内容的样式 -->
+            <div class="modal-content">
+                <!-- 头部,类名modal-header来自Bootstrap,用于应用头部的样式 -->
+                <div class="modal-header">
+                    <h5 class="modal-title">搜索</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- 主体,类名modal-body来自Bootstrap,用于应用主体的样式 -->
+                <div class="modal-body">
+                    <!-- 表单，当用户点击搜索按钮时，将以GET方法提交到指定的URL -->
+                    <form id="argon_serach_form" method="get" action="https://www.ghostchu.com">
+                        <div class="form-group mb-3">
+                            <div class="input-group input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                </div>
+                                <input name="s" class="form-control" placeholder="搜索什么..." type="text"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <!-- 按钮，当点击时，如果表单中的输入框不为空，则提交表单。 -->
+                            <button
+                                onclick="if($('#argon_serach_form input[name=\'s\']').val() != '') {document.getElementById('argon_serach_form').submit();}"
+                                type="button" class="btn btn-primary">搜索</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div
+</body>
+</html>

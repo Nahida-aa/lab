@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+		<ul>
+			{% if user.is_authenticated %}
+				欢迎您！{{ user.username }}
+				<li>
+					<a href="/logout_test/">Logout</a>
+					<a href="/profile_test/">Profile</a>
+				</li>
+			{% else %}
+				<li>
+					<a href="/login_test/">Login</a>
+					<a href="/register_test/">Register</a>
+				</li>
+			{% endif %}
+			<li><a href="/index_test/">Index</a></li>
+		</ul>
+	</div>
+</body>
+</html>

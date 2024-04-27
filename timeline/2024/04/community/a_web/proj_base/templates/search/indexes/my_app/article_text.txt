@@ -1,0 +1,9 @@
+#指定索引的属性
+{{object.title}}
+{{object.content}}
+{% for tag in object.tags.all %}
+    {{ tag.name }}
+{% endfor %}
+{% for category_s in object.category_s.all %}
+    {{ category_s.name }}
+{% endfor %}
