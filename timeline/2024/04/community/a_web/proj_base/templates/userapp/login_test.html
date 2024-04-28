@@ -130,8 +130,9 @@
                         <div>
                             <div>
                                 <label>
-                                    <input v-model="remember" name="remember" checked
-                                        type="checkbox" value="True">
+                                    <input name="remember" checked type="checkbox">
+                                    <!-- value="on" this复选框被选中时的值, default:value="on"-->
+                                    <!-- name="remember"：这是 HTML 的一个标准属性，用于在表单提交时标识这个输入元素。 -->
                                     <span data-localization-key="formFieldLabel__rememberMe">Remember me
                                     </span>
                                 </label>

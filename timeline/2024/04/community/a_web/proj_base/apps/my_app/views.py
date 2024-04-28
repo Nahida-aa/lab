@@ -448,7 +448,7 @@ def index(request):
         'article_all': article_all,
         }
     # return render(request, 'index.html', context=context)
-    return render(request, 'index1.html', context=context)
+    return render(request, 'index_test.html', context=context)
 
 class IndexTest(ListView):
     model = Article

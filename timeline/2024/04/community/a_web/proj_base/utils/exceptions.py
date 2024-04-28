@@ -1,0 +1,3 @@
+
+class MyForbidden(Exception):
+    pass

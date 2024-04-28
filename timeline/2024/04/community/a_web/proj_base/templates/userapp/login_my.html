@@ -76,7 +76,7 @@
     <div class="music-lgin-text">
         <div style="margin-top: 25px;float: right;">
             <span style="color: white;">还没有账号？</span>
-            <a href="/login/reg/" style="color: red;">注册</a>
+            <a href="/userapp/reg/" style="color: red;">注册</a>
         </div>
     </div>
 
@@ -130,7 +130,7 @@
             var form_data = {"username": username, "password": pwd, csrfmiddlewaretoken: csrf};
             //这里csrfmiddlewaretoken加不加引号都是一样的
             //发送请求
-            $.post('/login/', form_data, function (data) {
+            $.post('/userapp/', form_data, function (data) {
                 if (data.status == 1) {
                     window.location.href = data.url
                 } else {

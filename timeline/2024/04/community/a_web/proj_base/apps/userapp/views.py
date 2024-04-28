@@ -5,9 +5,9 @@ from django.db import DatabaseError
 from django.shortcuts import redirect, render
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
-# from proj_base.utils.exceptions import MyForbidden
+from proj_base.utils.exceptions import MyForbidden
 from django.http import HttpResponseForbidden
-from login.models import (
+from userapp.models import (
     # LoginUser,
     MyUser,
     Employee, DeptModel
@@ -73,15 +73,15 @@ class DeptModelViewSet(viewsets.ModelViewSet):
 #     serializer_class = LoginUserSerializer
 #     queryset = LoginUser.objects.all()
 
-    def get(self, request):
+    # def get(self, request):
         # query_set = self.get_queryset()
         # # 序列化{obj -> dict{serializer.data}}
         # serializer = self.get_serializer(instance=query_set, many=True)
         # # 返回序列化后的数据 {dict -> json}
         # return Response(serializer.data)
-        return self.list(request)
+        # return self.list(request)
     
-    def post(self, request):
+    # def post(self, request):
         # # 拿到请求数据
         # data = request.data
         # # 反序列化{dict -> obj{serializer.validated_data}}
@@ -92,7 +92,7 @@ class DeptModelViewSet(viewsets.ModelViewSet):
         #     serializer.save()
         #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return self.create(request)
+        # return self.create(request)
 
 # class UserViewDemoG2(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
 #     serializer_class = LoginUserSerializer
@@ -100,7 +100,7 @@ class DeptModelViewSet(viewsets.ModelViewSet):
     # def get_object(self):
     #     pass # 重写这个方法
     
-    def get(self, request, pk):
+    # def get(self, request, pk):
         # # print(pk, type(pk))
         # # 获取单个用户
         # user = self.get_object() # 自动根据pk获取单个对象
@@ -108,9 +108,9 @@ class DeptModelViewSet(viewsets.ModelViewSet):
         # serializer = self.get_serializer(instance=user)
         # # 返回序列化后的数据 {dict -> json}
         # return Response(serializer.data)
-        return self.retrieve(request, pk)
+        # return self.retrieve(request, pk)
     
-    def put(self, request, pk):
+    # def put(self, request, pk):
         # # 获取单个用户
         # user = self.get_object()
         # # 拿到请求数据
@@ -123,9 +123,9 @@ class DeptModelViewSet(viewsets.ModelViewSet):
         #     serializer.save()
         #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return self.update(request, pk)
+        # return self.update(request, pk)
     
-    def patch(self, request, pk):
+    # def patch(self, request, pk):
         # # 获取单个用户
         # user = self.get_object()
         # # 拿到请求数据
@@ -138,21 +138,21 @@ class DeptModelViewSet(viewsets.ModelViewSet):
         #     serializer.save()
         #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return self.partial_update(request, pk)
+        # return self.partial_update(request, pk)
     
-    def destroy(self, request, *args, **kwargs):
-        # 继承
-        response = super().destroy(request, *args, **kwargs)
-        return Response({"message": '完成删除'}, status=response.status_code)
+    # def destroy(self, request, *args, **kwargs):
+    #     # 继承
+    #     response = super().destroy(request, *args, **kwargs)
+    #     return Response({"message": '完成删除'}, status=response.status_code)
     
 
-    def delete(self, request, pk):
+    # def delete(self, request, pk):
         # # 获取单个用户
         # user = self.get_object()
         # # 删除用户
         # user.delete()
         # return Response({"message": '完成删除'}, status=status.HTTP_204_NO_CONTENT)
-        return self.destroy(request, pk)
+        # return self.destroy(request, pk)
 
 """
 APIView.as_view() 在View的as_view()方法的基础上, 使用csrf_exempt装饰器的封装
@@ -322,18 +322,18 @@ class UsernameCount(APIView):
         try:
             count = MyUser.objects.filter(username=username).count()
         except Exception as e:
-            raise HttpResponseForbidden('数据库异常')
+            return HttpResponseForbidden('数据库异常')
         return JsonResponse({'code': 200, 'msg': 'OK', 'count': count})
 
 class RegisterMg(View):
     def get(self, request):
-        return render(request, 'login/register_mg.html')
+        return render(request, 'userapp/register_mg.html')
     def post(self, request):
         return HttpResponse('注册成功')
 
 class RegisterTest(View):
     def get(self, request):
-        return render(request, 'login/reg_test.html')
+        return render(request, 'userapp/reg_test.html')
     def post(self, request):
         # # axios请求
         # # 解析 JSON 数据
@@ -350,21 +350,21 @@ class RegisterTest(View):
         password = request.POST.get('password', None)
         # 校验数据
         if not all([username, password]):
-            raise HttpResponseForbidden('请填写完整信息')
+            return HttpResponseForbidden('请填写完整信息')
         # if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', username):
         if not re.match(r'^.{1,40}$', username):
-            raise HttpResponseForbidden('用户名格式不正确')
+            return HttpResponseForbidden('用户名格式不正确')
         if phone and not re.match(r'^1[3-9]\d{9}$', phone): # 电话号码可为空
-            raise HttpResponseForbidden('手机号格式不正确')
+            return HttpResponseForbidden('手机号格式不正确')
         if email and not re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email):
-            raise HttpResponseForbidden('邮箱格式不正确')
+            return HttpResponseForbidden('邮箱格式不正确')
         if not re.match(r'^(?=.*[A-Z|a-z|\d])[A-Za-z0-9_,-\.]{2,40}$', password):
-            raise HttpResponseForbidden('密码格式不正确')
+            return HttpResponseForbidden('密码格式不正确')
         # 保存数据
         try:
             user = MyUser.objects.create_user(username=username, email=email, password=password, phone=phone)
         except DatabaseError as e:
-            return render(request, 'login/reg_test.html', {'errmsg': '注册失败'})
+            return render(request, 'userapp/reg_test.html', {'errmsg': '注册失败'})
         #保持登录状态
         login(request, user)
         # 返回响应
@@ -372,7 +372,7 @@ class RegisterTest(View):
 
 class Register(View):
     def get(self, request):
-        return render(request, 'login/reg.html')
+        return render(request, 'userapp/reg.html')
     def post(self, request):
         # 获取数据
         username = request.POST.get('username', None)
@@ -381,25 +381,27 @@ class Register(View):
         # 校验数据
         if not all([username, email, password]):
             print(username, email, password)
-            raise HttpResponseForbidden('请填写完整信息')
+            return HttpResponseForbidden('请填写完整信息')
         # if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', username):
         if not re.match(r'^.{1,40}$', username):
-            raise HttpResponseForbidden('用户名格式不正确')
+            return HttpResponseForbidden('用户名格式不正确')
         if not re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email):
-            raise HttpResponseForbidden('邮箱格式不正确')
+            return HttpResponseForbidden('邮箱格式不正确')
         if not re.match(r'^(?=.*[A-Z|a-z|\d])[A-Za-z0-9_-,\.]{2,40}$', password):
-            raise HttpResponseForbidden('密码格式不正确')
+            return HttpResponseForbidden('密码格式不正确')
         # 保存数据
         try:
+            from django.contrib.auth.models import AbstractUser
+            AbstractUser.objects.create_user(username=username, email=email, password=password)
             user = MyUser.objects.create_user(username=username, email=email, password=password)
         except DatabaseError as e:
-            return render(request, 'login/reg.html', {'errmsg': '注册失败'})
+            return render(request, 'userapp/reg.html', {'errmsg': '注册失败'})
         # 返回响应
-        return HttpResponseRedirect('/login/')
+        return HttpResponseRedirect('/userapp/')
     
 class LoginTest(View):
     def get(self, request):
-        return render(request, 'login/login_test.html')
+        return render(request, 'userapp/login_test.html')
     def post(self, request):
         # 获取数据
         identifier = request.POST.get('identifier', None)  # 用户名/邮箱/手机号
@@ -407,38 +409,68 @@ class LoginTest(View):
         remember = request.POST.get('remember', None)
         # 校验数据
         if not all([identifier, password, remember]):
-            raise HttpResponseForbidden('请填写完整信息')
+            return HttpResponseForbidden('请填写完整信息')
         # 判断输入的是用户名、邮箱还是手机号
         identifier_type = None
-        if re.match(r'^[a-zA-Z0-9_-]{2,16}$', identifier):  # 用户名
-            user = MyUser.objects.filter(username=identifier).first()
-            identifier_type = 'username'
+        if re.match(r'^1[3456789]\d{9}$', identifier):  # 手机号
+            user = MyUser.objects.filter(phone=identifier).first()
+            identifier_type = 'phone'
         elif re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', identifier):  # 邮箱
             user = MyUser.objects.filter(email=identifier).first()
             identifier_type = 'email'
-        elif re.match(r'^1[3456789]\d{9}$', identifier):  # 手机号
-            user = MyUser.objects.filter(phone=identifier).first()
-            identifier_type = 'phone'
+        elif re.match(r'^[a-zA-Z0-9_-]{2,16}$', identifier):  # 用户名
+            user = MyUser.objects.filter(username=identifier).first()
+            identifier_type = 'username'
         else:
-            raise HttpResponseForbidden('输入的用户名/邮箱/手机号格式不正确')
+            return HttpResponseForbidden('输入的用户名/邮箱/手机号格式不正确')
 
         if not user:
-            return render(request, 'login/login_test.html', {'msg': f'{identifier_type}不存在'})
-
+            return render(request, 'userapp/login_test.html', {'msg': f'{identifier_type}不存在'})
+        
         if not user.check_password(password):
-            return render(request, 'login/login_test.html', {'msg': '密码错误'})
+            return render(request, 'userapp/login_test.html', {'msg': '密码错误'})
+        
+        if user.is_active == False:
+            return render(request, 'userapp/login_test.html', {'msg': '已注销，可以恢复'})
 
         # 保持登录状态
         login(request, user)
 
-        if remember == "True":
+        if remember == 'on':
             request.session.set_expiry(60*60*24*30)
             # request.session.set_expiry(None) # default: 2 weeks
         else:
             request.session.set_expiry(0)
 
         # 返回响应
-        return HttpResponseRedirect('/index_test/')
+        return HttpResponseRedirect('/')
+
+class Profile(View):
+    def get(self, request, username):
+        # 获取用户信息
+        user = MyUser.objects.filter(username=username).first()
+        if not user:
+            raise Http404('用户不存在')
+        # 获取用户的文章
+        # articles = Article.objects.filter(user=user)
+        # 获取用户的关注
+        # followings = user.following.all()
+        # 获取用户的粉丝
+        # followers = user.follower.all()
+        # 获取用户的点赞
+        # likes = user.like.all()
+        # 获取用户的评论
+        # comments = user.comment.all()
+        # 获取用户的收藏
+        # collections = user.collection.all()
+        # 返回响应
+        return render(request, 'userapp/profile.html', {'user': user})
+
+class CheckLogin(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return JsonResponse({'code': 200, 'msg': '已登录'})
+        return JsonResponse({'code': 400, 'msg': '未登录'})
 
 # class RegisterOld(View):
 #     def get(self, request):

@@ -72,7 +72,7 @@
           <li class="login_username">欢迎你，
             <strong>{{ request.session.username }}</strong>
           </li>
-          <li class="login_btn1"><a href="/login/logout">退出</a></li>
+          <li class="login_btn1"><a href="/userapp/logout">退出</a></li>
           {% else %}
           <li class="login_username">欢迎你，
             <span>游客</span>
@@ -80,7 +80,7 @@
           <li id="login_btn2_on">
             <ul>
               <li class="login_btn2"><a href="/login">登录</a></li>
-              <li class="login_btn2"><a href="login/register">注册</a></li>
+              <li class="login_btn2"><a href="userapp/register">注册</a></li>
             </ul>
           </li>
           {% endif %}

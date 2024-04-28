@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     # 'django_ckeditor_5', # pip install django-ckeditor-5
     'ckeditor', # pip install django-ckeditor
     'ckeditor_uploader',
-    'login',
+    'userapp',
     'verifycode', # 验证码
     'haystack', 
 ]
@@ -370,7 +370,7 @@ SIMPLE_JWT = {
 }
 
 # 如果要使用自定义的用户模型，需要在 settings.py 中添加 AUTH_USER_MODEL 配置项，指定自定义的用户模型
-AUTH_USER_MODEL = 'login.MyUser'
+AUTH_USER_MODEL = 'userapp.MyUser'
 
 # 指定自定义的用户认证后端(不使用默认的认证后端)
 # AUTHENTICATION_BACKENDS = []
@@ -422,3 +422,6 @@ APIID = 'C18364283'
 APIKEY = '4fd3425525bed15cd44c3674320671db'
 
 # from django.conf import settings, global_settings
+
+# custom authentication
+AUTHENTICATION_BACKENDS = ['userapp.auth.MutiIdentityLoginAuth']

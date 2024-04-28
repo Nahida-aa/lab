@@ -22,9 +22,15 @@ urlpatterns = [
 
     path('login_test/', LoginTest.as_view(), name='login_test'),
     path('login_api/', TokenObtainPairView.as_view(), name='login_api'),
+    
+    # profile(用户主页、个人主页)
+    re_path(r'^(?P<username>.{2,40})/$', Profile.as_view(), name='profile'),
 
     # path('check_username/', check_username, name='check_username'),
     re_path(r'^usernames/(?P<username>.{1,40})/count/$', UsernameCount.as_view(), name='username_count'),
+    # 检验用户是否已经登录
+    re_path(r'^check_login/$', CheckLogin.as_view(), name='check_login'),
+
     # path('logout/', logout, name='logout'),
     path('logout_test/', LogoutTest.as_view(), name='logout_test'),
     # path('api_view_demo/', UserViewDemo1.as_view()),

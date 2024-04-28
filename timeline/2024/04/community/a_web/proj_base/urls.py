@@ -24,7 +24,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from login.views import (
+from userapp.views import (
     # LoginAPI, 
     Register, 
     RegisterTest,
@@ -34,12 +34,13 @@ from login.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
-    path('', include(('login.urls', 'login'), namespace='login')),
+    
     path('', include(('verifycode.urls', 'verifycode'), namespace='verifycode')),
     path('docs/', include_docs_urls(title='My API Docs', description='API接口文档')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # 生成token(用户名+密码登录)
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),# 刷新token
     path("", include("my_app.urls")),
+    path('', include(('userapp.urls', 'userapp'), namespace='userapp')),
 ]
 
 # urlpatterns += [

@@ -65,7 +65,7 @@
           <li class="login_username">欢迎你，
             <strong>{{ request.session.username }}</strong>
           </li>
-          <li class="login_btn1"><a href="/login/logout">退出</a></li>
+          <li class="login_btn1"><a href="/userapp/logout">退出</a></li>
           {% else %}
           <li class="login_username">欢迎你，
             <span>游客</span>
@@ -73,7 +73,7 @@
           <li id="login_btn2_on">
             <ul>
               <li class="login_btn2"><a href="/login">登录</a></li>
-              <li class="login_btn2"><a href="login/register">注册</a></li>
+              <li class="login_btn2"><a href="userapp/register">注册</a></li>
             </ul>
           </li>
           {% endif %}
@@ -514,51 +514,53 @@
           alert("评论内容不能为空");
           return false; //阻止表单提交
         }
-        {% comment %} $.ajax({
-          type: "POST",
-          url: "/comment/",
-          data: {
-            "commentId": commentId,
-            "commentName": commentName,
-            "commentEmail": commentEmail,
-            "commentContent": commentContent
-          },
-          // es6可以简写
-          // data: {commentId, commentName, commentEmail, commentContent},
-          cache: false, //不缓存此页面
-          success: function (res) {
-            console.log(res);
-            if (res.status == 200) {
-              alert(res.msg);
-            }else{
-              alert(res.msg);
-            }
-          }
-        }); {% endcomment %}
+        // {% comment %} $.ajax({
+        //   type: "POST",
+        //   url: "/comment/",
+        //   data: {
+        //     "commentId": commentId,
+        //     "commentName": commentName,
+        //     "commentEmail": commentEmail,
+        //     "commentContent": commentContent
+        //   },
+        //   // es6可以简写
+        //   // data: {commentId, commentName, commentEmail, commentContent},
+        //   cache: false, //不缓存此页面
+        //   success: function (res) {
+        //     console.log(res);
+        //     if (res.status == 200) {
+        //       alert(res.msg);
+        //     }else{
+        //       alert(res.msg);
+        //     }
+        //   }
+        // }); 
+        // {% endcomment %}
         // 普通写法(非ajax)
         var data = { commentId, commentName, commentEmail, commentContent, csrfmiddlewaretoken };
         update_comment(data)
-        {% comment %} $.post("/detail_comment/", data, function (res) {
-          console.log(res);
-          var h_total = ``
-          res.data.forEach(function (item, index) {
-            h_total += `
-              <li>
-                <span class="face"><img src="/static/images/icon/icon.png" alt=""></span> 
-                <span class="text">
-                  <strong>${item.name}</strong> (${item.create_time}) 说：<br />
-                  ${item.content}
-                </span>
-              </li> 
-            `;             
-          });
-          var htm = `
-            <ul>
-              ${h_total}
-            </ul>
-          `;
-          $(".comment-content").html(htm);
-        }); {% endcomment %}
+        // {% comment %} $.post("/detail_comment/", data, function (res) {
+        //   console.log(res);
+        //   var h_total = ``
+        //   res.data.forEach(function (item, index) {
+        //     h_total += `
+        //       <li>
+        //         <span class="face"><img src="/static/images/icon/icon.png" alt=""></span> 
+        //         <span class="text">
+        //           <strong>${item.name}</strong> (${item.create_time}) 说：<br />
+        //           ${item.content}
+        //         </span>
+        //       </li> 
+        //     `;             
+        //   });
+        //   var htm = `
+        //     <ul>
+        //       ${h_total}
+        //     </ul>
+        //   `;
+        //   $(".comment-content").html(htm);
+        // }); 
+        // {% endcomment %}
         return false;
       });
       // 更新评论

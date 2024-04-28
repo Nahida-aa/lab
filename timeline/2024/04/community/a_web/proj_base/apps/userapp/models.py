@@ -29,7 +29,7 @@ from django.utils.translation import gettext_lazy as _
 
 class MyUser(AbstractUser):
     phone = models.CharField(max_length=11, verbose_name='手机号', null=True, blank=True
-                                #  , unique=True
+                                 , unique=True
                                  )
     groups = models.ManyToManyField(
         Group,
@@ -50,6 +50,7 @@ class MyUser(AbstractUser):
         related_name="myuser_set",  # Add or change the related_name
         related_query_name="user",
     )
+    birthday = models.DateField(null=True, blank=True)
     class Meta(AbstractUser.Meta):
         db_table = 'my_user'
         # verbose_name = _("user")
