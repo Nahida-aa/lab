@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
 # from proj_base.utils.exceptions import MyForbidden
-from proj_base.utils.exceptions import MyForbidden
+from django.http import HttpResponseForbidden
 from login.models import (
     # LoginUser,
     MyUser,
@@ -322,7 +322,7 @@ class UsernameCount(APIView):
         try:
             count = MyUser.objects.filter(username=username).count()
         except Exception as e:
-            raise MyForbidden('数据库异常')
+            raise HttpResponseForbidden('数据库异常')
         return JsonResponse({'code': 200, 'msg': 'OK', 'count': count})
 
 class RegisterMg(View):
@@ -350,16 +350,16 @@ class RegisterTest(View):
         password = request.POST.get('password', None)
         # 校验数据
         if not all([username, password]):
-            raise MyForbidden('请填写完整信息')
+            raise HttpResponseForbidden('请填写完整信息')
         # if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', username):
         if not re.match(r'^.{1,40}$', username):
-            raise MyForbidden('用户名格式不正确')
+            raise HttpResponseForbidden('用户名格式不正确')
         if phone and not re.match(r'^1[3-9]\d{9}$', phone): # 电话号码可为空
-            raise MyForbidden('手机号格式不正确')
+            raise HttpResponseForbidden('手机号格式不正确')
         if email and not re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email):
-            raise MyForbidden('邮箱格式不正确')
+            raise HttpResponseForbidden('邮箱格式不正确')
         if not re.match(r'^(?=.*[A-Z|a-z|\d])[A-Za-z0-9_,-\.]{2,40}$', password):
-            raise MyForbidden('密码格式不正确')
+            raise HttpResponseForbidden('密码格式不正确')
         # 保存数据
         try:
             user = MyUser.objects.create_user(username=username, email=email, password=password, phone=phone)
@@ -381,14 +381,14 @@ class Register(View):
         # 校验数据
         if not all([username, email, password]):
             print(username, email, password)
-            raise MyForbidden('请填写完整信息')
+            raise HttpResponseForbidden('请填写完整信息')
         # if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', username):
         if not re.match(r'^.{1,40}$', username):
-            raise MyForbidden('用户名格式不正确')
+            raise HttpResponseForbidden('用户名格式不正确')
         if not re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email):
-            raise MyForbidden('邮箱格式不正确')
+            raise HttpResponseForbidden('邮箱格式不正确')
         if not re.match(r'^(?=.*[A-Z|a-z|\d])[A-Za-z0-9_-,\.]{2,40}$', password):
-            raise MyForbidden('密码格式不正确')
+            raise HttpResponseForbidden('密码格式不正确')
         # 保存数据
         try:
             user = MyUser.objects.create_user(username=username, email=email, password=password)
@@ -396,6 +396,49 @@ class Register(View):
             return render(request, 'login/reg.html', {'errmsg': '注册失败'})
         # 返回响应
         return HttpResponseRedirect('/login/')
+    
+class LoginTest(View):
+    def get(self, request):
+        return render(request, 'login/login_test.html')
+    def post(self, request):
+        # 获取数据
+        identifier = request.POST.get('identifier', None)  # 用户名/邮箱/手机号
+        password = request.POST.get('password', None)
+        remember = request.POST.get('remember', None)
+        # 校验数据
+        if not all([identifier, password, remember]):
+            raise HttpResponseForbidden('请填写完整信息')
+        # 判断输入的是用户名、邮箱还是手机号
+        identifier_type = None
+        if re.match(r'^[a-zA-Z0-9_-]{2,16}$', identifier):  # 用户名
+            user = MyUser.objects.filter(username=identifier).first()
+            identifier_type = 'username'
+        elif re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', identifier):  # 邮箱
+            user = MyUser.objects.filter(email=identifier).first()
+            identifier_type = 'email'
+        elif re.match(r'^1[3456789]\d{9}$', identifier):  # 手机号
+            user = MyUser.objects.filter(phone=identifier).first()
+            identifier_type = 'phone'
+        else:
+            raise HttpResponseForbidden('输入的用户名/邮箱/手机号格式不正确')
+
+        if not user:
+            return render(request, 'login/login_test.html', {'msg': f'{identifier_type}不存在'})
+
+        if not user.check_password(password):
+            return render(request, 'login/login_test.html', {'msg': '密码错误'})
+
+        # 保持登录状态
+        login(request, user)
+
+        if remember == "True":
+            request.session.set_expiry(60*60*24*30)
+            # request.session.set_expiry(None) # default: 2 weeks
+        else:
+            request.session.set_expiry(0)
+
+        # 返回响应
+        return HttpResponseRedirect('/index_test/')
 
 # class RegisterOld(View):
 #     def get(self, request):

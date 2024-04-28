@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
 import string, random
-from captcha.image import ImageCaptcha
+from captcha.image import ImageCaptcha # pip install captcha
 import django_redis
 # 短信验证码api
 from proj_base.utils.huyi_sms.sms3 import send_sms_code
@@ -49,7 +49,9 @@ class SMScode(View):
         print(f'smscode_str:{{\n{smscode_str}\n}}')
         # 判断是否已经发送过短信
         smscode_has = redis_conn.get(f'sms_{phone}')
+        # print(f'smscode_has:{{\n{smscode_has}\n}}')
         if smscode_has:
+            print('短信验证码已发送，请稍后再试')
             return JsonResponse({'code': 4004, 'msg': '短信验证码已发送，请稍后再试'})
         # 保存到redis中
         # redis_conn.setex(f'sms_{phone}', 60, smscode_str)
@@ -58,9 +60,11 @@ class SMScode(View):
         pl.execute()
 
         # TODO: 异步
-        from blog11.utils.huyi_sms.tasks import huyi_send_sms_code
+        from proj_base.celery_tasks.sms.tasks import huyi_send_sms_code
         # Celery异步发送短信
         ret = huyi_send_sms_code.delay(phone, smscode_str)
+        print('开始发送短信')
+        print(f'ret:{{\n{ret}\n}}')
 
         # red: task_id 存在说明已经被调用
         if ret:

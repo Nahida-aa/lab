@@ -45,15 +45,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'my_app',
-    'rest_framework',
-    'rest_framework_simplejwt',
+    'rest_framework', # pip install djangorestframework
+    'rest_framework_simplejwt', # pip install djangorestframework_simplejwt
     # 'DjangoUeditor',
     # 'django_ckeditor_5', # pip install django-ckeditor-5
     'ckeditor', # pip install django-ckeditor
     'ckeditor_uploader',
     'login',
     'verifycode', # 验证码
-    'haystack',
+    'haystack', 
 ]
 
 MIDDLEWARE = [
@@ -120,8 +120,11 @@ DATABASES = {
         'NAME': 'blog11', # 数据库名
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': os.getenv('WINDOWS_IP', 'localhost'),
+        # 'HOST': 'localhost',
+        # 'HOST': 'host.docker.internal', # docker中访问宿主机
         'PORT': '3306',
+        'CONN_MAX_AGE': 600,  # 10 minutes
     }
 }
 
@@ -294,27 +297,31 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
 
 # redis
 REDIS_HOST = '127.0.0.1'
+# REDIS_HOST = os.getenv('WINDOWS_IP', 'localhost') # 默认值为 '127.0.0.1'
+# REDIS_HOST = os.getenv('WSL_IP', 'localhost') # 默认值为 '127.0.0.1'
+# print(f"REDIS_HOST: {REDIS_HOST}")
 REDIS_PORT = 6379
 REDIS_DB = 0
-# django-redis
+#django-redis
 CACHES = {
     "default": { # 默认
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        # "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
     "session": { # session
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{1}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
     "verify_code": { # 验证码
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{2}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -413,3 +420,5 @@ LOGGING = {
 # 互亿无线 短信平台
 APIID = 'C18364283'
 APIKEY = '4fd3425525bed15cd44c3674320671db'
+
+# from django.conf import settings, global_settings

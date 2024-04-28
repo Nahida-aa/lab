@@ -1,3 +1,5 @@
+# import eventlet
+# eventlet.monkey_patch()
 # clelery_tasks/sms/tasks.py
 
 import os
@@ -20,7 +22,7 @@ if not os.getenv('DJANGO_SETTINGS_MODULE'):
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.dev')
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
-from huyi_sms.sms3 import send_sms_code
+from utils.huyi_sms.sms3 import send_sms_code
 
 logger = logging.getLogger('django')
 
@@ -37,9 +39,9 @@ def huyi_send_sms_code(phone, smscode_str):
         ret = send_sms_code(smscode_str,phone)
  
     except Exception as e:
-        logger.error(e)
+        logger.error(f"celery:{e}")
     
     if ret.get('code') != 2:
-        logger.error(e)
+        logger.error('Error: code is not 2')
     
     return ret.get('code',None)

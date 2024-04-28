@@ -118,7 +118,7 @@ let vue = new Vue({
                 },
                 responseType: 'json'
             }).then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 if (response.data.code == 200) { // 短信验证码正常发送
                     // 倒计时
                     let num = 60;
@@ -133,9 +133,10 @@ let vue = new Vue({
                         }
                     }, 1000);
                 } else {
-                    if(response.data.code == 4001 || response.data.code == 4002 || response.data.code == 4003 || response.data.code == 5001) {
+                    if(response.data.code == 4001 || response.data.code == 4002 || response.data.code == 4003 || response.data.code == 4004 || response.data.code == 5001) {
                         this.error_imgcode = true;
                         this.error_imgcode_msg = response.data.msg;
+                        console.log(this.error_imgcode_msg)
                     }
                     this.send_smscode_flag = false;
                     this.generate_imgcode();

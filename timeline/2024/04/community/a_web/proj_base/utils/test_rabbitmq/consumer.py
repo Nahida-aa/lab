@@ -1,4 +1,4 @@
-# blog11/utils/test_rabbitmq/consumer.py
+# a_web/proj_base/utils/test_rabbitmq/consumer.py
 import pika
 
 # 链接到rabbitmq服务器

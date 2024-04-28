@@ -43,7 +43,7 @@ APIKEY = settings.APIKEY
 
 def send_sms_code(smscode, mobile):
     return {
-        'code': 201,
+        'code': 2,
         'msg': '此功能已被禁用',
         'smsid': '20210428101312345',
     }

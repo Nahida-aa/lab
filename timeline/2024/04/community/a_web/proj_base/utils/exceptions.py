@@ -1,2 +1,0 @@
-class MyForbidden(Exception):
-    pass

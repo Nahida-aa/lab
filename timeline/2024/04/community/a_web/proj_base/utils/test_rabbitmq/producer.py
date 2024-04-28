@@ -1,4 +1,4 @@
-# blog11/utils/test_rabbitmq/producer.py
+# a_web/proj_base/utils/test_rabbitmq/producer.py
 import pika
 
 # 链接到RabbitMQ服务器

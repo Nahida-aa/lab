@@ -20,7 +20,7 @@ urlpatterns = [
     path("register_mg/", RegisterMg.as_view(), name="register_mg"), # 注册测试
     path('reg_api', RegisterAPI.as_view(), name='reg_api'),
 
-    # path('login', Login.as_view(), name='login'),
+    path('login_test/', LoginTest.as_view(), name='login_test'),
     path('login_api/', TokenObtainPairView.as_view(), name='login_api'),
 
     # path('check_username/', check_username, name='check_username'),
