@@ -61,7 +61,7 @@ vim ~/.ssh/id_rsa.pub
 # 复制公钥
 ```
 
-![20240429131746](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429131746.png)
+![20240429135414](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429135414.png)
 
 if刚刚指定了文件名，那么就要 >> ~/.ssh/config
 
