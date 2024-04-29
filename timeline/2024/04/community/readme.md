@@ -82,6 +82,39 @@ tail -5 ~/.ssh/config
 git push -u github main
 ```
 
+#### windows(其他开发者)
+
+```sh
+cd /c/Users/aa/.ssh
+ls -al
+# ssh-keygen -t rsa [-C "注释"] [-f ~/.ssh/id_rsa_github] [-b 4096]
+ssh-keygen -t rsa -C "win_github" -f ~/.ssh/id_rsa_github -b 4096
+# 查看公钥
+vim ~/.ssh/id_rsa_github.pub
+# 去配置公钥(告诉我，我给你配到项目)
+
+echo "# github
+Host github.com
+  HostName github.com
+  preferredauthentications publickey
+  IdentityFile ~/.ssh/id_rsa_github" >> ~/.ssh/config
+
+cd /d/a_note/web/Django_l/projects
+mkdir team
+cd team
+git init
+git branch -M main
+
+git remote add github git@github.com:Nahida-aa/team.git
+git pull github main
+# create branch waa 不切换
+git branch waa
+# 切换到 waa
+git checkout waagit 
+# 创建并切换到 dev 分支
+git checkout -b dev
+```
+
 # 04/25
 
 ```sh
