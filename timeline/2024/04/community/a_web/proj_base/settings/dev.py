@@ -425,3 +425,6 @@ APIKEY = '4fd3425525bed15cd44c3674320671db'
 
 # custom authentication
 AUTHENTICATION_BACKENDS = ['userapp.auth.MutiIdentityLoginAuth']
+
+# 指定登录首页请求地址
+LOGIN_URL = '/login/'

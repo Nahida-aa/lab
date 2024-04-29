@@ -301,10 +301,10 @@ def logout(request):
     # return JsonResponse({'status': 0, 'msg': '退出失败', 'url': '/'})
 """
 
-class LogoutTest(View):
+class Logout(View):
     def get(self, request):
         logout(request)
-        return redirect('/index_test/')
+        return redirect('/')
 
 # def check_username(request):
 #     username = request.POST.get('username')
@@ -331,7 +331,7 @@ class RegisterMg(View):
     def post(self, request):
         return HttpResponse('注册成功')
 
-class RegisterTest(View):
+class Register(View):
     def get(self, request):
         return render(request, 'userapp/reg_test.html')
     def post(self, request):
@@ -368,36 +368,36 @@ class RegisterTest(View):
         #保持登录状态
         login(request, user)
         # 返回响应
-        return HttpResponseRedirect('/index_test/')
+        return HttpResponseRedirect('/')
 
-class Register(View):
-    def get(self, request):
-        return render(request, 'userapp/reg.html')
-    def post(self, request):
-        # 获取数据
-        username = request.POST.get('username', None)
-        email = request.POST.get('email', None)
-        password = request.POST.get('password', None)
-        # 校验数据
-        if not all([username, email, password]):
-            print(username, email, password)
-            return HttpResponseForbidden('请填写完整信息')
-        # if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', username):
-        if not re.match(r'^.{1,40}$', username):
-            return HttpResponseForbidden('用户名格式不正确')
-        if not re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email):
-            return HttpResponseForbidden('邮箱格式不正确')
-        if not re.match(r'^(?=.*[A-Z|a-z|\d])[A-Za-z0-9_-,\.]{2,40}$', password):
-            return HttpResponseForbidden('密码格式不正确')
-        # 保存数据
-        try:
-            from django.contrib.auth.models import AbstractUser
-            AbstractUser.objects.create_user(username=username, email=email, password=password)
-            user = MyUser.objects.create_user(username=username, email=email, password=password)
-        except DatabaseError as e:
-            return render(request, 'userapp/reg.html', {'errmsg': '注册失败'})
-        # 返回响应
-        return HttpResponseRedirect('/userapp/')
+# class Register(View):
+#     def get(self, request):
+#         return render(request, 'userapp/reg.html')
+#     def post(self, request):
+#         # 获取数据
+#         username = request.POST.get('username', None)
+#         email = request.POST.get('email', None)
+#         password = request.POST.get('password', None)
+#         # 校验数据
+#         if not all([username, email, password]):
+#             print(username, email, password)
+#             return HttpResponseForbidden('请填写完整信息')
+#         # if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', username):
+#         if not re.match(r'^.{1,40}$', username):
+#             return HttpResponseForbidden('用户名格式不正确')
+#         if not re.match(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$', email):
+#             return HttpResponseForbidden('邮箱格式不正确')
+#         if not re.match(r'^(?=.*[A-Z|a-z|\d])[A-Za-z0-9_-,\.]{2,40}$', password):
+#             return HttpResponseForbidden('密码格式不正确')
+#         # 保存数据
+#         try:
+#             from django.contrib.auth.models import AbstractUser
+#             AbstractUser.objects.create_user(username=username, email=email, password=password)
+#             user = MyUser.objects.create_user(username=username, email=email, password=password)
+#         except DatabaseError as e:
+#             return render(request, 'userapp/reg.html', {'errmsg': '注册失败'})
+#         # 返回响应
+#         return HttpResponseRedirect('/userapp/')
     
 class LoginTest(View):
     def get(self, request):
@@ -446,32 +446,88 @@ class LoginTest(View):
         return HttpResponseRedirect('/')
 
 class Profile(View):
+    # 127.0.0.1/<username>
+    # 判断自己是否登录
+    # 未登录: add:顶部显示登录注册等
+    #   判断用户是否存在
+    #       不存在: add: 404
+    #      存在: add:显示用户信息
+    #           未登录等效用户不是自己: add:显示关注等按钮
+    # 已登录: add:顶部显示自己的头像等
+    #   判断用户是否存在
+    #      不存在: add: 404
+    #      存在: add:显示用户信息
+    #           判断是否是自己
+    #              是: add:显示编辑等按钮
+    #              否: add:显示关注等按钮
+    
+    # 1. 不存在且自己未登录: 自定义404界面, 顶部显示登录注册等
+    # 2. 不存在且自己已登录: 自定义404界面, 顶部显示自己的头像等
+    # 3. 存在且自己未登录: 显示用户信息, 顶部显示登录注册等，显示关注等按钮
+    # 4. 存在且自己已登录且不是自己: 显示用户信息, 顶部显示自己的头像等，显示关注等按钮
+    # 5. 存在且自己已登录且是自己: 显示用户信息, 顶部显示自己的头像等，显示编辑等按钮
     def get(self, request, username):
-        # 获取用户信息
+        # 判断用户是否存在
         user = MyUser.objects.filter(username=username).first()
+        # if访问的用户不存在
         if not user:
-            raise Http404('用户不存在')
-        # 获取用户的文章
-        # articles = Article.objects.filter(user=user)
-        # 获取用户的关注
-        # followings = user.following.all()
-        # 获取用户的粉丝
-        # followers = user.follower.all()
-        # 获取用户的点赞
-        # likes = user.like.all()
-        # 获取用户的评论
-        # comments = user.comment.all()
-        # 获取用户的收藏
-        # collections = user.collection.all()
-        # 返回响应
-        return render(request, 'userapp/profile.html', {'user': user})
+            # 判断是否登录
+            if request.user.is_authenticated:
+                # return render(request, 'aa404.html', {'msg': '用户不存在!..', 'user': request.user})
+                raise Http404('用户不存在!')
+            # return render(request, 'aa404.html', {'msg': '用户不存在!..'})
+            raise Http404('用户不存在!')
+        # 判断是否是自己
+        if request.user.is_authenticated and request.user == user:
+            return render(request, 'userapp/profile.html', {'user': user, 'is_self': True})
+        return render(request, 'userapp/profile.html', {'user': user, 'is_self': False})
 
-class CheckLogin(APIView):
+class Follow(View):
     def get(self, request):
-        if request.user.is_authenticated:
-            return JsonResponse({'code': 200, 'msg': '已登录'})
-        return JsonResponse({'code': 400, 'msg': '未登录'})
-
+        target = request.GET.get('target')
+        # 判断用户是否存在
+        user = MyUser.objects.filter(username=target).first()
+        # if访问的用户不存在
+        if not user:
+            # return render(request, 'aa404.html', {'msg': '用户不存在!..'})
+            raise Http404('用户不存在!')
+        # 判断是否登录
+        if not request.user.is_authenticated:
+            return render(request, 'userapp/login_test.html', {'msg': '请先登录'})
+        # 判断是否是自己
+        if request.user == user:
+            return render(request, 'userapp/profile.html', {'user': user, 'is_self': True})
+        # 判断是否已关注
+        if request.user.following.filter(id=user.id).exists():
+            # 取消关注
+            request.user.following.remove(user)
+            return render(request, 'userapp/profile.html', {'user': user, 'is_self': False})
+        # 关注
+        request.user.following.add(user)
+        return render(request, 'userapp/profile.html', {'user': user, 'is_self': False})
+    def post(self, request):
+        target = request.POST.get('target')
+        # 判断用户是否存在
+        user = MyUser.objects.filter(username=target).first()
+        # if访问的用户不存在
+        if not user:
+            # return render(request, 'aa404.html', {'msg': '用户不存在!..'})
+            raise Http404('用户不存在!')
+        # 判断是否登录
+        if not request.user.is_authenticated:
+            return render(request, 'userapp/login_test.html', {'msg': '请先登录'})
+        # 判断是否是自己
+        if request.user == user:
+            return render(request, 'userapp/profile.html', {'user': user, 'is_self': True})
+        # 判断是否已关注
+        if request.user.following.filter(id=user.id).exists():
+            # 取消关注
+            request.user.following.remove(user)
+            return render(request, 'userapp/profile.html', {'user': user, 'is_self': False})
+        # 关注
+        request.user.following.add(user)
+        return render(request, 'userapp/profile.html', {'user': user, 'is_self': False})
+    
 # class RegisterOld(View):
 #     def get(self, request):
 #         return render(request, 'login/reg.html')

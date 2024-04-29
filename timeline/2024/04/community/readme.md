@@ -1,3 +1,87 @@
+
+# git
+
+## muti user develop
+
+
+以github为例
+
+创建仓库后会看到:
+
+点击ssh, 因为https貌似被禁用了
+
+![20240429123755](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429123755.png)
+
+### …or create a new repository on the command line
+
+### …or push an existing repository from the command line
+由于我们本地已有一个仓库，所以我们需要将远程仓库和本地仓库关联起来
+
+```sh
+# 关联远程仓库
+# https: (貌似被禁用)
+# git remote add origin https://github.com/Nahida-aa/team.git
+# ssh: (推荐)
+# git remote add origin git@github.com:Nahida-aa/team.git
+git remote add github git@github.com:Nahida-aa/team.git
+# if 之前写错了 可以用这个命令修改
+git remote set-url github git@github.com:Nahida-aa/team.git
+# 检测 proj_root/.git/config 文件
+cat .git/config  
+
+# 重命名 master 分支为 main (github 默认分支名)
+git branch -M main
+
+# create ssh key 用于认证
+cd ~/.ssh
+# 检查是否已存在 ssh key
+ls -a -l 
+# 生成 ssh key
+ssh-keygen -t rsa [-C "注释"] [-f ~/.ssh/id_rsa_github] [-b 4096]
+# 默认分别是:   "", ~/.ssh/id_rsa, 2048
+```
+`-C` 选项用于添加一个注释到生成的 SSH 密钥中。这个注释可以是任何字符串，但通常我们会使用电子邮件地址
+
+当你有多个 SSH 密钥时，你可以通过查看注释来快速识别每个密钥。这在管理多个 SSH 密钥，或者在多个设备或服务之间共享 SSH 密钥时非常有用。
+
+如果你不添加 `-C "注释"`，`ssh-keygen` 仍然会生成一个 SSH 密钥，但这个密钥不会有注释。这意味着，如果你有多个 SSH 密钥，你可能会发现很难记住每个密钥是用于什么的。
+
+![20240429125627](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429125627.png)
+
+默认生成的文件为~/.ssh/id_rsa 和 ~/.ssh/id_rsa.pub     
+
+如果以前创建过，会覆盖，那么就需要自己提供其他的名字
+![20240429130323](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429130323.png)
+
+```sh
+# 检验是否生成成功
+ls -ltra
+# 查看公钥
+vim ~/.ssh/id_rsa.pub
+# 复制公钥
+```
+
+![20240429131746](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429131746.png)
+
+if刚刚指定了文件名，那么就要 >> ~/.ssh/config
+
+```sh
+# 将 #github ...追加到 ~/.ssh/config
+echo "# github
+Host github.com
+  HostName github.com
+  preferredauthentications publickey
+  IdentityFile ~/.ssh/<filename>" >> ~/.ssh/config
+
+# 检查最后5行
+tail -5 ~/.ssh/config
+```
+
+```sh
+# 将本地仓库推送到远程仓库
+git push -u github main
+```
+
 # 04/25
 
 ```sh

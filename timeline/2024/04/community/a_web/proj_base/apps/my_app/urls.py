@@ -3,7 +3,7 @@ from .views import *
 
 urlpatterns = [
     path("", index, name="index"),
-    path("index_test/", IndexTest.as_view(), name="index_test"),
+    path("index/", IndexTest.as_view(), name="index_test"),
     # path("about/", about, name="about"),
     # path("contact/", contact, name="contact"),
     # path("list/", article_list, name="list"),
@@ -15,5 +15,5 @@ urlpatterns = [
     path('zan/', zan, name='zan'),
     path('detail_comment/', detail_comment, name='detail_comment'),
     path('commentbox/', commentbox, name='commentbox'),
-    re_path(r'^(?P<name_en>[^/]+)/$', detail, name='detail'),
+    # re_path(r'^(?P<name_en>[^/]+)/$', detail, name='detail'),
 ]

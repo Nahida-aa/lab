@@ -27,7 +27,6 @@ from rest_framework_simplejwt.views import (
 from userapp.views import (
     # LoginAPI, 
     Register, 
-    RegisterTest,
     RegisterMg
 )
 
@@ -37,6 +36,7 @@ urlpatterns = [
     
     path('', include(('verifycode.urls', 'verifycode'), namespace='verifycode')),
     path('docs/', include_docs_urls(title='My API Docs', description='API接口文档')),
+    path('docs', include_docs_urls(title='My API Docs', description='API接口文档')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # 生成token(用户名+密码登录)
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),# 刷新token
     path("", include("my_app.urls")),

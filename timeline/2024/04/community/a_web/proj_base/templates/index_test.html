@@ -11,16 +11,16 @@
 			{% if user.is_authenticated %}
 				欢迎您！{{ user.username }}
 				<li>
-					<a href="/logout_test/">Logout</a>
-					<a href="/profile_test/">Profile</a>
+					<a href="/logout/">Logout</a>
+					<a href="/{{user.username}}">profile</a>
 				</li>
 			{% else %}
 				<li>
-					<a href="/login_test/">Login</a>
-					<a href="/register_test/">Register</a>
+					<a href="/login/">Login</a>
+					<a href="/register/">Register</a>
 				</li>
 			{% endif %}
-			<li><a href="/index_test/">Index</a></li>
+			<li><a href="/">Index</a></li>
 		</ul>
 	</div>
 </body>
