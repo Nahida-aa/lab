@@ -82,6 +82,81 @@ tail -5 ~/.ssh/config
 git push -u github main
 ```
 
+#### windows(其他开发者)
+
+```sh
+cd /c/Users/aa/.ssh
+ls -al
+# ssh-keygen -t rsa [-C "注释"] [-f ~/.ssh/id_rsa_github] [-b 4096]
+ssh-keygen -t rsa -C "win_github" -f ~/.ssh/id_rsa_github -b 4096
+# 查看公钥
+vim ~/.ssh/id_rsa_github.pub
+# 去配置公钥(告诉我，我给你配到项目)
+
+echo "# github
+Host github.com
+  HostName github.com
+  preferredauthentications publickey
+  IdentityFile ~/.ssh/id_rsa_github" >> ~/.ssh/config
+
+cd /d/a_note/web/Django_l/projects
+mkdir team
+cd team
+git init
+git branch -M main
+
+git remote add github git@github.com:Nahida-aa/team.git
+git pull github main
+# create branch waa 不切换
+git branch waa
+# 切换到 waa
+git checkout waagit 
+# 创建并切换到 dev 分支
+git checkout -b dev
+```
+
+### 工作流
+
+#### caa init:
+
+```sh
+# 切换到 dev 分支
+git checkout dev
+# 从远程仓库的dev拉取最新代码 到 本地dev 分支
+git pull
+# 自己的分支
+git checkout caa
+# 将 dev 分支合并到 caa 分支
+git merge dev
+# 现在本地的caa分支是dev分支的最新代码了
+```
+
+#### caa coding
+
+```sh
+# 写完了准备下班
+# 这一步是保证自己在caa分支
+git checkout caa
+# 暂存更改(将更改add到暂存区)
+git add ./
+# 提交到本地仓库
+git commit -m 'caa合并冲突test'
+# 从远程仓库的同名分(caa)支拉取最新代码 到 本地caa 分支
+# 保证自己的分支是最新的，就是自己可能通过其他方式提交了代码到caa分支
+git pull 
+# 将本地caa分支推送到远程caa分支
+git push
+
+# 切换到dev分支
+git checkout dev
+# 将caa分支合并到dev分支
+git merge aa
+# 确保本地dev分支是相对于远程dev最新的(可能有其他人提交了代码到远程dev分支)
+git pull
+# 将本地dev分支推送到远程dev分支
+git push
+```
+
 # 04/25
 
 ```sh
