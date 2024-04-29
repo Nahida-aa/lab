@@ -117,7 +117,7 @@ git checkout -b dev
 
 ### 工作流
 
-caa init
+#### caa init:
 
 ```sh
 # 切换到 dev 分支
@@ -128,6 +128,33 @@ git pull
 git checkout caa
 # 将 dev 分支合并到 caa 分支
 git merge dev
+# 现在本地的caa分支是dev分支的最新代码了
+```
+
+#### caa coding
+
+```sh
+# 写完了准备下班
+# 这一步是保证自己在caa分支
+git checkout caa
+# 暂存更改(将更改add到暂存区)
+git add ./
+# 提交到本地仓库
+git commit -m 'caa合并冲突test'
+# 从远程仓库的同名分(caa)支拉取最新代码 到 本地caa 分支
+# 保证自己的分支是最新的，就是自己可能通过其他方式提交了代码到caa分支
+git pull 
+# 将本地caa分支推送到远程caa分支
+git push
+
+# 切换到dev分支
+git checkout dev
+# 将caa分支合并到dev分支
+git merge aa
+# 确保本地dev分支是相对于远程dev最新的(可能有其他人提交了代码到远程dev分支)
+git pull
+# 将本地dev分支推送到远程dev分支
+git push
 ```
 
 # 04/25
