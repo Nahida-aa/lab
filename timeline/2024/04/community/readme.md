@@ -150,7 +150,7 @@ git push
 # 切换到dev分支
 git checkout dev
 # 将caa分支合并到dev分支
-git merge aa
+git merge caa
 # 确保本地dev分支是相对于远程dev最新的(可能有其他人提交了代码到远程dev分支)
 git pull
 # 将本地dev分支推送到远程dev分支
