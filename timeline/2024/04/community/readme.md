@@ -115,6 +115,21 @@ git checkout waagit
 git checkout -b dev
 ```
 
+### 工作流
+
+caa init
+
+```sh
+# 切换到 dev 分支
+git checkout dev
+# 从远程仓库的dev拉取最新代码 到 本地dev 分支
+git pull
+# 自己的分支
+git checkout caa
+# 将 dev 分支合并到 caa 分支
+git merge dev
+```
+
 # 04/25
 
 ```sh
