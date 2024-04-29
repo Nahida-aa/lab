@@ -157,6 +157,30 @@ git pull
 git push
 ```
 
+#### waa init:
+
+```sh
+git checkout dev
+git pull
+git checkout waa
+git merge dev
+```
+
+#### waa coded
+
+```sh
+git checkout waa
+git add ./
+git commit -m 'waa合并冲突test'
+git pull
+git push
+
+git checkout dev
+git merge waa
+git pull
+git push
+```
+
 # 04/25
 
 ```sh
