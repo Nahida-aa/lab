@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'userapp',
     'verifycode', # 验证码
     'haystack', 
+    'oauth', # 第三方登录
 ]
 
 MIDDLEWARE = [

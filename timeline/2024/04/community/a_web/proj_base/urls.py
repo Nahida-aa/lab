@@ -15,7 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic.base import RedirectView
 # from django.conf import settings
 # from django.conf.urls.static import static
 
@@ -36,11 +37,13 @@ urlpatterns = [
     
     path('', include(('verifycode.urls', 'verifycode'), namespace='verifycode')),
     path('docs/', include_docs_urls(title='My API Docs', description='API接口文档')),
-    path('docs', include_docs_urls(title='My API Docs', description='API接口文档')),
+    path('docs', RedirectView.as_view(url='/docs/')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # 生成token(用户名+密码登录)
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),# 刷新token
     path("", include("my_app.urls")),
     path('', include(('userapp.urls', 'userapp'), namespace='userapp')),
+    # oauth
+    path('oauth/', include('oauth.urls')),
 ]
 
 # urlpatterns += [
