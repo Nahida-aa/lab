@@ -11,8 +11,27 @@ let vue = new Vue({
         // v-show
         show_identifier_error: false,
         show_pwd_error: false,
+        // qq
+        qq_login_url: '',
+        // github
+        github_login_url: ''
     },
+    created() {
+        this.get_github_login_url();
+      },
     methods: {
+        Github_login() {
+            window.location.href = this.github_login_url;
+        },
+        get_github_login_url() {
+            axios.get('/oauth/github/login_url/')
+                .then(response => {
+                    this.github_login_url = response.data.github_login_url;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         login: function () {
             if (!this.identifier) {
                 this.show_identifier_error = true;

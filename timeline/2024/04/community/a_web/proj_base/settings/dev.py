@@ -120,6 +120,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'blog11', # 数据库名
         'USER': 'root',
+        # Secret key
         'PASSWORD': 'root',
         'HOST': os.getenv('WINDOWS_IP', 'localhost'),
         # 'HOST': 'localhost',
@@ -420,6 +421,7 @@ LOGGING = {
 
 # 互亿无线 短信平台
 APIID = 'C18364283'
+# Secret key
 APIKEY = '4fd3425525bed15cd44c3674320671db'
 
 # from django.conf import settings, global_settings
@@ -429,3 +431,14 @@ AUTHENTICATION_BACKENDS = ['userapp.auth.MutiIdentityLoginAuth']
 
 # 指定登录首页请求地址
 LOGIN_URL = '/login/'
+
+
+QQ_CLIENT = '101935883'
+# Secret key (not)
+QQ_CLIENT_SECRET = ''
+QQ_REDIRECT_URI = 'http://'
+
+GITHUB_CLIENT_ID = '3c9caf64a7be625bc322'
+# Secret key
+GITHUB_CLIENT_SECRET = 'b992cfe346e5686d23840eca28957bf062b4dcdb'
+GITHUB_REDIRECT_URI = 'http://127.0.0.1:8000/'
