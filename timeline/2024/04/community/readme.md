@@ -3,7 +3,6 @@
 
 ## muti user develop
 
-
 以github为例
 
 创建仓库后会看到:
