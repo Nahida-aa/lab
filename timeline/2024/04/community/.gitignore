@@ -145,3 +145,5 @@ cython_debug/
 
 # me
 zreadme/
+# django settings/dev.py
+dev.py
