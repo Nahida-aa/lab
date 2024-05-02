@@ -51,6 +51,7 @@ class MyUser(AbstractUser):
         related_query_name="user",
     )
     birthday = models.DateField(null=True, blank=True)
+    oauth_github_id = models.CharField(max_length=255, unique=True, null=True)
     class Meta(AbstractUser.Meta):
         db_table = 'my_user'
         # verbose_name = _("user")

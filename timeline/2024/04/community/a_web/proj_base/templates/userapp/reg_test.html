@@ -11,16 +11,16 @@
 			{% if user.is_authenticated %}
 				欢迎您！{{ user.username }}
 				<li>
-					<a href="/logout_test/">Logout</a>
-					<a href="/profile_test/">Profile</a>
+					<a href="/logout/">Logout</a>
+					<a href="/{{user.username}}">profile</a>
 				</li>
 			{% else %}
 				<li>
-					<a href="/login_test/">Login</a>
-					<a href="/register_test/">Register</a>
+					<a href="/login/">Login</a>
+					<a href="/register/">Register</a>
 				</li>
 			{% endif %}
-			<li><a href="/index_test/">Index</a></li>
+			<li><a href="/index/">Index</a></li>
 		</ul>
 	</div>
 	<h5>
@@ -30,7 +30,7 @@
 	</h5>
 	<!-- register -->
 	<div  id="register" v-cloak>
-		<form @submit="reg_sub" method="post" action="/register_test/">
+		<form @submit="reg_sub" method="post" action="/register/">
 			<!-- @submit.prevent="reg_sub"  
 			prevent the default action of the form, which is to reload the page
 			翻译：阻止表单的默认行为，即重新加载页面

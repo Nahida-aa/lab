@@ -1,5 +1,7 @@
 from django.db import models
 from proj_base.utils.basemodels import BaseModel
+from userapp.models import MyUser
+
 
 class OAuthQQUser(BaseModel):
     """QQ登录⽤户数据"""
@@ -12,3 +14,13 @@ class OAuthQQUser(BaseModel):
         db_table = 'oauth_qq'
         verbose_name = 'QQ登录⽤户数据'
         verbose_name_plural = verbose_name
+        
+
+class GithubAuth(models.Model):
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
+    github_username = models.CharField(max_length=150)
+    oauth_github_id = models.CharField(max_length=150)
+    github_url = models.URLField()
+
+    class Meta:
+        db_table = 'oauth_github'

@@ -25,11 +25,6 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from userapp.views import (
-    # LoginAPI, 
-    Register, 
-    RegisterMg
-)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -40,10 +35,14 @@ urlpatterns = [
     path('docs', RedirectView.as_view(url='/docs/')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # 生成token(用户名+密码登录)
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),# 刷新token
-    path("", include("my_app.urls")),
-    path('', include(('userapp.urls', 'userapp'), namespace='userapp')),
     # oauth
     path('oauth/', include('oauth.urls')),
+    # get code http://127.0.0.1:8000/reg_/profile/?code=ef8ef327eac2af20d392
+    # path('settings/profile', include('settings.urls')),
+    
+    path("", include("my_app.urls")),
+    path('', include(('userapp.urls', 'userapp'), namespace='userapp')),
+
 ]
 
 # urlpatterns += [

@@ -19,9 +19,24 @@ let vue = new Vue({
     created() {
         this.get_github_login_url();
       },
+    mounted() {
+        this.get_qq_login_url();
+    },
     methods: {
+        get_qq_login_url() {
+            axios.get('/oauth/qq/login_url/')
+                .then(response => {
+                    this.qq_login_url = response.data.qq_login_url;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
         Github_login() {
-            window.location.href = this.github_login_url;
+            // 
+            // window.location.href = this.github_login_url;
+            // 另外打开一个窗口
+            window.open(this.github_login_url, 'github_login', 'width=600,height=400');
         },
         get_github_login_url() {
             axios.get('/oauth/github/login_url/')
