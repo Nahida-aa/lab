@@ -35,9 +35,10 @@ git branch -M main
 # create ssh key 用于认证
 cd ~/.ssh
 # 检查是否已存在 ssh key
-ls -a -l 
+ls -ltra
 # 生成 ssh key
 ssh-keygen -t rsa [-C "注释"] [-f ~/.ssh/id_rsa_github] [-b 4096]
+ssh-keygen -t rsa -C "github" -f ~/.ssh/id_rsa_github -b 4096
 # 默认分别是:   "", ~/.ssh/id_rsa, 2048
 ```
 `-C` 选项用于添加一个注释到生成的 SSH 密钥中。这个注释可以是任何字符串，但通常我们会使用电子邮件地址
@@ -57,7 +58,7 @@ ssh-keygen -t rsa [-C "注释"] [-f ~/.ssh/id_rsa_github] [-b 4096]
 # 检验是否生成成功
 ls -ltra
 # 查看公钥
-vim ~/.ssh/id_rsa.pub
+vim ~/.ssh/id_rsa_github.pub
 # 复制公钥
 ```
 
