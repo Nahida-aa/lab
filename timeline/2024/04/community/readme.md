@@ -274,6 +274,7 @@ mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+# zsh ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 
 rm -rf ~/miniconda3/miniconda.sh
 ```
@@ -333,6 +334,12 @@ pip install django==4.2.0
 
 # WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
 # 翻译: 以 'root' 用户身份运行 pip 可能会导致权限损坏和与系统包管理器冲突的行为。建议使用虚拟环境: https://pip.pypa.io/warnings/venv
+
+sudo apt-get update
+sudo apt-get install pkg-config libmysqlclient-dev
+sudo apt-get install build-essential
+pip freeze > requirements.txt
+pip install -r requirements.txt
 ```
 
 ## wsl user
