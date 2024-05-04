@@ -366,7 +366,7 @@ docker rm tracker
 docker run -dit --name tracker --network=my_network --ip=192.168.0.2 -v /var/fdfs/tracker:/var/fdfs delron/fastdfs tracker
 docker ps -a
 
-docker run -dti --name storage --network=host -e TRACKER_SERVER=192.168.21.141:22122 -v /var/fdfs/storage:/var/fdfs delron/fastdfs storage
+docker run -dti --name storage --network=host -e TRACKER_SERVER=192.168.0.2:22122 -v /var/fdfs/storage:/var/fdfs delron/fastdfs storage
 ```
 
 ```sh
