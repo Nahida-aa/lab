@@ -21,4 +21,7 @@ WORKDIR /app
 COPY . /app
 
 # 安装requirements.txt中指定的Python包
-# RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt
+
+# 运行bash
+CMD ["/bin/bash"]

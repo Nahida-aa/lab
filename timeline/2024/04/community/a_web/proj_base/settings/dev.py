@@ -82,7 +82,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # 因Jinja2不能直接使用context_processors中的内容
             ],
             # 补充Jinja2模板引擎的环境变量
             "environment": "proj_base.utils.jinja2_env.environment",
@@ -120,13 +119,15 @@ WSGI_APPLICATION = "proj_base.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blog11', # 数据库名
+        'NAME': 'web', # 数据库名
         'USER': 'root',
         # Secret key
         'PASSWORD': 'root',
-        'HOST': os.getenv('WINDOWS_IP', 'localhost'),
-        # 'HOST': 'localhost',
+        # 'HOST': os.getenv('WINDOWS_IP', 'localhost'),
+        # "HOST": "ho"
+        'HOST': '127.0.0.1',
         # 'HOST': 'host.docker.internal', # docker中访问宿主机
+        # 'HOST': '192.168.0.4', # mysql容器的IP地址
         'PORT': '3306',
         'CONN_MAX_AGE': 600,  # 10 minutes
     }

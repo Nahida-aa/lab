@@ -352,6 +352,8 @@ mv docker-compose.yml docker/
 mv .dockerignore docker/
 
 docker build -t community_image -f docker/Dockerfile .
+docker run -dit --network=my_network --ip=192.168.0.8 -p 8000:8000 -v /home/aa/projects/community:/app --name community_container community_image
+docker exec -it community_container /bin/bash
 ```
 
 ```sh
@@ -359,14 +361,22 @@ docker pull delron/fastdfs
 docker images
 
 # 开启 tracker 和 storage
+# 创建文件夹
 sudo mkdir -p /var/fdfs/tracker
 sudo mkdir -p /var/fdfs/storage
+# 创建网络
+docker network ls
+docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 my_network
+docker network inspect my_network
+docker network rm my_network
+
 docker stop tracker
 docker rm tracker
-docker run -dit --name tracker --network=my_network --ip=192.168.0.2 -v /var/fdfs/tracker:/var/fdfs delron/fastdfs tracker
-docker ps -a
+docker run -dit --name tracker --network=my_network --ip=192.168.0.2 -v /var/fdfs/tracker:/var/fdfs -p 22122:22122 delron/fastdfs tracker
 
-docker run -dti --name storage --network=host -e TRACKER_SERVER=192.168.0.2:22122 -v /var/fdfs/storage:/var/fdfs delron/fastdfs storage
+docker run -dti --name storage --network=my_network --ip=192.168.0.3 -e TRACKER_SERVER=192.168.0.2:22122 -v /var/fdfs/storage:/var/fdfs delron/fastdfs storage
+
+docker ps -a
 ```
 
 ```sh
@@ -375,4 +385,33 @@ pip install py3Fdfs
 pip install mutagen
 mkdir -p ./a_web/proj_base/utils/fastdfs
 touch ./a_web/proj_base/utils/fastdfs/client.conf
+```
+
+```sh
+cd
+docker build -t mysql_image -f Dockerfile.oracle .
+# docker run -dit --name mysql -e MYSQL_ROOT_PASSWORD=root --network=my_network --ip=192.168.0.4 -p 3306:3306 -v /mnt/d/mysql_data:/var/lib/mysql mysql:8.0.37-debian /bin/bash
+docker run -dit --name mysql -e MYSQL_ROOT_PASSWORD=root --network=my_network --ip=192.168.0.4 -p 3306:3306 -p 33060:33060 -v /var/lib/mysql:/var/lib/mysql  mysql_image
+docker run -dit --name mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -p 33060:33060 -v /var/lib/mysql:/var/lib/mysql  mysql_image
+
+docker exec -it mysql mysql -uroot -p
+
+# or
+docker exec -it mysql /bin/bash
+# +
+mysql -uroot -p
+
+CREATE DATABASE web CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+```
+
+```sh
+docker network connect host mysql
+docker network connect host tracker
+docker network connect host storage
+```
+
+```sh
+mv /mnt/c/Users/aa/Desktop/community/a_web/proj_base/static/images /home/aa//projects/community/a_web/proj_base/static/
+
+mv /mnt/c/Users/aa/Desktop/community/a_web/proj_base/static/images /home/aa//projects/community/a_web/proj_base/static/
 ```
