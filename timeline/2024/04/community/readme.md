@@ -343,9 +343,36 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-## wsl user
+## docker
 
 ```sh
-adduser aa
-su aa
+mkdir docker
+mv Dockerfile docker/
+mv docker-compose.yml docker/
+mv .dockerignore docker/
+
+docker build -t community_image -f docker/Dockerfile .
+```
+
+```sh
+docker pull delron/fastdfs
+docker images
+
+# 开启 tracker 和 storage
+sudo mkdir -p /var/fdfs/tracker
+sudo mkdir -p /var/fdfs/storage
+docker stop tracker
+docker rm tracker
+docker run -dit --name tracker --network=my_network --ip=192.168.0.2 -v /var/fdfs/tracker:/var/fdfs delron/fastdfs tracker
+docker ps -a
+
+docker run -dti --name storage --network=host -e TRACKER_SERVER=192.168.21.141:22122 -v /var/fdfs/storage:/var/fdfs delron/fastdfs storage
+```
+
+```sh
+# fastdfs client expend
+pip install py3Fdfs
+pip install mutagen
+mkdir -p ./a_web/proj_base/utils/fastdfs
+touch ./a_web/proj_base/utils/fastdfs/client.conf
 ```

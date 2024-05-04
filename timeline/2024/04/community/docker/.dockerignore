@@ -1,0 +1,4 @@
+LICENSE
+a_web/proj_base/db.sqlite3
+a_web/proj_base/erlang-26.2.4-1.el9.x86_64.rpm
+a_web/proj_base/rabbitmq-server-3.13.1-1.el8.noarch.rpm
