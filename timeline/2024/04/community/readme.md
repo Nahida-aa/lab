@@ -413,5 +413,5 @@ docker network connect host storage
 ```sh
 mv /mnt/c/Users/aa/Desktop/community/a_web/proj_base/static/images /home/aa//projects/community/a_web/proj_base/static/
 
-mv /mnt/c/Users/aa/Desktop/community/a_web/proj_base/static/images /home/aa//projects/community/a_web/proj_base/static/
+mv /home/aa//projects/community /mnt/c/Users/aa/Desktop/
 ```
