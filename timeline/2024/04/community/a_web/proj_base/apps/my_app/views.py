@@ -448,11 +448,11 @@ def index(request):
         'article_all': article_all,
         }
     # return render(request, 'index.html', context=context)
-    return render(request, 'index_test.html', context=context)
+    return render(request, 'index.html', context=context)
 
 class IndexTest(ListView):
     model = Article
-    template_name = 'index_test.html'
+    template_name = 'index.html'
     
     # def get_queryset(self):
     #     return Article.objects.all()
