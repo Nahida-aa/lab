@@ -201,11 +201,11 @@ html.themecolor-toodark.darkmode {
 	--themecolor-light: #8a98eb !important;
 }
 
-body {
+/* body {
 	background: var(--color-background) !important;
 	font-family: var(--font);
 	overflow: overlay;
-}
+} */
 a {
 	transition: color 0.25s ease;
 }
