@@ -147,3 +147,5 @@ cython_debug/
 zreadme/
 # django settings/dev.py
 # a_web/proj_base/settings/dev.py
+
+data/

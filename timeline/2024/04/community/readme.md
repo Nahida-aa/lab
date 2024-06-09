@@ -343,6 +343,20 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
+## [environment(docker)](docker/readme.md)
+
+```sh
+conda create -n web_310 python=3.10
+conda activate web_310
+pip install -r requirements.txt
+```
+
+### run
+
+```shell
+python ./a_web/manage.py runserver
+```
+
 ## docker
 
 ```sh
