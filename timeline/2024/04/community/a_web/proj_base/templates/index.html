@@ -2,13 +2,37 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aidea</title>
 
+<link rel="stylesheet" href="/static/css/base.css">
+<!-- bootstrap -->
+<link href="/static/css/bootstrap.min.css" rel="stylesheet"crossorigin="anonymous">
+<link href="/static/css/bs5_patch.css" rel="stylesheet"crossorigin="anonymous">
+<script src="/static/js/bootstrap.bundle.min.js" integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="/static/css/base.css">
-    <script type="text/javascript" src="/static/js/base.js"></script>
+<script type="text/javascript" src="/static/js/base.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_oddbird_popover-polyfill_dist_popover_js-4ac41d0a76fd.js"></script>
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="/static/js/todo.js"></script>
+<!-- left menu and user menu and create_new -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_primer_behaviors_dist_esm_focus-zone_js-f669b9466f06.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_github_relative-time-element_dist_index_js-5c00adf875b8.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_github_combobox-nav_dist_index_js-node_modules_github_markdown-toolbar-e-820fc0-1176135e4d90.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_github_auto-complete-element_dist_index_js-node_modules_github_catalyst_-392fe4-5df1d85d02da.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_github_text-expander-element_dist_index_js-b2135edb5ced.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_github_filter-input-element_dist_index_js-node_modules_github_remote-inp-b7d8f4-6e6f83bcc978.js"></script>
+<!-- left menu and user menu -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/vendors-node_modules_github_file-attachment-element_dist_index_js-node_modules_primer_view-co-3959a9-78d79e74e4ca.js"></script>
+<!-- search and create new -->
+<script crossorigin="anonymous" defer="defer" type="application/javascript" src="https://github.githubassets.com/assets/element-registry-64b89985b4e2.js"></script>
+
 </head>
 
 
@@ -22,103 +46,681 @@
         </div>
     </div> 
     -->
-    <div id="toolbar">
-        <!-- 上方的通用导航 -->
-        <header class="header-global">
-            <!-- 上方的导航 -->
-            <nav id="navbar-main"
-                class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light bg-primary headroom--not-bottom headroom--not-top headroom--pinned">
-                <div class="container">
-                    <!-- 左上角按钮 -->
-                    <button id="open_sidebar" class="navbar-toggler" type="button" aria-expanded="false"
-                        aria-label="Toggle sidebar">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <!-- 主页 -->
-                    <div class="navbar-brand mr-0">
-                        <a class="navbar-brand navbar-title" href="https://www.ghostchu.com">Nahida-aa&#039;s Blog</a>
-                    </div>
-                    <!-- 主页右侧按钮们 -->
-                    <div class="navbar-collapse collapse" id="navbar_global">
-                        <!-- 缩小后的搜索框 -->
-                        <div class="navbar-collapse-header">
-                            <!-- 不知道干嘛的 -->
-                            <div class="row" style="display: none;">
-                                <div class="col-6 collapse-brand"></div>
-                                <div class="col-6 collapse-close">
-                                    <button type="button" class="navbar-toggler" data-toggle="collapse"
-                                        data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false"
-                                        aria-label="Toggle navigation">
-                                        <span></span>
-                                        <span></span>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- 主体 -->
-                            <div class="input-group input-group-alternative">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                                </div>
-                                <input id="navbar_search_input_mobile" class="form-control" placeholder="搜索什么..."
-                                    type="text" autocomplete="off">
-                            </div>
-                        </div>
-                        <!-- 留言板、朋友们、时间线、关于我 -->
-                        <ul class='navbar-nav navbar-nav-hover align-items-lg-center'>
+<div class="position-relative js-header-wrapper ">
+    <!-- 上方的通用导航 -->
+  <header class="AppHeader" role="banner">
+    <!-- sr-only通常在Bootstrap等框架中使用，用于创建只有屏幕阅读器可以读取的内容 -->
+    <h2 class="sr-only">Navigation Menu</h2>
+  
+    <div class="AppHeader-globalBar  js-global-bar">
 
-                            <li class='nav-item'>
-                                <a href='https://www.ghostchu.com/commentbox/' class='nav-link' target='' title=''>
-                                    <i class='ni ni-book-bookmark d-lg-none'></i>
-                                    <span class='nav-link-inner--text'><i class="fa fa-hashtag"></i> 留言板</span>
-                                </a>
-                            </li>
+      <div class="AppHeader-globalBar-left">
+        <!-- 00 用于获取url -->
+        <deferred-side-panel data-url="/_side-panels/global">
+          <!-- 用于获取内容 -->
+          <include-fragment data-target="deferred-side-panel.fragment">
 
-                            <li class='nav-item'>
-                                <a href='https://www.ghostchu.com/friends/' class='nav-link' target='' title=''>
-                                    <i class='ni ni-book-bookmark d-lg-none'></i>
-                                    <span class='nav-link-inner--text'><i class="fa fa-link"></i> 朋友们</span>
-                                </a>
-                            </li>
+            <!-- 用于展开侧边的按钮 -->
+            <button aria-label="Open global navigation menu" 
+              data-action="click:deferred-side-panel#loadPanel click:deferred-side-panel#panelOpened" 
+              data-show-dialog-id="dialog-854e814f-42d7-4618-ab56-eeec353dcea9" id="dialog-show-dialog-854e814f-42d7-4618-ab56-eeec353dcea9" 
+              type="button" data-view-component="true" class="Button Button--iconOnly Button--secondary Button--medium AppHeader-button color-bg-transparent p-0 color-fg-muted">  
+              <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-three-bars Button-visual">
+                <path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75ZM1.75 12h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Z"></path>
+              </svg>
+            </button>
 
-                            <li class='nav-item'>
-                                <a href='https://www.ghostchu.com/timeline/' class='nav-link' target='' title=''>
-                                    <i class='ni ni-book-bookmark d-lg-none'></i>
-                                    <span class='nav-link-inner--text'><i class="fa fa-clock-o"></i>时间线</span>
-                                </a>
-                            </li>
+            <!-- 展开的内容 -->
+            <dialog-helper>
+              <dialog data-target="deferred-side-panel.panel" id="dialog-854e814f-42d7-4618-ab56-eeec353dcea9" aria-modal="true" aria-labelledby="dialog-854e814f-42d7-4618-ab56-eeec353dcea9-title" aria-describedby="dialog-854e814f-42d7-4618-ab56-eeec353dcea9-description" data-view-component="true" class="Overlay Overlay-whenNarrow Overlay--size-small-portrait Overlay--motion-scaleFade Overlay--placement-left SidePanel">
+                <!-- upper logo close -->
+                <header></header>
+                <!-- main 可滚动时，显示滑条 -->
+                <scrollable-region data-labelled-by="dialog-854e814f-42d7-4618-ab56-eeec353dcea9-title">
+                </scrollable-region>
+              </dialog>
+            </dialog-helper>
 
-                            <li class='nav-item'>
-                                <a href='https://www.ghostchu.com/about-me' class='nav-link' target='' title=''>
-                                    <i class='ni ni-book-bookmark d-lg-none'></i>
-                                    <span class='nav-link-inner--text'><i class="fa fa-github"></i> 关于我</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- 搜索 -->
-                        <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-                            <li id="navbar_search_container" class="nav-item" data-toggle="modal">
-                                <div id="navbar_search_input_container">
-                                    <div class="input-group input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-search"></i></span>
-                                        </div>
-                                        <input id="navbar_search_input" class="form-control" placeholder="搜索什么..."
-                                            type="text" autocomplete="off">
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- 菜单面具，点击搜索触发 -->
-                    <div id="navbar_menu_mask" data-toggle="collapse" data-target="#navbar_global"></div>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global"
-                        aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon navbar-toggler-searcg-icon"></span>
-                    </button>
-                </div>
+          </include-fragment>
+        </deferred-side-panel>
+        <!-- 01 logo 跳转 index a(tag) -->
+        <a aria-label="Homepage" class="AppHeader-logo ml-2" href="https://127.0.0.1/">
+          <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32" data-view-component="true" class="octicon octicon-mark-github v-align-middle color-fg-default">
+            <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+          </svg>
+        </a>
+        <!-- 02 path -->
+        <div class="AppHeader-context" >
+      
+          <div class="AppHeader-context-compact">
+            <a>
+              <strong>
+                <span>Dashboard</span>
+              </strong>
+            </a>
+          </div>
+
+          <div class="AppHeader-context-full">
+            <nav>
+              <ul>
+                <li>
+                  <span></span>
+                </li>
+              </ul>
             </nav>
-        </header>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="AppHeader-globalBar-center"></div> -->
+
+      <div class="AppHeader-globalBar-right">
+        <!-- 10 切换 search 引擎或者网站 打开输入框 cmd -->
+        <div class="AppHeader-search">
+          <search-input class="search-input" data-scope="" data-custom-scopes-path="/search/custom_scopes"
+            data-delete-custom-scopes-csrf="f5wx4QWOPQ5WHYHdAZr-A3pWIT-rTz1qNPfR0JyUWNx8scAAbxe1aDWZML0I6t6jOJw0PSAhSG5sx8LZWS11oQ"
+            data-max-custom-scopes="10" data-header-redesign-enabled="true" data-initial-value=""
+            data-blackbird-suggestions-path="/search/suggestions"
+            data-jump-to-suggestions-path="/_graphql/GetSuggestedNavigationDestinations" data-current-repository=""
+            data-current-org="" data-current-owner="" data-logged-in="true" data-copilot-chat-enabled="false"
+            data-blackbird-indexed-repo-csrf="<input type=&quot;hidden&quot; value=&quot;UEaVPXh6U0OIIWRsItRyCLfM_Fo966lp5TjPk5Mv0Yxv-NN5tW2UAhRsEBE0-y7QZy6QABKp9XmNadbM49lNOw&quot; data-csrf=&quot;true&quot; />"
+          >
+          </search-input>
+        </div>
+        <!-- 11 create new... -->
+        <div class="AppHeader-actions position-relative">
+          <!-- 用于展开create menu -->
+          <button id="global-create-menu-anchor" aria-label="Create something new" data-target="react-partial-anchor.anchor"
+            type="button" disabled="disabled" data-view-component="true"
+            class="AppHeader-button global-create-button cursor-wait Button--secondary Button--medium Button width-auto color-fg-muted">
+            <!-- 阻止默认效果(提交 form), 也会让按钮变为不可点击状态可用于动态阻止没有填写完整信息时的进行提交 -->
+            <span class="Button-content">
+              <!-- 加号 -->
+              <span class="Button-visual Button-leadingVisual">
+                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
+                  class="octicon octicon-plus">
+                  <path
+                    d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z">
+                  </path>
+                </svg>
+              </span>
+              <!-- 倒三角 -->
+              <span class="Button-label"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                data-view-component="true" class="octicon octicon-triangle-down">
+                <path
+                  d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z">
+                </path>
+              </svg></span>
+            </span>
+          </button>
+          <!-- 悬停提示 -->
+          <tool-tip id="tooltip-ca404b30-cac9-4f9c-8453-9bd414d5fddf" for="global-create-menu-anchor"
+            popover="manual" data-direction="s" data-type="description" data-view-component="true"
+            class="sr-only position-absolute">Create new...
+          </tool-tip>
+          <!-- 在加载页面时不会被渲染，在运行时使用js进行实例化 -->
+          <template data-target="react-partial-anchor.template">
+            <script crossorigin="anonymous" defer="defer" type="application/javascript"
+              src="https://github.githubassets.com/assets/vendors-node_modules_primer_react_lib-esm_ActionMenu_ActionMenu_js-node_modules_primer_react_-5b2420-830b07fb2c84.js"></script>
+            <!-- crossorigin="anonymous" : 不包含凭证(eg. cookies) -->
+          </template>
+        </div> 
+        <!-- 12 message -->
+        <message
+          data-channel="eyJjIjoibm90aWZpY2F0aW9uLWNoYW5nZWQ6OTYwODM5MjYiLCJ0IjoxNzE3OTczMDk1fQ==--8f754b0f63cd5c76ca0ca03688088f735f2a9686fc4157e6697d6b705ab85b88"
+          data-indicator-mode="none" data-tooltip-global="You have unread notifications"
+          data-tooltip-unavailable="Notifications are unavailable at the moment."
+          data-tooltip-none="You have no unread notifications" data-header-redesign-enabled="true"
+          data-fetch-indicator-src="/notifications/indicator" data-fetch-indicator-enabled="true" data-view-component="true"
+          class="js-socket-channel">
+          <a id="AppHeader-notifications-button" href="/messages" aria-labelledby="message-tooltip"
+            data-hotkey="g n" data-target="message.link"
+            data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;NOTIFICATIONS_HEADER&quot;,&quot;label&quot;:null}"
+            data-view-component="true"
+            class="Button Button--iconOnly Button--secondary Button--medium AppHeader-button  color-fg-muted"> <svg
+              aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
+              class="octicon octicon-inbox Button-visual">
+              <path
+                d="M2.8 2.06A1.75 1.75 0 0 1 4.41 1h7.18c.7 0 1.333.417 1.61 1.06l2.74 6.395c.04.093.06.194.06.295v4.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25v-4.5c0-.101.02-.202.06-.295Zm1.61.44a.25.25 0 0 0-.23.152L1.887 8H4.75a.75.75 0 0 1 .6.3L6.625 10h2.75l1.275-1.7a.75.75 0 0 1 .6-.3h2.863L11.82 2.652a.25.25 0 0 0-.23-.152Zm10.09 7h-2.875l-1.275 1.7a.75.75 0 0 1-.6.3h-3.5a.75.75 0 0 1-.6-.3L4.375 9.5H1.5v3.75c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25Z">
+              </path>
+            </svg>
+          </a>
+      
+          <tool-tip id="message-tooltip" data-target="message.tooltip"
+            for="AppHeader-notifications-button" popover="manual" data-direction="s" data-type="label"
+            data-view-component="true" class="sr-only position-absolute">Messages</tool-tip>
+        </message>
+        <!-- 13 user -->
+        <div class="AppHeader-user">
+          <deferred-side-panel data-url="/_side-panels/user?react_global_nav=false">
+            <include-fragment data-target="deferred-side-panel.fragment">
+              <user-drawer-side-panel>
+
+                <!-- Avatar -->
+                <button aria-label="Open user account menu"
+                  data-action="click:deferred-side-panel#loadPanel click:deferred-side-panel#panelOpened"
+                  data-show-dialog-id="dialog-834043ca-671c-4f75-ac45-707d649f4137"
+                  id="dialog-show-dialog-834043ca-671c-4f75-ac45-707d649f4137" type="button" 
+                  data-view-component="true"
+                  class="AppHeader-logo Button--invisible Button--medium Button Button--invisible-noVisuals color-bg-transparent p-0">
+                  <span class="Button-content">
+                    <span class="Button-label">
+                      <img src="https://avatars.githubusercontent.com/u/96083926?v=4" alt=""
+                        size="32" height="32" width="32" data-view-component="true" class="avatar circle" />
+                    </span>
+                  </span>
+                </button>
+
+                <!-- 展开的 dialog -->
+                <dialog-helper>
+                  <dialog data-target="deferred-side-panel.panel" id="dialog-834043ca-671c-4f75-ac45-707d649f4137"
+                    aria-modal="true" aria-labelledby="dialog-834043ca-671c-4f75-ac45-707d649f4137-title"
+                    aria-describedby="dialog-834043ca-671c-4f75-ac45-707d649f4137-description" data-view-component="true"
+                    class="Overlay Overlay-whenNarrow Overlay--size-small-portrait Overlay--motion-scaleFade Overlay--placement-right SidePanel">
+
+                    <!-- upper avatar name and close -->
+                    <div styles="flex-direction: row;" data-view-component="true" class="Overlay-header">
+                      <div class="Overlay-headerContentWrap">
+                        <!-- avatar and name+ -->
+                        <div class="Overlay-titleWrap">
+                          <h1 class="Overlay-title sr-only" id="dialog-834043ca-671c-4f75-ac45-707d649f4137-title">
+                            Account menu
+                          </h1>
+                          <div data-view-component="true" class="d-flex">
+                            <!-- avatar -->
+                            <div data-view-component="true" class="AppHeader-logo position-relative">
+                              <img src="https://avatars.githubusercontent.com/u/96083926?v=4" alt="" size="32" height="32"
+                                width="32" data-view-component="true" class="avatar circle" />
+                            </div>
+                            <!-- name+ -->
+                            <div data-view-component="true" class="overflow-hidden d-flex width-full">
+                              <!-- username and name -->
+                              <div data-view-component="true"
+                                class="lh-condensed overflow-hidden d-flex flex-column flex-justify-center ml-2 f5 mr-auto width-full">
+                                <span data-view-component="true" class="Truncate text-bold">
+                                  <span data-view-component="true" class="Truncate-text">
+                                    Nahida-aa
+                                  </span>
+                                </span> 
+                                <span data-view-component="true" class="Truncate color-fg-subtle">
+                                  <span data-view-component="true" class="Truncate-text">
+                                    aa
+                                  </span>
+                                </span>
+                              </div>
+                              <!-- 之前的 create new... ? 不知道有啥作用 -->
+                              <!-- omit -->
+                            </div>
+                          </div>
+                        </div>
+                        <!-- close button -->
+                        <div class="Overlay-actionWrap">
+                          <button data-close-dialog-id="dialog-834043ca-671c-4f75-ac45-707d649f4137" aria-label="Close"
+                            type="button" data-view-component="true" class="close-button Overlay-closeButton">
+                            <svg
+                              aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                              data-view-component="true" class="octicon octicon-x">
+                              <path
+                                d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z">
+                              </path>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- main 可滚动，右侧有滑条 -->
+                    <scrollable-region data-labelled-by="dialog-834043ca-671c-4f75-ac45-707d649f4137-title">
+                      <div data-view-component="true" class="Overlay-body d-flex flex-column px-2">
+                        <div data-view-component="true" class="d-flex flex-column mb-3">
+                          <nav aria-label="User navigation" data-view-component="true" class="ActionList">
+                            <nav-list>
+                              <ul data-target="nav-list.topLevelList" data-view-component="true" class="ActionListWrap">
+                                <!--  -->
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+                                  <button id="item-7025639c-cdd8-46b2-9fa8-663b448f7b94" type="button"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <span data-view-component="true" class="d-flex flex-items-center"> <svg
+                                          style="box-sizing: content-box; color: var(--color-icon-primary);" width="16"
+                                          height="16" viewBox="0 0 16 16" fill="none" data-view-component="true"
+                                          class="anim-rotate">
+                                          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25"
+                                            stroke-width="2" vector-effect="non-scaling-stroke" fill="none" />
+                                          <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                                        </svg>
+                                      </span>
+                                    </span>
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      <span class="color-fg-muted">
+                                        Loading...
+                                      </span>
+                                    </span>
+                                  </button>
+                                </li>
+      
+      
+                                <li role="presentation" aria-hidden="true" data-view-component="true"
+                                  class="ActionList-sectionDivider"></li>
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;PROFILE&quot;,&quot;label&quot;:null}"
+                                    id="item-0232a223-78d2-4d26-aadc-e85ebcad9666" href="https://github.com/Nahida-aa"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-person">
+                                        <path
+                                          d="M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Your profile
+                                    </span></a>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <button id="item-07d041d8-9d88-4f7c-802f-b128f35ba5eb" type="button"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <span data-view-component="true" class="d-flex flex-items-center"> <svg
+                                          style="box-sizing: content-box; color: var(--color-icon-primary);" width="16"
+                                          height="16" viewBox="0 0 16 16" fill="none" data-view-component="true"
+                                          class="anim-rotate">
+                                          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25"
+                                            stroke-width="2" vector-effect="non-scaling-stroke" fill="none" />
+                                          <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                                        </svg>
+                                      </span>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+      
+      
+                                      <span class="color-fg-muted">
+                                        Loading...
+                                      </span>
+      
+                                    </span></button>
+      
+                                </li>
+      
+      
+                                <li role="presentation" aria-hidden="true" data-view-component="true"
+                                  class="ActionList-sectionDivider"></li>
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;YOUR_REPOSITORIES&quot;,&quot;label&quot;:null}"
+                                    id="item-70b77c86-706a-4517-b9ac-837064c31b3e" href="/Nahida-aa?tab=repositories"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-repo">
+                                        <path
+                                          d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Your repositories
+                                    </span></a>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;YOUR_PROJECTS&quot;,&quot;label&quot;:null}"
+                                    id="item-0da4d3e6-a770-4c76-b20b-2c52befed4b5" href="/Nahida-aa?tab=projects"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-project">
+                                        <path
+                                          d="M1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0ZM1.5 1.75v12.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25ZM11.75 3a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75Zm-8.25.75a.75.75 0 0 1 1.5 0v5.5a.75.75 0 0 1-1.5 0ZM8 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 3Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Your projects
+                                    </span></a>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <button id="item-14cfcce2-b482-41e4-967a-974058df96cb" type="button"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <span data-view-component="true" class="d-flex flex-items-center"> <svg
+                                          style="box-sizing: content-box; color: var(--color-icon-primary);" width="16"
+                                          height="16" viewBox="0 0 16 16" fill="none" data-view-component="true"
+                                          class="anim-rotate">
+                                          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25"
+                                            stroke-width="2" vector-effect="non-scaling-stroke" fill="none" />
+                                          <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                                        </svg>
+                                      </span>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+      
+      
+                                      <span class="color-fg-muted">
+                                        Loading...
+                                      </span>
+      
+                                    </span></button>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <button id="item-32523e3b-cf3f-4c97-8df9-6ebe216611ea" type="button"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <span data-view-component="true" class="d-flex flex-items-center"> <svg
+                                          style="box-sizing: content-box; color: var(--color-icon-primary);" width="16"
+                                          height="16" viewBox="0 0 16 16" fill="none" data-view-component="true"
+                                          class="anim-rotate">
+                                          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25"
+                                            stroke-width="2" vector-effect="non-scaling-stroke" fill="none" />
+                                          <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                                        </svg>
+                                      </span>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+      
+      
+                                      <span class="color-fg-muted">
+                                        Loading...
+                                      </span>
+      
+                                    </span></button>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;YOUR_STARS&quot;,&quot;label&quot;:null}"
+                                    id="item-37bbad0b-8cad-46cc-a838-ae8f18d43312" href="/Nahida-aa?tab=stars"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-star">
+                                        <path
+                                          d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Your stars
+                                    </span></a>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;SPONSORS&quot;,&quot;label&quot;:null}"
+                                    id="item-1552e9cd-07a1-4466-bd5a-4364e7c00d2a" href="/sponsors/accounts"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-heart">
+                                        <path
+                                          d="m8 14.25.345.666a.75.75 0 0 1-.69 0l-.008-.004-.018-.01a7.152 7.152 0 0 1-.31-.17 22.055 22.055 0 0 1-3.434-2.414C2.045 10.731 0 8.35 0 5.5 0 2.836 2.086 1 4.25 1 5.797 1 7.153 1.802 8 3.02 8.847 1.802 10.203 1 11.75 1 13.914 1 16 2.836 16 5.5c0 2.85-2.045 5.231-3.885 6.818a22.066 22.066 0 0 1-3.744 2.584l-.018.01-.006.003h-.002ZM4.25 2.5c-1.336 0-2.75 1.164-2.75 3 0 2.15 1.58 4.144 3.365 5.682A20.58 20.58 0 0 0 8 13.393a20.58 20.58 0 0 0 3.135-2.211C12.92 9.644 14.5 7.65 14.5 5.5c0-1.836-1.414-3-2.75-3-1.373 0-2.609.986-3.029 2.456a.749.749 0 0 1-1.442 0C6.859 3.486 5.623 2.5 4.25 2.5Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Your sponsors
+                                    </span></a>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;YOUR_GISTS&quot;,&quot;label&quot;:null}"
+                                    id="item-7939a5c3-d479-41ef-8ecc-d17ee20baf59" href="https://gist.github.com/mine"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-code-square">
+                                        <path
+                                          d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25Zm7.47 3.97a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1 0 1.06l-2 2a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L10.69 8 9.22 6.53a.75.75 0 0 1 0-1.06ZM6.78 6.53 5.31 8l1.47 1.47a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-2-2a.75.75 0 0 1 0-1.06l2-2a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Your gists
+                                    </span></a>
+      
+                                </li>
+      
+      
+                                <li role="presentation" aria-hidden="true" data-view-component="true"
+                                  class="ActionList-sectionDivider"></li>
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <button id="item-8a30995f-e66c-4aa3-a1ac-f50a800c81c5" type="button"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <span data-view-component="true" class="d-flex flex-items-center"> <svg
+                                          style="box-sizing: content-box; color: var(--color-icon-primary);" width="16"
+                                          height="16" viewBox="0 0 16 16" fill="none" data-view-component="true"
+                                          class="anim-rotate">
+                                          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25"
+                                            stroke-width="2" vector-effect="non-scaling-stroke" fill="none" />
+                                          <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                                        </svg>
+                                      </span>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+      
+      
+                                      <span class="color-fg-muted">
+                                        Loading...
+                                      </span>
+      
+                                    </span></button>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <button id="item-53a24041-f07c-4b51-9157-0c9ce5ddc295" type="button"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <span data-view-component="true" class="d-flex flex-items-center"> <svg
+                                          style="box-sizing: content-box; color: var(--color-icon-primary);" width="16"
+                                          height="16" viewBox="0 0 16 16" fill="none" data-view-component="true"
+                                          class="anim-rotate">
+                                          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25"
+                                            stroke-width="2" vector-effect="non-scaling-stroke" fill="none" />
+                                          <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                                        </svg>
+                                      </span>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+      
+      
+                                      <span class="color-fg-muted">
+                                        Loading...
+                                      </span>
+      
+                                    </span></button>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;SETTINGS&quot;,&quot;label&quot;:null}"
+                                    id="item-37d608c8-657d-4173-959d-8e170c7ae4ee" href="/settings/profile"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-gear">
+                                        <path
+                                          d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a5.738 5.738 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8.12 8.12 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Zm-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189-.173.086-.34.183-.5.29-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045-.22.312-.412.644-.573.99-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a4.709 4.709 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19.162.346.353.677.573.989.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27.161.107.328.204.501.29.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189.173-.086.34-.183.5-.29.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045.22-.313.411-.644.573-.99.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a4.709 4.709 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.464 6.464 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.44 4.44 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Settings
+                                    </span></a>
+      
+                                </li>
+      
+      
+                                <li role="presentation" aria-hidden="true" data-view-component="true"
+                                  class="ActionList-sectionDivider"></li>
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;SUPPORT&quot;,&quot;label&quot;:null}"
+                                    id="item-3690232a-9d4d-49db-948c-27e20e474b9c" href="https://support.github.com"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-people">
+                                        <path
+                                          d="M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.22 5.018 5.01 5.01 0 0 1 2.56 3.012.749.749 0 0 1-.885.954.752.752 0 0 1-.549-.514 3.507 3.507 0 0 0-2.522-2.372.75.75 0 0 1-.574-.73v-.352a.75.75 0 0 1 .416-.672A1.5 1.5 0 0 0 11 5.5.75.75 0 0 1 11 4Zm-5.5-.5a2 2 0 1 0-.001 3.999A2 2 0 0 0 5.5 3.5Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      GitHub Support
+                                    </span></a>
+      
+                                </li>
+      
+      
+      
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+      
+      
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;COMMUNITY&quot;,&quot;label&quot;:null}"
+                                    id="item-d6eaf916-22dc-4be3-9eda-2ec71bfaf0e7" href="https://community.github.com"
+                                    data-view-component="true" class="ActionListContent ActionListContent--visual16">
+                                    <span class="ActionListItem-visual ActionListItem-visual--leading">
+                                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                                        data-view-component="true" class="octicon octicon-comment-discussion">
+                                        <path
+                                          d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1ZM1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25Zm13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z">
+                                        </path>
+                                      </svg>
+                                    </span>
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      GitHub Community
+                                    </span></a>
+      
+                                </li>
+                                <li role="presentation" aria-hidden="true" data-view-component="true"
+                                  class="ActionList-sectionDivider"></li>
+                                <li data-item-id="" data-targets="nav-list.items" data-view-component="true"
+                                  class="ActionListItem">
+                                  <a data-analytics-event="{&quot;category&quot;:&quot;Global navigation&quot;,&quot;action&quot;:&quot;LOGOUT&quot;,&quot;label&quot;:null}"
+                                    id="item-b751e409-3df9-4b1e-8fec-04de41ebdd61" href="/logout" data-view-component="true"
+                                    class="ActionListContent">
+      
+                                    <span data-view-component="true" class="ActionListItem-label">
+                                      Sign out
+                                    </span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </nav-list>
+                          </nav>
+                        </div>
+                      </div>
+                    </scrollable-region>
+                  </dialog>
+                </dialog-helper>
+              </user-drawer-side-panel>
+            </include-fragment>
+          </deferred-side-panel>
+        </div>
+      </div>
+
     </div>
+  </header>
+</div>
+
+    <!-- 主体 -->
+    <main></main>
     <div>
         <ul>
             {% if user.is_authenticated %}
@@ -136,6 +738,11 @@
             <li><a href="/">Index</a></li>
         </ul>
     </div>
+    </main>
+
+    <footer>
+        <p>© 2020 Nahida-aa</p>
+    </footer>
 </body>
 
 </html>

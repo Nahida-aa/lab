@@ -145,6 +145,7 @@ cython_debug/
 
 # me
 zreadme/
+.env_secret/
 # django settings/dev.py
 # a_web/proj_base/settings/dev.py
 

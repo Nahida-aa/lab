@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aieda</title>
+
+
+    <link rel="stylesheet" href="/static/css/base.css">
+    <script type="text/javascript" src="/static/js/base.js"></script>
+</head>
+
+
+<body>
+
+<div class="position-relative js-header-wrapper ">
+    <!-- 上方的通用导航 -->
+  <header class="AppHeader" role="banner">
+    <h2 class="sr-only">Navigation Menu</h2>
+  
+    <div class="AppHeader-globalBar  js-global-bar">
+      <div class="AppHeader-globalBar-start"></div>
+        <!-- 上方的导航 -->
+        <nav id="navbar-main"
+            class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light bg-primary headroom--not-bottom headroom--not-top headroom--pinned">
+            <div class="container">
+                <!-- 左上角按钮 -->
+                <left-side-panel>
+                <button id="open_sidebar" class="navbar-toggler" type="button" aria-expanded="false"
+                    aria-label="Toggle sidebar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                </left-side-panel>
+                <!-- 主页 -->
+                <index-page>
+                <div class="navbar-brand mr-0">
+                    <a class="navbar-brand navbar-title" href="https://www.ghostchu.com">Nahida-aa&#039;s Blog</a>
+                </div>
+                </index-page>
+                <!-- 主页右侧按钮们 -->
+                <div class="navbar-collapse collapse" id="navbar_global">
+                    <!-- 缩小后的搜索框 -->
+                    <div class="navbar-collapse-header">
+                        <!-- 不知道干嘛的 -->
+                        <div class="row" style="display: none;">
+                            <div class="col-6 collapse-brand"></div>
+                            <div class="col-6 collapse-close">
+                                <button type="button" class="navbar-toggler" data-toggle="collapse"
+                                    data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 主体 -->
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            </div>
+                            <input id="navbar_search_input_mobile" class="form-control" placeholder="搜索什么..."
+                                type="text" autocomplete="off">
+                        </div>
+                    </div>
+                    <!-- 留言板、朋友们、时间线、关于我 -->
+                    <ul class='navbar-nav navbar-nav-hover align-items-lg-center'>
+
+                        <li class='nav-item'>
+                            <a href='https://www.ghostchu.com/commentbox/' class='nav-link' target='' title=''>
+                                <i class='ni ni-book-bookmark d-lg-none'></i>
+                                <span class='nav-link-inner--text'><i class="fa fa-hashtag"></i> 留言板</span>
+                            </a>
+                        </li>
+
+                        <li class='nav-item'>
+                            <a href='https://www.ghostchu.com/friends/' class='nav-link' target='' title=''>
+                                <i class='ni ni-book-bookmark d-lg-none'></i>
+                                <span class='nav-link-inner--text'><i class="fa fa-link"></i> 朋友们</span>
+                            </a>
+                        </li>
+
+                        <li class='nav-item'>
+                            <a href='https://www.ghostchu.com/timeline/' class='nav-link' target='' title=''>
+                                <i class='ni ni-book-bookmark d-lg-none'></i>
+                                <span class='nav-link-inner--text'><i class="fa fa-clock-o"></i>时间线</span>
+                            </a>
+                        </li>
+
+                        <li class='nav-item'>
+                            <a href='https://www.ghostchu.com/about-me' class='nav-link' target='' title=''>
+                                <i class='ni ni-book-bookmark d-lg-none'></i>
+                                <span class='nav-link-inner--text'><i class="fa fa-github"></i> 关于我</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- 搜索 -->
+                    <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+                        <li id="navbar_search_container" class="nav-item" data-toggle="modal">
+                            <div id="navbar_search_input_container">
+                                <div class="input-group input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                    </div>
+                                    <input id="navbar_search_input" class="form-control" placeholder="搜索什么..."
+                                        type="text" autocomplete="off">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 菜单面具，点击搜索触发 -->
+                <div id="navbar_menu_mask" data-toggle="collapse" data-target="#navbar_global"></div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global"
+                    aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon navbar-toggler-searcg-icon"></span>
+                </button>
+
+                <!-- user -->
+                <user-drawer-side-panel>
+                    <button>user</button>
+                </user-drawer-side-panel>
+            </div>
+        </nav>
+  </header>
+</div>
+
+    <!-- 主体 -->
+    <main></main>
+    <div>
+        <ul>
+            {% if user.is_authenticated %}
+            欢迎您！{{ user.username }}
+            <li>
+                <a href="/logout/">Logout</a>
+                <a href="/{{user.username}}">profile</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="/login/">Login</a>
+                <a href="/register/">Register</a>
+            </li>
+            {% endif %}
+            <li><a href="/">Index</a></li>
+        </ul>
+    </div>
+    </main>
+
+    <footer>
+        <p>© 2020 Nahida-aa</p>
+    </footer>
+</body>
+
+</html>
