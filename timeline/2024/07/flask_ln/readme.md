@@ -9,13 +9,13 @@ FlaskProject/
 │   ├── __init__.py     # 创建 Flask 应用
 │   ├── models.py       # 定义数据库模型
 │   ├── routes.py       # 定义路由和视图函数
-|   ├── config.py       # 配置文件
+│   ├── config.py       # 配置文件
 │   ├── templates/      # 模板文件
 │   └── static/         # 静态文件
 │
 ├── run.py              # 项目入口文件
-|── wsgi.py             # WSGI 入口文件
-|── gunicorn_config.py  # Gunicorn 配置文件
+├── wsgi.py             # WSGI 入口文件
+├── gunicorn_config.py  # Gunicorn 配置文件
 ├── requirements.txt
 └── readme.md
 ```
