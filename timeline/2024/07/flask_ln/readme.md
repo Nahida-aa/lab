@@ -93,11 +93,11 @@ class Nahida(Resource):
             schema:
               type: object
               properties:
-                message:
+                author:
                   type: string
-                  example: "Hello, World!"
+                  example: "Nahida"
         """
-        return jsonify({"message": "Hello, World!"})
+        return jsonify({"author": "Nahida"})
 ```
 
 [run.py](run.py)
@@ -167,8 +167,8 @@ def create_app():
 
     swagger = Swagger(app, config=swagger_config)
 
-    from .routes import HelloWorld, ArticleResource
-    api.add_resource(HelloWorld, '/')
+    from .routes import Nahiad, ArticleResource
+    api.add_resource(Nahiad, '/')
     api.add_resource(ArticleResource, '/articles')
 
     with app.app_context():
@@ -199,7 +199,7 @@ from flask_restful import Resource
 from .models import Article
 from . import db
 
-class HelloWorld(Resource):
+class Nahiad(Resource):
     def get(self):
         """
         A simple GET endpoint
@@ -210,11 +210,11 @@ class HelloWorld(Resource):
             schema:
               type: object
               properties:
-                message:
+                author:
                   type: string
-                  example: "Hello, World!"
+                  example: "Nahida"
         """
-        return jsonify({"message": "Hello, World!"})
+        return jsonify({"author": "Nahida"})
 
 class ArticleResource(Resource):
     def get(self):
@@ -261,7 +261,7 @@ class ArticleResource(Resource):
         new_article = Article(title=data['title'], content=data['content'])
         db.session.add(new_article)
         db.session.commit()
-        return jsonify({"message": "Article created"}), 201
+        return jsonify({"author": "Article created"}), 201
 ```
 
 ## 部署(Gunicorn 和 Nginx )
