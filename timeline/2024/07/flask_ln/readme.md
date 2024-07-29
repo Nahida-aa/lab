@@ -51,6 +51,7 @@ conda activate web_py310
 ## API
 
 ```sh
+pip install Flask
 # 用于创建api
 pip install Flask-RESTful
 # 用于创建api文档
