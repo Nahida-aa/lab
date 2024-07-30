@@ -370,8 +370,15 @@ server {
 **启用 Nginx 配置**
 
 ```sh
+# 
 sudo ln -s /etc/nginx/sites-available/flask_app /etc/nginx/sites-enabled
+# 检查配置文件是否有语法错误
+sudo nginx -t
+# 重新加载 Nginx 配置 (不会中断服务) (2选1)
+sudo systemctl reload nginx
+# 重启 Nginx 服务 (会中断服务) (2选1)
 sudo systemctl restart nginx
+# 确保你的服务器防火墙允许外部访问端口 80
 sudo ufw allow 80
 conda activate web_py310
 gunicorn -c gunicorn_config.py wsgi:app
