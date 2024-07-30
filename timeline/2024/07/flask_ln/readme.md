@@ -342,6 +342,8 @@ sudo systemctl enable nginx
 
 ```sh
 sudo vi /etc/nginx/sites-available/flask_app
+# or
+sudo vi /etc/nginx/conf.d/flask_app.conf
 ```
 
 [/etc/nginx/sites-available/flask_app](/etc/nginx/sites-available/flask_app)
@@ -352,7 +354,7 @@ server {
     # server_name your_domain_or_IP;
     server_name 175.178.164.97;
 
-    # 将 175.178.164.97:80/ 反向代理到 http://0.0.0.0:8000/
+    # 将 http://0.0.0.0:8000/ 反向代理到 175.178.164.97:80/
     location / {
         proxy_pass http://0.0.0.0:8000; # 确保端口和 Gunicorn 配置一致
         proxy_set_header Host $host;
@@ -370,7 +372,8 @@ server {
 **启用 Nginx 配置**
 
 ```sh
-# 
+# if use sites-available
+# 因为 include /etc/nginx/conf.d/.conf; include /etc/nginx/sites-enabled/ 没有包含 sites-available
 sudo ln -s /etc/nginx/sites-available/flask_app /etc/nginx/sites-enabled
 # 检查配置文件是否有语法错误
 sudo nginx -t
