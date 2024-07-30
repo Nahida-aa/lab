@@ -346,12 +346,13 @@ sudo vi /etc/nginx/sites-available/flask_app
 
 [/etc/nginx/sites-available/flask_app](/etc/nginx/sites-available/flask_app)
 
-```nginx
+```conf
 server {
     listen 80;
     # server_name your_domain_or_IP;
     server_name 175.178.164.97;
 
+    # 将 175.178.164.97:80/ 反向代理到 http://0.0.0.0:8000/
     location / {
         proxy_pass http://0.0.0.0:8000; # 确保端口和 Gunicorn 配置一致
         proxy_set_header Host $host;
