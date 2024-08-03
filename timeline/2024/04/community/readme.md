@@ -7,8 +7,6 @@
 
 创建仓库后会看到:
 
-点击ssh, 因为https貌似被禁用了
-
 ![20240429123755](https://raw.githubusercontent.com/Nahida-aa/picgo/main/images/20240429123755.png)
 
 ### …or create a new repository on the command line
