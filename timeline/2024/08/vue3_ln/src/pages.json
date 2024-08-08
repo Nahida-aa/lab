@@ -1,0 +1,108 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        // "navigationBarTitleText": "推荐"
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/classify/classify",
+      "style": {
+        // "navigationBarTitleText": "分类"
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/my/my",
+      "style": {
+        "navigationBarTitleText": "我的"
+        // 下拉刷新
+        // "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/test/test",
+      "style": {
+        "navigationBarTitleText": ""
+        // "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/wallpaperList/wallpaperList",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/preview/preview",
+      "style": {
+        "navigationBarTitleText": "预览",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/notice/notice",
+      "style": {
+        "navigationBarTitleText": "公告",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/notice/detail",
+      "style": {
+        "navigationBarTitleText": "公告详情",
+        "enablePullDownRefresh": false
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "小草壁纸",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    // 自定义导航栏，会去掉默认导航栏，上面三跟配置会失效
+    // "navigationStyle": "custom",
+    "backgroundColor": "#F8F8F8",
+    // 下拉刷新 与生命周期onPullDownRefresh配合使用
+    "enablePullDownRefresh": true,
+    // 触底加载距离，单位px
+    "onReachBottomDistance": 500
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "backgroundColor": "#ffffff",
+    // "borderStyle": "black",
+    // "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "推荐",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/classify/classify",
+        "text": "分类",
+        "iconPath": "static/tabbar/classify.png",
+        "selectedIconPath": "static/tabbar/classify-active.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "static/tabbar/user.png",
+        "selectedIconPath": "static/tabbar/user-active.png"
+      }
+    ]
+  },
+  "subPackages": []
+}
