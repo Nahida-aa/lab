@@ -6,7 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404</title>
   <script>
-    window.location.href = '/vue3_ln/index.html';
+    document.addEventListener("DOMContentLoaded", function() {
+      // 获取当前路径
+      var path = window.location.pathname;
+      
+      // 提取项目名
+      var projectName = path.split('/')[1];
+      
+      // 重定向到项目主页
+      if (projectName) {
+        window.location.href = '/' + projectName + '/index.html';
+      } else {
+        // 如果没有项目名，重定向到根目录
+        window.location.href = '/index.html';
+      }
+    });
+    // window.location.href = '/vue3_ln/index.html';
   </script>
 </head>
 <body>
