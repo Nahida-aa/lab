@@ -30,7 +30,7 @@ import { gotoHome } from '@/utils/common.js'
 
 const wallpaperList = ref([])
 const queryParams = {
-  pageNum: 1,
+  page: 1,
   pageSize: 12,
 }
 const noData = ref(false)
@@ -39,7 +39,10 @@ let pageName
 onLoad((e) => {
   console.log('wallpaper_onLoad:', e)
   let { id = null, name = null, type = null } = e
-  if (!id) gotoHome()
+  if (!id && !name) {
+    gotoHome()
+    return
+  }
   if (id) queryParams.class_id = id
   if (type) queryParams.type = type
   pageName = name
@@ -60,7 +63,7 @@ onReachBottom(() => {
     return
   }
   // TODO: 防抖
-  queryParams.pageNum++
+  queryParams.page++
   get_wallList_by_classify()
 })
 
@@ -72,7 +75,7 @@ const get_wallList_by_x = async () => {
     res_json = await apiWallpaper(queryParams) 
   }
   if (queryParams.type) res_json = await apiUserWall(queryParams)
-  console.log('apiWallpaper:', res_json)
+  console.log('apiUserWall:', res_json)
   // wallpaperList.value = res_json.data
   // 追加
   wallpaperList.value = [...wallpaperList.value, ...res_json.data]

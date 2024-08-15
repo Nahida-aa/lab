@@ -13,7 +13,7 @@
     autoplay
     circular>
     <swiper-item v-for="item in bannerList" :key="item._id">
-      <image
+      <image @click="goTarget(item)"
         :src="item.pic_url"
         mode="aspectFill"
       />
@@ -128,6 +128,22 @@ get_banner()
 get_notice()
 get_recommend()
 get_classify()
+
+const goTarget = (item) => {
+  console.log('goTarget:',item)
+  if (item.target == 'miniProgram') {
+    goMp(item)
+  }
+  // TODO: 跳转 H5
+  // TODO: 跳转self
+}
+const goMp = (item) => {
+  console.log('goMp:',item)
+  // TODO: 跳转小程序
+  uni.navigateToMiniProgram({
+    appId: item.appid,
+  })
+}
 
 const goPreview = (id) => {
   uni.setStorageSync("storeWallList",recommendList.value)

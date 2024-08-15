@@ -128,9 +128,10 @@ const clickContact = () => {
 const toWallpaperLst = (name, type) => {
 	console.log('toWallpaperLst:', name, type)
 	uni.navigateTo({
-		url: '/pages/wallpaperList/wallpaperList?id=1&name='+name+'&type='+type
+		url: '/pages/wallpaperList/wallpaperList?name='+name+'&type='+type
 	})
 }
+
 const toNewsDetail = (id) => {
 	console.log('toNewsDetail:', id)
 	uni.navigateTo({

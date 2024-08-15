@@ -8,9 +8,11 @@
     </swiper>
 
     <view class="mask" v-show="maskState">
+      <!-- #ifndef MP-TOUTIAO -->
       <view class="goBack" @click="goBack" :style="{top:getStatusBarHeight()+'px'}">
         <uni-icons type="back" color="#fff" size="20"></uni-icons>
       </view>
+      <!-- #endif -->
       <view class="count">{{ current_index + 1 }} / {{ previewList.length }}</view>
       <view class="time">
         <uni-dateformat :date="new Date()" format="hh:mm"/>
@@ -533,7 +535,7 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       .text{
-        font-size: 32rpx;
+        font-size: 30rpx;
         color: #ffca3e;
         padding-left: 10rpx;
         width: 80rpx;

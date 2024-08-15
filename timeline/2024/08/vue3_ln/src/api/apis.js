@@ -71,3 +71,9 @@ export function apiUserWall(data={}) {
         data
     })
 }
+export function apiSearch(data={}) {
+    return request({
+        url:'/search',
+        data
+    })
+}
