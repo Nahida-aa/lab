@@ -11,16 +11,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, getCurrentInstance } from 'vue'
+import { onShareAppMessage } from '@dcloudio/uni-app';
 import topic_item from '@/components/topic-item/topic-item.vue'
 import {apiGetClassify} from '@/api/apis.js'
 const classifyList = ref([])
 const get_classify = async () => {
   let res_json = await apiGetClassify()
-  console.log(res_json)
+  console.log('apiGetClassify:',res_json)
   classifyList.value = res_json.data
 }
 get_classify()
+
+// 分享
+onShareAppMessage((e) => {
+  console.log('分享',e)
+  return {
+    title: '小草壁纸~~~',
+    path: '/pages/classify/classify',
+  }
+})
+onMounted(() => {
+  const instance = getCurrentInstance();
+  if (instance) {
+    instance.proxy.onShareTimeline = () => {
+      return {
+        title: '小草壁纸~~~',
+      };
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>

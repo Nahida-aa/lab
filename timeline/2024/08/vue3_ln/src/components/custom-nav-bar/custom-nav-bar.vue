@@ -4,7 +4,7 @@
     <view class="statusBar" :style="{height:getStatusBarHeight()+'px'}"></view>
     <view class="titleBar" :style="{height:getTitleBarHeight()+'px', marginLeft:getLeftIconLeft()+'px'}">
       <view class="title">{{ title }}</view>
-      <view class="search">
+      <view class="search" @click="toSearch">
         <uni-icons class="icon" type="search" colo="#888" size="18"></uni-icons>
         <text>搜索</text>
       </view>
@@ -23,6 +23,12 @@ defineProps({
   title: String,
   default: '壁纸'
 })
+
+const toSearch = () => {
+  uni.navigateTo({
+    url: '/pages/search/search'
+  })
+}
 </script>
 
 <style lang="scss" scoped>

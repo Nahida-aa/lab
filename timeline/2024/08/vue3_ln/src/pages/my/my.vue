@@ -1,40 +1,47 @@
 <template>
 <view class="userLayout pageBg">
+<!-- 顶部导航栏占位 -->
+<view :style="{height:getNavBarHeight()+'px'}"></view>
 
 <view class="user-info">
 	<view class="avatar">
 		<image :src="user.avatar" mode="aspectFill"/>
 	</view>
-	<view class="ip">100.100.100.100</view>
-	<view class="address">来自于：南极</view>
+	<view class="ip">{{user.IP}}</view>
+	<view class="address">
+		来自于：{{ user.address.province || user.address.city || user.address.country || '未知'  }}
+	</view>
 </view>
 
 <!-- 菜单1 -->
 <view class="menu">
-  <view class="menu-item" v-for="item in 1">
-    <view class="row" @click="toWallpaperLst">
+
+  <view class="menu-item" v-for="item in 1" :key="item">
+    <view class="row" @click="toWallpaperLst('我的下载','download')">
 			<view class="left">
 				<uni-icons type="download-filled" size="20" ></uni-icons>
 				<view class="text">我的下载</view>
 			</view>
 			<view class="right">
-				<view class="text">33</view>
+				<view class="text">{{ user.downloadSize }}</view>
 				<uni-icons type="right" size="15" color="#999"></uni-icons>
 			</view>
 		</view>
   </view>
+
 	<view class="menu-item">
-    <view class="row" @click="toWallpaperLst">
+    <view class="row" @click="toWallpaperLst('我的评分','score')">
 			<view class="left">
 				<uni-icons type="star-filled" size="20" ></uni-icons>
-				<view class="text">评分</view>
+				<view class="text">我的评分</view>
 			</view>
 			<view class="right">
-				<view class="text">22</view>
+				<view class="text">{{ user.scoreSize }}</view>
 				<uni-icons type="right" size="15" color="#999"></uni-icons>
 			</view>
 		</view>
   </view>
+
 	<view class="menu-item">
     <view class="row">
 			<view class="left">
@@ -59,8 +66,8 @@
 
 <!-- 菜单2 -->
 <view class="menu">
-	<view class="menu-item" v-for="item in 1">
-		<view class="row">
+	<view class="menu-item" v-for="item in 1" :key="item">
+		<view class="row" @click="toNewsDetail(2)">
 			<view class="left">
 				<uni-icons type="notification-filled" size="20" ></uni-icons>
 				<view class="text">订阅更新</view>
@@ -72,7 +79,7 @@
 		</view>
 	</view>
 	<view class="menu-item">
-    <view class="row">
+    <view class="row" @click="toNewsDetail(3)">
 			<view class="left">
 				<uni-icons type="help-filled" size="20" ></uni-icons>
 				<view class="text">常见问题</view>
@@ -90,22 +97,44 @@
 
 <script setup>
 import { ref } from "vue"
+import { getNavBarHeight } from '@/utils/system.js'
+// console.log('getNavBarHeight', getNavBarHeight())
+import { apiUserInfo } from '@/api/apis.js'
 
 const user = ref({
     avatar: '/static/images/Nahida.jpg',
     nickname: 'aa',
-    username: 'Nahida'
+    username: 'Nahida',
+		// scoreSize: 0, // 确保初始化所有需要的属性
+		address: {},
 })
 
+const getUserInfo = ()=>{
+	apiUserInfo().then(res_json=>{
+		console.log('getUserInfo:', res_json)
+		// user.value = res_json.data
+		Object.assign(user.value, res_json.data)
+		console.log('user:', user)
+	})
+}
+getUserInfo()
+
 const clickContact = () => {
-		uni.makePhoneCall({
-				phoneNumber: '18162711944'
-		})
+	uni.makePhoneCall({
+		phoneNumber: '18162711944'
+	})
 }
 
-const toWallpaperLst = () => {
+const toWallpaperLst = (name, type) => {
+	console.log('toWallpaperLst:', name, type)
 	uni.navigateTo({
-		url: '/pages/wallpaperList/wallpaperList'
+		url: '/pages/wallpaperList/wallpaperList?id=1&name='+name+'&type='+type
+	})
+}
+const toNewsDetail = (id) => {
+	console.log('toNewsDetail:', id)
+	uni.navigateTo({
+		url: '/pages/notice/detail?id='+id
 	})
 }
 </script>
@@ -173,6 +202,9 @@ const toWallpaperLst = () => {
 						margin-left: 20rpx;
 						font-size: 32rpx;
 						color: #666;
+						display: flex;
+						align-items: center;
+						text-align: center;
 					}
 				}
 				.right {
@@ -181,6 +213,14 @@ const toWallpaperLst = () => {
 					.text {
 						font-size: 32rpx;
 						color: #999;
+						display: flex;
+						align-items: center;
+						text-align: center;
+					}
+					uni-icons{
+						// 上下居中
+						display: flex;
+						align-items: center;
 					}
 				}
 				button{

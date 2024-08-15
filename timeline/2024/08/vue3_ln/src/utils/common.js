@@ -27,3 +27,18 @@ export function formatTimeDifference(timestamp) {
         return null;
     }
 }
+
+export function gotoHome() {
+    uni.showModal({
+        title: '提示',
+        content: '页面有误将返回首页',
+        showCancel: false,
+        success: function (res) {
+            if (res.confirm) {
+                uni.switchTab({
+                    url: '/pages/index/index'
+                });
+            }
+        }
+    })
+}

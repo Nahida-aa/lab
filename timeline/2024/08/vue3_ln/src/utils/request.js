@@ -30,7 +30,7 @@ export function request({
                     reject(res.data)
                 } else {
                     uni.showToast({
-                        title: res.data.errMsg,
+                        title: '意外错误',
                         icon: 'none'
                     })
                     reject(res.data)

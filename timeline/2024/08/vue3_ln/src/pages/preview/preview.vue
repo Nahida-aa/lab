@@ -1,5 +1,5 @@
 <template>
-  <view class="preview">
+  <view class="preview" v-if="current_info">
     <swiper circular :current="current_index" @change="swiperChange">
       <swiper-item v-for="(item,index) in previewList" :key="item._id">
         <!-- 这个if 避免一次加载全部的图片 -->
@@ -73,7 +73,7 @@
             <view class="row">
               <view class="label">标签：</view>
               <view class="value tabs">
-                <view class="tab" v-for="tag in current_info.tags">{{ tag }}</view>
+                <view class="tab" v-for="tag in current_info.tags" :key="tag">{{ tag }}</view>
               </view>
             </view>
             <view class="copyright">
@@ -109,10 +109,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, getCurrentInstance } from 'vue'
+import { onShareAppMessage } from '@dcloudio/uni-app';
 import { getStatusBarHeight } from '@/utils/system';
 import { onLoad } from '@dcloudio/uni-app';
-import { apiScore } from '@/api/apis';
+import { apiScore,apiWriteDownload,apiWallpaper } from '@/api/apis';
 // 使用 getStatusBarHeight 函数
 // console.log('StatusBarHeight:', getStatusBarHeight());
 
@@ -132,8 +133,19 @@ const current_index = ref(0)
 const current_info = ref(null)
 const read_imgs = ref([])
 
-onLoad((e)=>{
+onLoad(async (e)=>{  // 此时页面还未显示，没有开始进入的转场动画，页面dom还不存在
+  console.log('onLoad',e)
   current_id.value = e.id
+  if (e.type == 'share') {
+    let res_json = await apiWallpaper({id: current_id.value})
+    console.log('apiWallpaper:',res_json)
+    previewList.value = res_json.data.map(item=>{
+      return {
+        ...item,
+        pic_url: item.small_url.replace("_small","").replace("small","index")
+      }
+    })
+  }
   current_index.value = previewList.value.findIndex(item=>item._id == current_id.value)
   preloadImages(read_imgs, current_index, previewList)
   current_info.value = previewList.value[current_index.value]
@@ -168,7 +180,7 @@ const clickInfoClose = ()=>{
 
 // open score popup
 const scorePopup = ref(null)
-const scoring = ref(false)
+// const scoring = ref(false)
 const clickScore = ()=>{
   console.log('clickScore')
   if (current_info.value.user_score) {
@@ -196,7 +208,7 @@ const submitScore = async ()=>{
       user_score: user_score.value
     }
   })
-  console.log(res_json)
+  console.log('apiScore:',res_json)
   if (res_json.errCode == 0) {
     is_has_score.value = true
     uni.showToast({
@@ -210,7 +222,7 @@ const submitScore = async ()=>{
 }
 
 // download
-const clickDownload = ()=>{
+const clickDownload = async ()=>{
   console.log('clickDownload')
   // #ifdef H5
   console.log('H5')
@@ -220,35 +232,78 @@ const clickDownload = ()=>{
   })
   // #endif
   // #ifndef H5
-  console.log('not H5')
-  uni.getImageInfo({
-    src: current_info.value.pic_url,
-    success: (res) => {
-      console.log('getImageInfo', res)
-      uni.saveImageToPhotosAlbum({
-        filePath: res.path,
-        success: (success) => {
-          console.log('saveImageToPhotosAlbum', success)
-        },
-        fail: (err) => {
-          console.log('saveImageToPhotosAlbum', err)
-          uni.showModal({
-            title: '提示',
-            content: '需要授权保存到相册',
-            success:(success)=>{
-              if (success.confirm) {
-                uni.openSetting({
-                  success: (res) => {
-                    console.log(res.authSetting)
-                  }
-                })
-              }
-            },
-          })
-        }       
-      })
-    },
-  })
+  try {  // 利用 try 异步同步化
+    console.log('not H5')
+    uni.showLoading({
+      title: '下载中...',
+      mask: true
+    })
+    // TODO: api 如果频繁请求(5秒内只能一次), res_json.errCode == 400 用于判断
+    // let {class_id, _id:wall_id} = current_info.value
+    // let res_json = await apiWriteDownload({
+    //   data: {
+    //     class_id,
+    //     wall_id,
+    //   }
+    // })
+    // console.log(res_json)
+    // if (res_json.errCode != 0) throw res_json
+    // download
+    uni.getImageInfo({
+      src: current_info.value.pic_url,
+      success: (res) => {
+        console.log('getImageInfo', res)
+        uni.saveImageToPhotosAlbum({
+          filePath: res.path,
+          success: (success) => {
+            console.log('saveImageToPhotosAlbum', success)
+          },
+          fail: (err) => {
+            console.log('saveImageToPhotosAlbum', err)
+            if (err.errMsg == 'saveImageToPhotosAlbum:fail cancel') {
+              uni.showToast({
+                title: '取消保存',
+                icon: 'none'
+              })
+              return
+            }
+            // if (err.errMsg == 'saveImageToPhotosAlbum:fail auth deny') {
+            // }
+            uni.showModal({
+              title: '提示',
+              content: '需要授权保存到相册',
+              success:(success)=>{
+                if (success.confirm) {
+                  uni.openSetting({
+                    success: (res) => {
+                      console.log('res.authSetting',res.authSetting)
+                      if (res.authSetting['scope.writePhotosAlbum']) {
+                        uni.showToast({
+                          title: '授权成功',
+                          icon: 'success'
+                        })
+                      } else {
+                        uni.showToast({
+                          title: '授权失败',
+                          icon: 'none'
+                        })
+                      }
+                    }
+                  })
+                }
+              },
+            })
+          },
+          complete:(complete)=>{
+            uni.hideLoading()
+          },      
+        })
+      },
+    })
+  } catch (error) {
+    console.log('unH5 download_err:',error)
+    uni.hideLoading()
+  }
   // #endif
 }
 
@@ -262,8 +317,36 @@ const maskChange = ()=>{
 // 返回
 const goBack = ()=>{
   console.log('goBack')
-  uni.navigateBack()
+  uni.navigateBack({
+    success: (res) => {
+    },
+    fail: (err) => {
+      uni.reLaunch({
+        url: '/pages/index/index'
+      })
+    },
+  })
 }
+
+// 分享
+onShareAppMessage((e) => {
+  console.log('分享',e)
+  return {
+    title: '小草壁纸',
+    path: '/pages/preview/preview?id='+current_id.value+"&type=share",
+  }
+})
+onMounted(() => {
+  const instance = getCurrentInstance();
+  if (instance) {
+    instance.proxy.onShareTimeline = () => {
+      return {
+        title: '小草壁纸~~~',
+        query: 'id='+current_id.value+"&type=share"
+      };
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>

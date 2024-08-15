@@ -31,7 +31,7 @@
     <swiper vertical interval="1500"
       autoplay
       circular>
-      <swiper-item v-for="item in noticeList" :key="item._id" @click="goNoticeDetail">{{ item.title }}</swiper-item>
+      <swiper-item v-for="item in noticeList" :key="item._id" @click="goNoticeDetail(item._id)">{{ item.title }}</swiper-item>
     </swiper>
   </view>
   <view class="right">
@@ -54,7 +54,10 @@
   </common-title>
   <view class="content">
     <scroll-view scroll-x>
-      <view class="box" v-for="item in recommendList" :key="item._id" @click="goPreview">
+      <view class="box" 
+        v-for="item in recommendList" :key="item._id" 
+        @click="goPreview(item._id)"
+      >
         <image
           :src="item.small_url"
           mode="aspectFill"/>
@@ -83,8 +86,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import {apiGetBanner,apiGetNotice,apiGetRecommend,apiGetClassify} from '@/api/apis.js'
+import { ref, onMounted, getCurrentInstance } from 'vue'
+import {apiGetBanner,apiNewsList,apiGetRecommend,apiGetClassify} from '@/api/apis.js'
+import { onShareAppMessage } from '@dcloudio/uni-app';
+
 const bannerList = ref([])
 const noticeList = ref([])
 const recommendList = ref([])
@@ -100,7 +105,7 @@ const get_banner = async () => {
   // console.log(bannerList.value)
 }
 const get_notice = async () => {
-  let res_json = await apiGetNotice(
+  let res_json = await apiNewsList(
     // {is_recommend:true}
   )
   // console.log(res_json.data)
@@ -124,17 +129,36 @@ get_notice()
 get_recommend()
 get_classify()
 
-const goPreview = () => {
+const goPreview = (id) => {
+  uni.setStorageSync("storeWallList",recommendList.value)
   uni.navigateTo({
-    url: '/pages/preview/preview'
+    url: '/pages/preview/preview?id='+id
   })
 }
 
-const goNoticeDetail = () => {
+const goNoticeDetail = (new_id) => {
   uni.navigateTo({
-    url: '/pages/notice/detail'
+    url: '/pages/notice/detail?id='+new_id
   })
 }
+
+// 分享
+onShareAppMessage((e) => {
+  console.log('分享',e)
+  return {
+    title: '小草壁纸~~~',
+  }
+})
+onMounted(() => {
+  const instance = getCurrentInstance();
+  if (instance) {
+    instance.proxy.onShareTimeline = () => {
+      return {
+        title: '小草壁纸~~~',
+      };
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>

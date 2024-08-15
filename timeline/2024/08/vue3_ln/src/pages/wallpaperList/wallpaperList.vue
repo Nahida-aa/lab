@@ -1,46 +1,52 @@
 <template>
-<view class="wallpaperList">
+  <view class="wallpaperList">
 
-<view class="loadingLayout" v-if="!wallpaperList.length && !noData">
-  <uni-load-more status="loading"></uni-load-more>
-</view>
+    <view class="loadingLayout" v-if="!wallpaperList.length && !noData">
+      <uni-load-more status="loading"></uni-load-more>
+    </view>
 
-<view class="content">
-  <view class="item" v-for="item in wallpaperList" :key="item._id">
-    <navigator :url="`/pages/preview/preview?id=`+item._id" class="img">
-      <image
-        :src="item.small_url"
-        mode="aspectFill"/>
-    </navigator>
+    <view class="content">
+      <view class="item" v-for="item in wallpaperList" :key="item._id">
+        <navigator :url="`/pages/preview/preview?id=` + item._id" class="img">
+          <image :src="item.small_url" mode="aspectFill" />
+        </navigator>
+      </view>
+    </view>
+
+    <view class="loadingLayout" v-if="wallpaperList.length || noData.value">
+      <uni-load-more :status="noData ? 'noMore' : 'loading'"></uni-load-more>
+    </view>
+
+    <view class="safe-area-inset-bottom"></view>
   </view>
-</view>
-
-<view class="loadingLayout" v-if="wallpaperList.length || noData.value">
-    <uni-load-more :status="noData?'noMore':'loading'"></uni-load-more>
-</view>
-
-<view class="safe-area-inset-bottom"></view>
-</view>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import {apiGetWallpaperList} from '@/api/apis.js'
-import { onLoad,onReachBottom } from '@dcloudio/uni-app';
+import { ref, onMounted, getCurrentInstance } from 'vue'
+import { onShareAppMessage } from '@dcloudio/uni-app';
+import { apiWallpaper, apiUserWall } from '@/api/apis.js'
+import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app';
+import { gotoHome } from '@/utils/common.js'
+
 const wallpaperList = ref([])
 const queryParams = {
   pageNum: 1,
   pageSize: 12,
 }
 const noData = ref(false)
+let pageName
 
 onLoad((e) => {
-  let {id=null,name=null} = e
-  queryParams.class_id = id
+  console.log('wallpaper_onLoad:', e)
+  let { id = null, name = null, type = null } = e
+  if (!id) gotoHome()
+  if (id) queryParams.class_id = id
+  if (type) queryParams.type = type
+  pageName = name
   uni.setNavigationBarTitle({
-    title: name
+    title: pageName
   })
-  get_wallList_by_classify()
+  get_wallList_by_x()
   // console.log('wallpaperList.length',wallpaperList.length,'noData',noData)
   // if (wallpaperList.length || noData.value) {
   //   console.log('显示底部加载更多')
@@ -49,7 +55,7 @@ onLoad((e) => {
   // console.log(wallpaperList.length || noData)
 })
 onReachBottom(() => {
-  console.log('到底了',noData.value)
+  console.log('到底了', noData.value)
   if (noData.value) {
     return
   }
@@ -58,30 +64,63 @@ onReachBottom(() => {
   get_wallList_by_classify()
 })
 
-const get_wallList_by_classify = async () => {
-  let res_json = await apiGetWallpaperList(queryParams)
-  console.log(res_json)
+const get_wallList_by_x = async () => {
+  let res_json
+  console.log('queryParams:', queryParams)
+  if (queryParams.class_id) { 
+    console.log('apiWallpaper')
+    res_json = await apiWallpaper(queryParams) 
+  }
+  if (queryParams.type) res_json = await apiUserWall(queryParams)
+  console.log('apiWallpaper:', res_json)
   // wallpaperList.value = res_json.data
   // 追加
-  wallpaperList.value = [...wallpaperList.value,...res_json.data]
+  wallpaperList.value = [...wallpaperList.value, ...res_json.data]
   if (res_json.data.length < queryParams.pageSize) noData.value = true
   // TODO: 缓存 后续建议使用 Pinia 来管理
-  uni.setStorageSync("storeWallList",wallpaperList.value)
+  uni.setStorageSync("storeWallList", wallpaperList.value)
 }
+
+// 分享
+onShareAppMessage((e) => {
+  console.log('分享', e)
+  return {
+    title: '小草壁纸-' + pageName,
+    path: '/pages/wallpaperList/wallpaperList?id=' + queryParams.class_id + '&name=' + pageName,
+  }
+})
+onMounted(() => {
+  const instance = getCurrentInstance();
+  if (instance) {
+    instance.proxy.onShareTimeline = () => {
+      return {
+        title: '小草壁纸~~~',
+        query: 'id=' + queryParams.class_id + '&name=' + pageName
+      };
+    };
+  }
+});
+onUnload(() => {
+  console.log('页面卸载')
+  uni.removeStorageSync("storeWallList")
+})
 </script>
 
 <style lang="scss" scoped>
-.wallpaperList{
-  .content{
+.wallpaperList {
+  .content {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5rpx;
     padding: 5rpx;
-    .item{
+
+    .item {
       height: 440rpx;
-      .img{
+
+      .img {
         height: 100%;
-        image{
+
+        image {
           width: 100%;
           height: 100%;
           display: block;
@@ -91,5 +130,3 @@ const get_wallList_by_classify = async () => {
   }
 }
 </style>
-    
-      

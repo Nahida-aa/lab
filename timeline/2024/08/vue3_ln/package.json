@@ -41,6 +41,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@climblee/uv-ui": "^1.1.20",
     "@dcloudio/uni-app": "3.0.0-4020320240708001",
     "@dcloudio/uni-app-plus": "3.0.0-4020320240708001",
     "@dcloudio/uni-components": "3.0.0-4020320240708001",
@@ -57,6 +58,7 @@
     "@dcloudio/uni-quickapp-webview": "3.0.0-4020320240708001",
     "@dcloudio/uni-ui": "^1.5.6",
     "katex": "^0.16.11",
+    "marked": "^14.0.0",
     "vue": "^3.4.33",
     "vue-i18n": "^9.13.1"
   },

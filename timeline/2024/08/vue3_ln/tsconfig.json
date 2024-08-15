@@ -14,7 +14,11 @@
       "node"
     ],
     "verbatimModuleSyntax": true, // 添加这一行
-    "ignoreDeprecations": "5.0" // 添加这一行
+    "ignoreDeprecations": "5.0", // 添加这一行
+    // "allowJs": true
+    // "checkJs": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/pages/MessageBoard/MessageService.js", "src/utils/system.js"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", 
+    // "src/**/*.js",
+  ]
 }

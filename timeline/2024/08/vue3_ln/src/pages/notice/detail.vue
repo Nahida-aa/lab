@@ -1,4 +1,25 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { apiNewsRead } from '@/api/apis.js'
+import markdown from '@/components/markdown/markdown.vue'
+
+let news_id
+const news = ref({})
+const isMarkdown = ref(false)
+
+onLoad((e) => {
+  news_id = e.id
+  apiNewsRead({ id:news_id }).then(res_body => {
+    console.log('apiNewsRead:', res_body)
+    news.value = res_body.data
+    if (news.value.detail_content && news.value.detail_content.endsWith('.md')) {
+      console.log('isMarkdown')
+      isMarkdown.value = true
+    }
+  })
+})
+</script>
 
 <template>
 <view class="noticeLayout">
@@ -25,7 +46,10 @@
   </view>
 
   <view class="content">
-    内容区域
+    <div v-if="news.detail_content && isMarkdown">
+      <markdown :src="news.detail_content"></markdown>
+    </div>
+    <div v-else v-html="news.detail_content"></div>
   </view>
 
   <view class="count">

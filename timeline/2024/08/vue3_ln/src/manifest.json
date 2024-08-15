@@ -56,7 +56,7 @@
             "urlCheck" : false,
             // "es6" : false,
             // "postcss" : false,
-            "minified" : true,
+            "minified" : true
         },
         "usingComponents" : true
     },
@@ -69,8 +69,8 @@
     "mp-toutiao" : {
         "usingComponents" : true
     },
-    "uniStatistics": {  
-        "enable": false
+    "uniStatistics" : {
+        "enable" : false
     },
     "vueVersion" : "3"
 }

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@climblee/uv-ui':
+        specifier: ^1.1.20
+        version: 1.1.20
       '@dcloudio/uni-app':
         specifier: 3.0.0-4020320240708001
         version: 3.0.0-4020320240708001(@dcloudio/types@3.4.12)(postcss@8.4.40)(rollup@4.19.0)(vue@3.4.34(typescript@4.9.5))
@@ -56,6 +59,9 @@ importers:
       katex:
         specifier: ^0.16.11
         version: 0.16.11
+      marked:
+        specifier: ^14.0.0
+        version: 14.0.0
       vue:
         specifier: ^3.4.33
         version: 3.4.34(typescript@4.9.5)
@@ -720,6 +726,9 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@climblee/uv-ui@1.1.20':
+    resolution: {integrity: sha512-jkyesHJsPJkF4Nap9ZmG1/ibKlxXA5M8+ntqKXwwloIsYSYL5SOKb0gyPj17aBOU1PkJpmeiZ8PwnTolhK2/HA==}
 
   '@dcloudio/types@3.4.12':
     resolution: {integrity: sha512-xSFDhBCm4bqdRBO9mBj7wySz7fzOv9sMeK9VMI21tHvZbT2bIdGMU5o+kJ/J4H2+N5+7SW2kDY+aIzZs94DAOg==}
@@ -2608,6 +2617,11 @@ packages:
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
 
+  marked@14.0.0:
+    resolution: {integrity: sha512-uIj4+faQ+MgHgwUW1l2PsPglZLOLOT1uErt06dAPtx2kjteLAkbsd/0FiYg/MGS+i7ZKLb7w2WClxHkzOOuryQ==}
+    engines: {node: '>= 18'}
+    hasBin: true
+
   media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
@@ -4339,6 +4353,8 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@climblee/uv-ui@1.1.20': {}
 
   '@dcloudio/types@3.4.12': {}
 
@@ -7122,6 +7138,8 @@ snapshots:
   makeerror@1.0.12:
     dependencies:
       tmpl: 1.0.5
+
+  marked@14.0.0: {}
 
   media-typer@0.3.0: {}
 
