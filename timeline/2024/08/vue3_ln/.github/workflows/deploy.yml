@@ -46,5 +46,6 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           github_token: ${{ secrets.DEPLOY_TOKEN }}
+          # github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: './dist/build/h5/'
           # publish_dir: './dist/'
