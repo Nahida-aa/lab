@@ -71,7 +71,7 @@
   <common-title>
     <template #name>专题精选</template>
     <template #custom>
-      <navigator class="more" url="/">
+      <navigator class="more" url="/pages/classify/classify">
         More+
       </navigator>
     </template>
@@ -89,6 +89,7 @@
 import { ref, onMounted, getCurrentInstance } from 'vue'
 import {apiGetBanner,apiNewsList,apiGetRecommend,apiGetClassify} from '@/api/apis.js'
 import { onShareAppMessage } from '@dcloudio/uni-app';
+import {is_dev} from '@/config/index.js'
 
 const bannerList = ref([])
 const noticeList = ref([])
@@ -120,7 +121,7 @@ const get_classify = async () => {
   let res_json = await apiGetClassify({
     is_recommend: true
   })
-  console.log(res_json)
+  if(is_dev) console.log(res_json)
   classifyList.value = res_json.data
 }
 
@@ -130,16 +131,19 @@ get_recommend()
 get_classify()
 
 const goTarget = (item) => {
-  console.log('goTarget:',item)
+  if(is_dev) console.log('goTarget:',item)
   if (item.target == 'miniProgram') {
     goMp(item)
   }
-  // TODO: 跳转 H5
-  // TODO: 跳转self
+  // TODO: 跳转 web
+  // TODO: 跳转 self
 }
 const goMp = (item) => {
-  console.log('goMp:',item)
+  if(is_dev) console.log('goMp:',item)
   // TODO: 跳转小程序
+  if (!item.appid) {
+    return
+  }
   uni.navigateToMiniProgram({
     appId: item.appid,
   })
@@ -160,7 +164,7 @@ const goNoticeDetail = (new_id) => {
 
 // 分享
 onShareAppMessage((e) => {
-  console.log('分享',e)
+  if(is_dev) console.log('分享',e)
   return {
     title: '小草壁纸~~~',
   }

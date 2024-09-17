@@ -1,5 +1,6 @@
 <script setup>
-console.log('markdown.vue')
+import {is_dev} from '@/config/index.js'
+if(is_dev) console.log('markdown.vue')
 import { ref, onMounted } from 'vue'
 import { marked } from 'marked'
 import { onLoad } from '@dcloudio/uni-app'
@@ -13,22 +14,22 @@ const props = defineProps({
 const htmlContent = ref('')
 
 const loadMarkdownContent = async (md_file_url) => {
-  console.log('loadMarkdownContent:', md_file_url)
+  if(is_dev) console.log('loadMarkdownContent:', md_file_url)
   try {
     uni.request({
       url: md_file_url,
       success: (response) => {
-        console.log('success:', response)
-        console.log('Markdown content:', response.data)
+        if(is_dev) console.log('success:', response)
+        if(is_dev) console.log('Markdown content:', response.data)
         const markdown = response.data
         htmlContent.value = marked(markdown)
       },
       fail: (error) => {
-        console.error('Error fetching markdown content:', error)
+        if(is_dev) console.error('Error fetching markdown content:', error)
       }
     })
   } catch (error) {
-    console.error('Error loading markdown content:', error)
+    if(is_dev) console.error('Error loading markdown content:', error)
   }
 }
 
@@ -37,7 +38,7 @@ const loadMarkdownContent = async (md_file_url) => {
 //   loadMarkdownContent(props.src)
 // })
 onMounted(() => {
-  console.log('onMounted:', props.src)
+  if(is_dev) console.log('onMounted:', props.src)
   loadMarkdownContent(props.src)
 })
 </script>

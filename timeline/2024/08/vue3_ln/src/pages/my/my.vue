@@ -4,12 +4,12 @@
 <view :style="{height:getNavBarHeight()+'px'}"></view>
 
 <view class="user-info">
-	<view class="avatar">
-		<image :src="user.avatar" mode="aspectFill"/>
+	<view class="avatar" @click="clickAvatar">
+		<image :src="avatarUrl" mode="aspectFill"/>
 	</view>
 	<view class="ip">{{user.IP}}</view>
 	<view class="address">
-		来自于：{{ user.address.province || user.address.city || user.address.country || '未知'  }}
+		来自于：{{ user.address.city || user.address.province || user.address.country || '未知'  }}
 	</view>
 </view>
 
@@ -23,7 +23,7 @@
 				<view class="text">我的下载</view>
 			</view>
 			<view class="right">
-				<view class="text">{{ user.downloadSize }}</view>
+				<view class="text">{{ downloadCount }}</view>
 				<uni-icons type="right" size="15" color="#999"></uni-icons>
 			</view>
 		</view>
@@ -36,7 +36,7 @@
 				<view class="text">我的评分</view>
 			</view>
 			<view class="right">
-				<view class="text">{{ user.scoreSize }}</view>
+				<view class="text">{{ scoreCount }}</view>
 				<uni-icons type="right" size="15" color="#999"></uni-icons>
 			</view>
 		</view>
@@ -92,29 +92,52 @@
   </view>
 </view>
 
+<uni-popup ref="avatarPopup" type="bottom">
+	<view class="avatar-sheet">
+		<view class="text" @click="uploadAvatar">上传新头像</view>
+		<view class="text" @click="clickAvatarCloser">取消</view>
+	</view>
+</uni-popup>
+
 </view>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { getNavBarHeight } from '@/utils/system.js'
-// console.log('getNavBarHeight', getNavBarHeight())
+// if(is_dev) console.log('getNavBarHeight', getNavBarHeight())
 import { apiUserInfo } from '@/api/apis.js'
+import {baseURL,defaultAvatar,is_dev} from '@/config/index.js'
+import { useUserStore } from '@/store/user';
+
+const userStore = useUserStore();
+const scoreCount = computed(() => userStore.score_count)
+const downloadCount = computed(() => userStore.download_count)
 
 const user = ref({
-    avatar: '/static/images/Nahida.jpg',
-    nickname: 'aa',
-    username: 'Nahida',
-		// scoreSize: 0, // 确保初始化所有需要的属性
+    avatar: '',
+    nickname: '',
+    username: '',
 		address: {},
+})
+
+const avatarUrl = computed( () => {
+	if (!user.value.avatar) {
+    return defaultAvatar;
+  }
+	return user.value.avatar
 })
 
 const getUserInfo = ()=>{
 	apiUserInfo().then(res_json=>{
-		console.log('getUserInfo:', res_json)
+		if(is_dev) console.log('getUserInfo:', res_json)
 		// user.value = res_json.data
 		Object.assign(user.value, res_json.data)
-		console.log('user:', user)
+		userStore.updateScoreCount(user.value.score_count)
+		userStore.updateDownloadCount(user.value.download_count)
+		downloadCount.value = userStore.download_count
+		scoreCount.value = userStore.score_count
+		if(is_dev) console.log('user:', user.value)
 	})
 }
 getUserInfo()
@@ -126,17 +149,95 @@ const clickContact = () => {
 }
 
 const toWallpaperLst = (name, type) => {
-	console.log('toWallpaperLst:', name, type)
+	if(is_dev) console.log('toWallpaperLst:', name, type)
 	uni.navigateTo({
 		url: '/pages/wallpaperList/wallpaperList?name='+name+'&type='+type
 	})
 }
 
 const toNewsDetail = (id) => {
-	console.log('toNewsDetail:', id)
+	if(is_dev) console.log('toNewsDetail:', id)
 	uni.navigateTo({
 		url: '/pages/notice/detail?id='+id
 	})
+}
+
+const avatarPopup = ref(null)
+const clickAvatar = () => {
+	avatarPopup.value.open()
+}
+const uploadAvatar = () => {
+	avatarPopup.value.close()
+	uni.chooseImage({
+		count: 1,
+		sizeType: ['compressed'],
+		sourceType: ['album', 'camera'],
+		success: (res) => {
+			if(is_dev) console.log('chooseImage:', res)
+			const tempFilePath = res.tempFilePaths[0];
+			const fileName = res.tempFiles[0].name;
+			// const localFilePath = res.tempFiles[0].path;
+			// let file = res.tempFiles[0].path;
+			if(is_dev) console.log('tempFilePath:', tempFilePath)
+			if(is_dev) console.log('fileName:', fileName)
+			// if (tempFilePath.startsWith('blob')) {
+			// 	const fs = uni.getFileSystemManager()
+			// 	fs.saveFile({
+			// 		tempFilePath,
+			// 		success: (res) => {
+			// 			if(is_dev) console.log('saveFile:', res)
+			// 			localFilePath = res.savedFilePath
+			// 		}
+			// 	})
+				// fetch(tempFilePath)
+				// .then(res => res.blob())
+				// .then(blob => {
+				// 		file = new File([blob], 'upload.jpg', { type: blob.type });
+				// 		if(is_dev) console.log('file:', file)
+				// })
+			// }
+			// 上传文件到服务器
+			uni.uploadFile({
+				url: baseURL+'/api/wallpaper/user-avatar/upload_avatar/', 
+				filePath: tempFilePath,
+				name: 'file',  // request body formData key: value[binary]
+				// header: {  // uni会自己处理，不用设置 'Content-Type'
+				// 	'Content-Type': 'multipart/form-data' // 设置 boundary
+				// 	// 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' // 设置 boundary
+				// },
+				// formData: {
+				// 	'fileName': fileName
+				// },
+				success: (uploadFileRes) => {
+					const data = JSON.parse(uploadFileRes.data);
+					if(is_dev) console.log('uploadFile:', data)
+					if (data.errCode == 0) {
+						// 更新用户头像
+						user.avatar = data.url;
+						uni.showToast({
+							title: '头像上传成功',
+							icon: 'success'
+						});
+					} else {
+						uni.showToast({
+							title: data.errMsg,
+							icon: 'none'
+						});
+					}
+				},
+				fail: (err) => {
+					if(is_dev) console.log('因网络上传失败', err);
+					uni.showToast({
+						title: '因网络上传失败',
+						icon: 'none'
+					})
+				}
+			})
+		}
+	})
+}
+const clickAvatarCloser = () => {
+	avatarPopup.value.close()
 }
 </script>
 
@@ -233,6 +334,37 @@ const toNewsDetail = (id) => {
 					// 完全覆盖row后进行100%透明
 					opacity: 0;
 				}
+			}
+		}
+	}
+	.avatar-sheet {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		position: absolute;
+		width: 100%;
+		bottom:var(--window-bottom);
+
+		// 圆角 ---
+		border-top-left-radius: 10rpx;
+		border-top-right-radius: 10rpx;
+		// 防止子元素溢出
+		overflow: hidden;
+		// ---
+		.text {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100rpx;
+			font-size: 32rpx;
+			color: #333;
+			background-color: #f9f9f9;
+			border-bottom: 1px solid #d0cccc;
+			&:last-child {
+				border-bottom: none;
 			}
 		}
 	}

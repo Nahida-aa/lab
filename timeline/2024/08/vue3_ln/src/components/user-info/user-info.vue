@@ -13,6 +13,7 @@
 </template>
 
 <script setup>
+import {is_dev} from '@/config/index.js'
 const props = defineProps({
 	user: {
 		type: Object,
@@ -25,7 +26,7 @@ const props = defineProps({
 		}
 	}
 })
-console.log('props:',props)
+if(is_dev) console.log('props:',props)
 </script>
 
 <style lang="scss" scoped>

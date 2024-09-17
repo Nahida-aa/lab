@@ -62,6 +62,9 @@ importers:
       marked:
         specifier: ^14.0.0
         version: 14.0.0
+      pinia:
+        specifier: ^2.2.2
+        version: 2.2.2(typescript@4.9.5)(vue@3.4.34(typescript@4.9.5))
       vue:
         specifier: ^3.4.33
         version: 3.4.34(typescript@4.9.5)
@@ -2847,6 +2850,18 @@ packages:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
 
+  pinia@2.2.2:
+    resolution: {integrity: sha512-ja2XqFWZC36mupU4z1ZzxeTApV7DOw44cV4dhQ9sGwun+N89v/XP7+j7q6TanS1u1tdbK4r+1BUx7heMaIdagA==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.3.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
@@ -3391,6 +3406,17 @@ packages:
       sugarss:
         optional: true
       terser:
+        optional: true
+
+  vue-demi@0.14.10:
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
         optional: true
 
   vue-i18n@9.13.1:
@@ -7319,6 +7345,14 @@ snapshots:
 
   pify@2.3.0: {}
 
+  pinia@2.2.2(typescript@4.9.5)(vue@3.4.34(typescript@4.9.5)):
+    dependencies:
+      '@vue/devtools-api': 6.6.3
+      vue: 3.4.34(typescript@4.9.5)
+      vue-demi: 0.14.10(vue@3.4.34(typescript@4.9.5))
+    optionalDependencies:
+      typescript: 4.9.5
+
   pirates@4.0.6: {}
 
   pixelmatch@4.0.2:
@@ -7852,6 +7886,10 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.77.8
       terser: 5.31.3
+
+  vue-demi@0.14.10(vue@3.4.34(typescript@4.9.5)):
+    dependencies:
+      vue: 3.4.34(typescript@4.9.5)
 
   vue-i18n@9.13.1(vue@3.4.34(typescript@4.9.5)):
     dependencies:

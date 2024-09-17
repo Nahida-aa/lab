@@ -1,3 +1,4 @@
+import { is_dev } from "../config"
 
 const SYSTEM_INFO = uni.getSystemInfoSync()
 export const getStatusBarHeight = () => SYSTEM_INFO.statusBarHeight || 15
@@ -20,7 +21,7 @@ export const getNavBarHeight = ()=>{
 // 抖音适配
 export const getLeftIconLeft = ()=>{
     // #ifdef MP-TOUTIAO
-    console.log(tt.getCustomButtonBoundingClientRect())
+    if(is_dev)  console.log(tt.getCustomButtonBoundingClientRect())
     let {leftIcon:{left,width}} = tt.getCustomButtonBoundingClientRect()
     return left + parseInt(width)
     // #endif

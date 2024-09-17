@@ -1,4 +1,5 @@
-const BASE_URL = 'http://127.0.0.1:8000/api/wallpaper'
+import {baseURL,is_dev} from '@/config/index.js'
+const API_URL = baseURL+'/api/wallpaper'
 
 export function request({
     url = '',
@@ -9,7 +10,7 @@ export function request({
     header['access-key'] = 'Nahida-aa'
     return new Promise((resolve, reject) => {
         uni.request({
-            url: BASE_URL + url,
+            url: API_URL + url,
             method: method,
             header,
             // header: {
@@ -19,11 +20,11 @@ export function request({
             data: data,
             success: (res) => {
                 if (res.data.errCode === 0) {
-                    // console.log('res', res)
+                    // if(is_dev) console.log('res', res)
                     resolve(res.data)
                 } else if (res.data.errCode === 400) {
                     uni.showModal({
-                        title: '错误提示',
+                        title: '提示',
                         content: res.data.errMsg,
                         showCancel: false,
                     })

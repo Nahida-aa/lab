@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "预览",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "uni-icons": "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",
+    "uni-dateformat": "../../node-modules/@dcloudio/uni-ui/lib/uni-dateformat/uni-dateformat",
+    "uni-rate": "../../node-modules/@dcloudio/uni-ui/lib/uni-rate/uni-rate",
+    "uni-popup": "../../node-modules/@dcloudio/uni-ui/lib/uni-popup/uni-popup"
+  }
+}

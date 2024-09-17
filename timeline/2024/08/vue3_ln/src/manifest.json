@@ -1,6 +1,6 @@
 {
-    "name" : "",
-    "appid" : "",
+    "name" : "小草壁纸",
+    "appid" : "__UNI__091E4F4",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -50,7 +50,6 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        // "appid" : "wx9399190059ef0dc4",
         "appid" : "wx2ca4ac1bf6405cef",
         "setting" : {
             "urlCheck" : false,

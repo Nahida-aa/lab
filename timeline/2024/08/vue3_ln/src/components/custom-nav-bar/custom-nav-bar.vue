@@ -42,7 +42,7 @@ const toSearch = () => {
     background: 
     linear-gradient(180deg, rgba(0, 0, 0, 0), #ffffff 400rpx),
     linear-gradient(90deg, #beecd8 20%, #f4e2d8);
-    .statusBar{ }
+    // .statusBar{ }
     .titleBar{
       display: flex;
       align-items: center;
@@ -73,9 +73,9 @@ const toSearch = () => {
       }
     }
   }
-  .fill{
+  // .fill{
 
-  }
+  // }
 }
 </style>
     

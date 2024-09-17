@@ -23,7 +23,6 @@ export default defineConfig({
         const sourceFile = resolve(__dirname, 'public/404.html');
         const destinationFile = resolve(outputDir, '404.html');
         copyFileSync(sourceFile, destinationFile);
-        console.log('404.html copied to', destinationFile);
       }
     }
   ],

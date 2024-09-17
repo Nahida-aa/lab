@@ -33,6 +33,7 @@
 <script setup>
 import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 import { ref } from 'vue'
+import {is_dev} from '@/config/index.js'
 
 const pets = ref([])
 const pet_cats = ref([])
@@ -43,7 +44,7 @@ const pet_classify = [{key:"all", value:"全部"}, {key:"cat", value:"猫猫"}, 
 const values = pet_classify.map(item => item.value)
 const styleType = 'button'
 const onClickItem = (e) => {
-  // console.log(e)
+  // if(is_dev) console.log(e)
   current.value = e.currentIndex
   network()
 }
@@ -85,8 +86,8 @@ function network() {
         pets.value = [...pets.value, ...res.data.data]
         preview_list.value = pets.value
       }else if (current.value === 1) {
-        console.log(pet_classify[current.value].key)
-        console.log('点击了猫猫')
+        if(is_dev) console.log(pet_classify[current.value].key)
+        if(is_dev) console.log('点击了猫猫')
         pet_cats.value = [...pet_cats.value, ...res.data.data]
         preview_list.value = pet_cats.value
       }else if (current.value === 2) {
@@ -103,7 +104,7 @@ function network() {
       })
     }
   }).catch(err => {
-    console.log(err)
+    if(is_dev) console.log(err)
     uni.showToast({
       title: '网络错误, 请重新刷新',
       icon: 'none'

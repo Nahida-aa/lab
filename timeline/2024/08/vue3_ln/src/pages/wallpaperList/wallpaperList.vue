@@ -24,20 +24,21 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance } from 'vue'
 import { onShareAppMessage } from '@dcloudio/uni-app';
-import { apiWallpaper, apiUserWall } from '@/api/apis.js'
+import { apiWallpaper, apiScore, apiDownload } from '@/api/apis.js'
 import { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app';
 import { gotoHome } from '@/utils/common.js'
+import { is_dev } from '@/config/index.js'
 
 const wallpaperList = ref([])
 const queryParams = {
   page: 1,
-  pageSize: 12,
+  page_size: 12,
 }
 const noData = ref(false)
 let pageName
 
 onLoad((e) => {
-  console.log('wallpaper_onLoad:', e)
+  if(is_dev) console.log('wallpaper_onLoad:', e)
   let { id = null, name = null, type = null } = e
   if (!id && !name) {
     gotoHome()
@@ -50,43 +51,50 @@ onLoad((e) => {
     title: pageName
   })
   get_wallList_by_x()
-  // console.log('wallpaperList.length',wallpaperList.length,'noData',noData)
+  // if(is_dev) console.log('wallpaperList.length',wallpaperList.length,'noData',noData)
   // if (wallpaperList.length || noData.value) {
-  //   console.log('显示底部加载更多')
-  //   console.log(wallpaperList.length || noData)
+  //   if(is_dev) console.log('显示底部加载更多')
+  //   if(is_dev) console.log(wallpaperList.length || noData)
   // }
-  // console.log(wallpaperList.length || noData)
+  // if(is_dev) console.log(wallpaperList.length || noData)
 })
 onReachBottom(() => {
-  console.log('到底了', noData.value)
+  if(is_dev) console.log('到底了', noData.value)
   if (noData.value) {
     return
   }
   // TODO: 防抖
   queryParams.page++
-  get_wallList_by_classify()
+  get_wallList_by_x()
 })
 
 const get_wallList_by_x = async () => {
   let res_json
-  console.log('queryParams:', queryParams)
+  if(is_dev) console.log('queryParams:', queryParams)
   if (queryParams.class_id) { 
-    console.log('apiWallpaper')
     res_json = await apiWallpaper(queryParams) 
+    if(is_dev) console.log('wallpaperList', res_json)
   }
-  if (queryParams.type) res_json = await apiUserWall(queryParams)
-  console.log('apiUserWall:', res_json)
+  // if (queryParams.type) res_json = await apiUserWall({data:queryParams})
+  if (queryParams.type == 'score') {
+    res_json = await apiScore({data:queryParams})
+    if(is_dev) console.log('我的评分', res_json)
+  }
+  if (queryParams.type == 'download') {
+    res_json = await apiDownload({data:queryParams})
+    if(is_dev) console.log('我的下载', res_json)
+  }
   // wallpaperList.value = res_json.data
   // 追加
   wallpaperList.value = [...wallpaperList.value, ...res_json.data]
-  if (res_json.data.length < queryParams.pageSize) noData.value = true
+  if (res_json.data.length < queryParams.page_size) noData.value = true
   // TODO: 缓存 后续建议使用 Pinia 来管理
   uni.setStorageSync("storeWallList", wallpaperList.value)
 }
 
 // 分享
 onShareAppMessage((e) => {
-  console.log('分享', e)
+  if(is_dev) console.log('分享', e)
   return {
     title: '小草壁纸-' + pageName,
     path: '/pages/wallpaperList/wallpaperList?id=' + queryParams.class_id + '&name=' + pageName,
@@ -104,7 +112,7 @@ onMounted(() => {
   }
 });
 onUnload(() => {
-  console.log('页面卸载')
+  if(is_dev) console.log('页面卸载')
   uni.removeStorageSync("storeWallList")
 })
 </script>

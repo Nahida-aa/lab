@@ -1,7 +1,9 @@
+import {is_dev} from '@/config/index.js'
+
 export function formatTimeDifference(timestamp) {
-    console.log('timestamp:', timestamp);
+    if(is_dev) console.log('timestamp:', timestamp);
     const now = Date.now();
-    console.log('now:', now);
+    if(is_dev) console.log('now:', now);
     const diff = now - timestamp;
 
     const minute = 60 * 1000;

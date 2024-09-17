@@ -26,20 +26,20 @@ onLoad((e) => {
 
   <view class="title">
     <view class="tag">
-      <uni-tag inverted 
-        text="置顶"
+      <uni-tag inverted class="tag-item"
+        text="置顶" v-if="news.is_sticky"
         size="normal"
         type="error"
       />
     </view>
-    <view class="font">这个区域写标题</view>
+    <view class="font">{{ news.title }}</view>
   </view>
 
   <view class="info">
-    <view class="item">Nahida</view>
+    <view class="item">{{ news.author }}</view>
     <view class="item">
       <uni-dateformat
-        :date="Date.now()"
+        :date="news.publish_date"
         format="yyyy/MM/dd hh:mm:ss"
       />
     </view>
@@ -53,7 +53,7 @@ onLoad((e) => {
   </view>
 
   <view class="count">
-    阅读 5588
+    阅读 {{ news.view_count || 0 }} 次
   </view>
   
 </view>
@@ -68,10 +68,18 @@ onLoad((e) => {
     line-height: 1.6em;
     padding-bottom: 30rpx;
     display: flex;
+    // 
+    // justify-content: center;
+    align-items: center;
     .tag{
       transform: scale(0.8);
       transform-origin: left center;
       flex-shrink: 0;
+      .tag-item{
+        // 上下居中
+        display: flex;
+        align-items: center;
+      }
     }
     .font{
       padding-left: 6rpx;

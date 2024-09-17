@@ -61,11 +61,12 @@
 import {ref} from "vue";
 import {onLoad,onUnload,onReachBottom} from "@dcloudio/uni-app";
 import { apiSearch } from "@/api/apis.js";
+import {is_dev} from '@/config/index.js'
 
 //查询参数
 const queryParams = ref({	
 	page:1,
-	pageSize:12,
+	page_size:12,
 	keyword:""
 })
 
@@ -87,16 +88,16 @@ const wallList = ref([])
 const onSearch = ()=>{
 	// if 纯空格
 	if (!queryParams.value.keyword.trim()) return
-	console.log("搜索param",queryParams.value);
+	if(is_dev) console.log("搜索param",queryParams.value);
 	// 去除左右空格
 	const trimmedKeyword = queryParams.value.keyword.trim();
 	uni.showLoading()
-	// console.log("追加前搜索历史",historySearch.value);
+	// if(is_dev) console.log("追加前搜索历史",historySearch.value);
 	// 追加到首位 and 去重 and 截取前10个
 	historySearch.value = [...new Set([trimmedKeyword,...historySearch.value])].slice(0,10);
 
 	uni.setStorageSync("historySearch",historySearch.value)
-	// console.log("追加后搜索历史",historySearch.value);
+	// if(is_dev) console.log("追加后搜索历史",historySearch.value);
 	initParams()
 	getSearchList()
 }
@@ -119,7 +120,7 @@ const removeHistory = ()=>{
 		title:"是否清空历史搜索？",
 		success:res=>{
 			if(res.confirm){
-				console.log("确认删除")
+				if(is_dev) console.log("确认删除")
 				uni.removeStorageSync("historySearch")
 				historySearch.value = []
 			}
@@ -137,13 +138,13 @@ const removeHistory = ()=>{
 const getSearchList = async()=>{
 	try{
 		let res_json = await apiSearch(queryParams.value)
-		console.log("搜索结果",res_json)
+		if(is_dev) console.log("搜索结果",res_json)
 		// 追加到列表
 		wallList.value = [...wallList.value,...res_json.data]
 		if (!res_json.next) noData.value = true
-		if (res_json.total == 0) noSearch.value = true
+		if (res_json.count == 0) noSearch.value = true
 		uni.setStorageSync("storeWallList", wallList.value)
-		console.log("搜索结果列表",wallList.value)
+		if(is_dev) console.log("搜索结果列表",wallList.value)
 	}finally{
 		uni.hideLoading()
 	}

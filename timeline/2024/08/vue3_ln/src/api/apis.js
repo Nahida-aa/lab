@@ -54,9 +54,17 @@ export function apiScore({method,data}= {}) {
         data
     })
 }
-export function apiWriteDownload(data={}) {
+// export function apiWriteDownload({method,data}= {}) {
+//     return request({
+//         url:'/download',
+//         method,
+//         data
+//     })
+// }
+export function apiDownload({method,data}= {}) {
     return request({
-        url:'/downloadWall',
+        url:'/download/',
+        method,
         data
     })
 }
@@ -65,12 +73,12 @@ export function apiUserInfo() {
         url:'/user',
     })
 }
-export function apiUserWall(data={}) {
-    return request({
-        url:'/userWallList',
-        data
-    })
-}
+// export function apiUserWall(data={}) {
+//     return request({
+//         url:'/userWallList',
+//         data
+//     })
+// }
 export function apiSearch(data={}) {
     return request({
         url:'/search',

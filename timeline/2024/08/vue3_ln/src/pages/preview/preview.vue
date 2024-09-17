@@ -27,7 +27,7 @@
         </view>
         <view class="box" @click="clickScore">
           <uni-icons type="star" color="" size="28" />
-          <view class="text">{{current_info.score}}分</view>
+          <view class="text">{{formattedScore}}分</view>
         </view>
         <view class="box">
           <uni-icons @click="clickDownload" type="download" color="" size="28" />
@@ -63,7 +63,7 @@
               <view class="label">评分：</view>
               <view class="value rateBox">
                 <uni-rate readonly :touchable="false" :value="current_info.score" />
-                <text class="score">{{current_info.score}}分</text>
+                <text class="score">{{formattedScore}}分</text>
               </view>
             </view>
             <view class="row">
@@ -115,12 +115,17 @@ import { ref, onMounted, getCurrentInstance } from 'vue'
 import { onShareAppMessage } from '@dcloudio/uni-app';
 import { getStatusBarHeight } from '@/utils/system';
 import { onLoad } from '@dcloudio/uni-app';
-import { apiScore,apiWriteDownload,apiWallpaper } from '@/api/apis';
+import { apiScore,apiDownload,apiWallpaper } from '@/api/apis';
+import { useUserStore } from '@/store/user';
+import {is_dev} from '@/config/index.js'
+
+const userStore = useUserStore();
+const scoreCount = ref(userStore.score_count);
 // 使用 getStatusBarHeight 函数
-// console.log('StatusBarHeight:', getStatusBarHeight());
+// if(is_dev) console.log('StatusBarHeight:', getStatusBarHeight());
 
 const storeWallList = uni.getStorageSync("storeWallList") || []
-console.log('storeWallList',storeWallList)
+if(is_dev) console.log('storeWallList',storeWallList)
 const previewList = ref([])
 previewList.value = storeWallList.map(item=>{
   return {
@@ -128,19 +133,22 @@ previewList.value = storeWallList.map(item=>{
     pic_url: item.small_url.replace("_small","").replace("small","index")
   }
 })
-console.log('previewList',previewList)
+if(is_dev) console.log('previewList',previewList)
 
 const current_id = ref(null)
 const current_index = ref(0)
 const current_info = ref(null)
+const formattedScore = computed(() => {
+  return Number(current_info.value.score).toFixed(1);
+})
 const read_imgs = ref([])
 
 onLoad(async (e)=>{  // 此时页面还未显示，没有开始进入的转场动画，页面dom还不存在
-  console.log('onLoad',e)
+  if(is_dev) console.log('onLoad',e)
   current_id.value = e.id
   if (e.type == 'share') {
     let res_json = await apiWallpaper({id: current_id.value})
-    console.log('apiWallpaper:',res_json)
+    if(is_dev) console.log('apiWallpaper:',res_json)
     previewList.value = res_json.data.map(item=>{
       return {
         ...item,
@@ -172,7 +180,7 @@ const preloadImages = (read_imgs, current_index, previewList) => {
 // click info, open info 弹窗
 const infoPopup = ref(null)
 const clickInfo = ()=>{
-  console.log('clickInfo')
+  if(is_dev) console.log('clickInfo')
   infoPopup.value.open()
 }
 // close info 
@@ -184,7 +192,7 @@ const clickInfoClose = ()=>{
 const scorePopup = ref(null)
 // const scoring = ref(false)
 const clickScore = ()=>{
-  console.log('clickScore')
+  if(is_dev) console.log('clickScore')
   if (current_info.value.user_score) {
     is_has_score.value = true
     user_score.value = current_info.value.user_score
@@ -200,7 +208,7 @@ const clickScoreClose = ()=>{
 const user_score = ref(0)
 const is_has_score = ref(false)
 const submitScore = async ()=>{
-  console.log('submitScore', user_score.value)
+  if(is_dev) console.log('submitScore', user_score.value)
   let {class_id, _id:wall_id} = current_info.value
   let res_json = await apiScore({
     method: 'post',
@@ -210,24 +218,30 @@ const submitScore = async ()=>{
       user_score: user_score.value
     }
   })
-  console.log('apiScore:',res_json)
+  if(is_dev) console.log('apiScore:',res_json)
   if (res_json.errCode == 0) {
     is_has_score.value = true
     uni.showToast({
       title: '评分成功',
       // icon: 'success'
     })
+    current_info.value.score = res_json.data.score
+    // 存到store
+    storeWallList[current_index.value].score = res_json.data.score
+    // 更新 pinia store 的用户评分的壁纸个数
+    if(is_dev) console.log('user__score_count',res_json.data.user__score_count)
+    userStore.updateScoreCount(res_json.data.user__score_count)
+    previewList.value[current_index.value].user_score = user_score.value
+    uni.setStorageSync("storeWallList", previewList.value)
   }
-  previewList.value[current_index.value].user_score = user_score.value
-  uni.setStorageSync("storeWallList", previewList.value)
   scorePopup.value.close()
 }
 
 // download
 const clickDownload = async ()=>{
-  console.log('clickDownload')
+  if(is_dev) console.log('clickDownload')
   // #ifdef H5
-  console.log('H5')
+  if(is_dev) console.log('H5')
   uni.showModal({
     content: '请长按保存壁纸',
     showCancel: false,
@@ -235,33 +249,35 @@ const clickDownload = async ()=>{
   // #endif
   // #ifndef H5
   try {  // 利用 try 异步同步化
-    console.log('not H5')
+    if(is_dev) console.log('not H5')
     uni.showLoading({
       title: '下载中...',
       mask: true
     })
-    // TODO: api 如果频繁请求(5秒内只能一次), res_json.errCode == 400 用于判断
-    // let {class_id, _id:wall_id} = current_info.value
-    // let res_json = await apiWriteDownload({
-    //   data: {
-    //     class_id,
-    //     wall_id,
-    //   }
-    // })
-    // console.log(res_json)
+    let {class_id, _id:wall_id} = current_info.value
+    let res_json = await apiDownload({
+      method: 'post',
+      data: {
+        class_id,
+        wall_id,
+      }
+    })
+    // if(is_dev) console.log(res_json)
     // if (res_json.errCode != 0) throw res_json
     // download
     uni.getImageInfo({
       src: current_info.value.pic_url,
       success: (res) => {
-        console.log('getImageInfo', res)
+        if(is_dev) console.log('getImageInfo', res)
         uni.saveImageToPhotosAlbum({
           filePath: res.path,
           success: (success) => {
-            console.log('saveImageToPhotosAlbum', success)
+            if(is_dev) console.log('saveImageToPhotosAlbum', success)
+            // 更新 pinia store 的用户下载的壁纸个数
+            userStore.updateDownloadCount(res_json.data.user__download_count)
           },
           fail: (err) => {
-            console.log('saveImageToPhotosAlbum', err)
+            if(is_dev) console.log('saveImageToPhotosAlbum', err)
             if (err.errMsg == 'saveImageToPhotosAlbum:fail cancel') {
               uni.showToast({
                 title: '取消保存',
@@ -278,7 +294,7 @@ const clickDownload = async ()=>{
                 if (success.confirm) {
                   uni.openSetting({
                     success: (res) => {
-                      console.log('res.authSetting',res.authSetting)
+                      if(is_dev) console.log('res.authSetting',res.authSetting)
                       if (res.authSetting['scope.writePhotosAlbum']) {
                         uni.showToast({
                           title: '授权成功',
@@ -303,7 +319,7 @@ const clickDownload = async ()=>{
       },
     })
   } catch (error) {
-    console.log('unH5 download_err:',error)
+    if(is_dev) console.log('unH5 download_err:',error)
     uni.hideLoading()
   }
   // #endif
@@ -312,13 +328,13 @@ const clickDownload = async ()=>{
 // 遮罩层状态
 const maskState = ref(true)
 const maskChange = ()=>{
-  console.log('maskChange')
+  if(is_dev) console.log('maskChange')
   maskState.value = !maskState.value
 }
 
 // 返回
 const goBack = ()=>{
-  console.log('goBack')
+  if(is_dev) console.log('goBack')
   uni.navigateBack({
     success: (res) => {
     },
@@ -332,7 +348,7 @@ const goBack = ()=>{
 
 // 分享
 onShareAppMessage((e) => {
-  console.log('分享',e)
+  if(is_dev) console.log('分享',e)
   return {
     title: '小草壁纸',
     path: '/pages/preview/preview?id='+current_id.value+"&type=share",
