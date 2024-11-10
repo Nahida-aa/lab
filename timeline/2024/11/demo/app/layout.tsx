@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import ThemeProvider from "@/components/provider/theme-provider";
-import ParticleBackground from "@/components/bg/ParticleBackground";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,7 +40,6 @@ export default function RootLayout({
 
           {children}
         </main>
-        {/* <ParticleBackground /> */}
         </ThemeProvider>
       </body>
     </html>
