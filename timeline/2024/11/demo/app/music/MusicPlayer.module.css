@@ -1,0 +1,31 @@
+@keyframes flicker {
+  0%, 100% {
+      box-shadow: 0 0 2px #b799df00, 0 0 7px #88d7da75, 0 0 5px #7cc3c575, 0 0 18px #a5d3d475;
+  }
+  33% {
+    box-shadow: 0 0 2px #0e002000, 0 0 7px #780afe75, 0 0 5px #bba6d475, 0 0 18px #ae91d175;
+  }
+  66% {
+    box-shadow: 0 0 2px #240111, 0 0 8px #d6a3b875, 0 0 5px #e9a8c675, 0 0 12px #e9bfd575;
+  }
+}
+
+.flicker {
+animation: flicker 3s infinite;
+}
+
+@keyframes rotate {
+from {
+  transform: rotate(0deg);
+}
+to {
+  transform: rotate(360deg);
+}
+}
+
+.rotate {
+animation: rotate 5s linear infinite;
+}
+.paused {
+animation-play-state: paused;
+}

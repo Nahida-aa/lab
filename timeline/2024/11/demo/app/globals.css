@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'XiaolaiMonoSC';
+  src: url('/fonts/XiaolaiMonoSC-Regular.ttf') format('truetype');
+  font-weight: normal; /* 默认权重: 400 | bold:700 | bolder: 比父元素更粗 */ 
+  font-style: normal; /* 默认样式 */
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'XiaolaiMonoSC', monospace;
+  font-feature-settings: 'calt', 'liga', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09';
   background-color: linear-gradient(to bottom right, 
   var(--background-1),
   var(--background-2),
@@ -99,4 +107,8 @@ body {
 .glow-purple {
   color: #f4edf7;
   text-shadow: 0 0 2px #0e002000, 0 0 7px #780afe75, 0 0 5px #780afe75, 0 0 18px #780afe75;
+}
+.glow-cyan {
+  color: #f4edf7;
+  text-shadow: 0 0 2px #0e002000, 0 0 7px #00f6ff75, 0 0 5px #00f6ff75, 0 0 18px #00f6ff75;
 }
