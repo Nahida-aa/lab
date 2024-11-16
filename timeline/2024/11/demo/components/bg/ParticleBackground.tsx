@@ -25,22 +25,25 @@ export default function ParticleBackground() {
 
     function animate() {
       requestAnimationFrame(animate)
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      particles.forEach(particle => {
-        particle.x += particle.dx
-        particle.y += particle.dy
-        if (particle.x > canvas.width || particle.x  < 0) {
-          particle.dx *= -1
-        }
-        if (particle.y > canvas.height || particle.y < 0) {
-          particle.dy *= -1
-        }
+      if (ctx){
 
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
-        ctx.fill()
-      })
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        particles.forEach(particle => {
+          particle.x += particle.dx
+          particle.y += particle.dy
+          if (particle.x > canvas.width || particle.x  < 0) {
+            particle.dx *= -1
+          }
+          if (particle.y > canvas.height || particle.y < 0) {
+            particle.dy *= -1
+          }
+  
+          ctx.beginPath()
+          ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
+          ctx.fill()
+        })
+      }
     }
     animate()
     const handleResize = () => {
