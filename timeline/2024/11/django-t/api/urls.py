@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .nj_api import api
+from api.nj_api import api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('example.urls')),
+    # path('', include('mcc.urls')),
     path("api/", api.urls),
 ]

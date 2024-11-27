@@ -1,5 +1,9 @@
 # dev
 
+```sh
+python manage.py runserver
+```
+
 项目结构
 ```yml
 api/:
@@ -11,6 +15,8 @@ api/:
   wsgi.py
 manage.py
 ```
+
+## django-ninja
 
 ```sh
 pip install django-ninja
@@ -42,4 +48,74 @@ urlpatterns = [
     ...
     path("api/", api.urls),
 ]
+```
+
+## db
+  
+```sh
+pip install python-dotenv
+pip install psycopg2-binary
+```
+
+```py name="api/settings.py"
+from urllib.parse import urlparse
+import os
+from dotenv import load_dotenv
+load_dotenv()
+# Replace the DATABASES section of your settings.py with this
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+print(f"tmpPostgres: {tmpPostgres}")
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+    },
+}
+```
+
+```sh
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+## django 内置 app, db
+
+### auth
+
+- db:
+  - auth_group
+    - id
+    - name
+    - id_auth_group_permissions_group_id
+    - id_auth_user_groups_group_id
+  - auth_group_permissions
+  - auth_permission
+  - auth_user
+    - id
+    - password
+    - last_login
+    - is_superuser
+    - username
+    - first_name
+    - last_name
+    - email
+    - is_staff
+    - is_active
+    - date_joined
+    - id_auth_user_groups_user_id
+    - id_auth_user_user_permissions_user_id
+    - id_django_admin_log_user_id
+  - auth_user_groups
+  - auth_user_user_permissions
+
+## users
+
+```sh
+pip install django-ninja-extra # 类
+pip install django-ninja-jwt # jwt
 ```

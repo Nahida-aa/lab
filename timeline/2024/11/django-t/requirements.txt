@@ -1,2 +1,6 @@
 Django==4.1.3
 django-ninja==1.3.0
+python-dotenv==1.0.1
+psycopg2-binary==2.9.10
+django-ninja-extra
+django-ninja-jwt
