@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
 // 开发: ws://localhost:8000/api/ws, 生产: ws://api.nahida-aa.us.kg/api/ws
-const WS_url = process.env.NODE_ENV === 'development' ? 'ws://localhost:8000/api/ws' : 'ws://api.nahida-aa.us.kg/api/ws';
+const WS_url = process.env.NODE_ENV === 'development' ? 'ws://localhost:3000/api/ws' : 'wss://api.nahida-aa.us.kg/api/ws';
 
 export default function WSPage() {
   const [messages, setMessages] = useState<string[]>([]);
