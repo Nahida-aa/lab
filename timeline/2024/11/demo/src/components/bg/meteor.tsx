@@ -10,6 +10,7 @@ export default function MeteorShower() {
     if (!canvas) return
     const ctx = canvas.getContext('2d');
     if (!ctx) return 
+    
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -29,6 +30,9 @@ export default function MeteorShower() {
     }
 
     function drawMeteor(meteor: { x: number, y: number, length: number, speed: number, angle: number, opacity: number }) {
+      if (!ctx) return;
+      // ctx as CanvasRenderingContext2D;
+        // Draw the tail of the meteor
       const gradient = ctx.createLinearGradient(
         meteor.x, meteor.y, 
         meteor.x - meteor.length * Math.cos(meteor.angle), 
