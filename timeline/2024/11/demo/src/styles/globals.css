@@ -19,8 +19,7 @@ body {
   var(--background-4),
   var(--background-5),
   var(--background-6)
-  )
-  ;
+  );
 }
 
 @layer base {
