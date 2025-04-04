@@ -1,5 +1,6 @@
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Response, status
 
 ### Create FastAPI instance with custom docs and openapi url
 app = FastAPI(docs_url="/api/py/docs",redoc_url="/api/py/redoc", openapi_url="/api/py/openapi.json")
@@ -18,6 +19,8 @@ async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
 @app.get("/api/py/helloFastApi")
 async def hello_fast_api():
     return {"message": "Hello from FastAPI"}
+
+
 
 @app.get("/items/{item_id}")
 async def read_item(item_id: int):
@@ -44,3 +47,8 @@ def divide(operation: Operation):
     if operation.b == 0:
         return {"error": "Division by zero"}
     return {"result": operation.a / operation.b}
+
+# 大型应用程序, 多文件写法
+from server.auth import route as auth_router
+
+app.include_router(auth_router.router)
