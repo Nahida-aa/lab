@@ -54,7 +54,7 @@ app.get('/', (c: Context) => {
           const $seconds = document.getElementById('seconds')
           let timer = null
           let seconds = 0
-          
+
           window.onload = () => {
             const saved = localStorage.getItem('chat-username')
             if (saved) {
@@ -97,7 +97,8 @@ app.get('/', (c: Context) => {
             }
           }
           function connect() {
-            ws = new WebSocket('ws://' + location.host + '/ws')
+            const protocol = location.protocol === 'https:' ? 'wss' : 'ws'
+            ws = new WebSocket(protocol + '://' + location.host + '/ws')
             ws.onopen = () => {
               ws.send(JSON.stringify({type: 'login', user: username}))
               updateStatus(true)
