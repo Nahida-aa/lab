@@ -1,0 +1,1 @@
+export const apiBasePath = process.env.apiBasePath || "api"

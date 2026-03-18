@@ -109,3 +109,9 @@ func main() {
 ### svelte
 
 ### astro
+
+## git submodule
+
+```bash
+git submodule update --init --recursive
+```
