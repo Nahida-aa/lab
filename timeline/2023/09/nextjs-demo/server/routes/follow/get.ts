@@ -7,7 +7,7 @@ import jsonContent from "~/lib/openapi/helpers/json-content";
 import { eq, is, sql } from "drizzle-orm";
 import { get_current_user_and_res, get_session_token_payload, get_session_token_payload_and_res } from "~/lib/middleware/auth";
 import { db } from "~/lib/db";
-import { user_table } from "~/lib/db/schema/user";
+import { user } from "~/lib/db/schema/user";
 // import { linkGroupFollow, linkUserFollow } from "~/server/db/schema/link";
 import { createSelectSchema } from "drizzle-zod";
 import { user_meta_schema } from "~/lib/schema/user";
@@ -88,7 +88,7 @@ const router = createRouter()
 //   const { offset, limit } = c.req.valid("query")
 //   console.log('offset', offset, 'limit', limit)
 //   const q_user = await db.query.user.findFirst({
-//     where: eq(user_table.name, target_name),
+//     where: eq(user.name, target_name),
 //   })
 //   if (!q_user) {
 //     return c.json({ message: 'User not found' }, httpStatus.NOT_FOUND)
@@ -152,16 +152,16 @@ const router = createRouter()
 //   if (!payload?.user?.name) {
 //     return c.json({ message: 'Unauthorized: 未登录' }, httpStatus.UNAUTHORIZED)
 //   }
-  
+
 //   const current_user = await db.query.user.findFirst({
-//     where: eq(user_table.name, payload.user.name),
+//     where: eq(user.name, payload.user.name),
 //   })
 //   if (!current_user) {
 //     return c.json({ message: `Unauthorized: 没有当前用户: name: ${payload.user.name}; id:, ${payload.user.id}` }, httpStatus.UNAUTHORIZED)
 //   }
 
 //   const q_user = await db.query.user.findFirst({
-//     where: eq(user_table.name, target_name),
+//     where: eq(user.name, target_name),
 //   })
 //   if (!q_user) {
 //     return c.json({ message: 'User not found' }, httpStatus.NOT_FOUND)
@@ -214,7 +214,7 @@ const router = createRouter()
 //   const { offset, limit } = c.req.valid("query");
 
 //   const user = await db.query.user.findFirst({
-//     where: eq(user_table.name, name),
+//     where: eq(user.name, name),
 //   });
 //   if (!user) {
 //     return c.json({ message: 'User not found' }, httpStatus.NOT_FOUND);
@@ -250,7 +250,7 @@ const router = createRouter()
 //       offset,
 //       limit,
 //     });
-    
+
 //     return c.json({
 //       followings: followings,
 //       count: user.following_count,
@@ -291,7 +291,7 @@ const router = createRouter()
 //   const current_user = CU_ret.user
 
 //   const q_user = await db.query.user.findFirst({
-//     where: eq(user_table.name, target_name),
+//     where: eq(user.name, target_name),
 //   });
 //   if (!q_user) {
 //     return c.json({ message: 'User or group not found' }, httpStatus.NOT_FOUND);

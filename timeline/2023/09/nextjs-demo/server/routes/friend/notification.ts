@@ -2,7 +2,7 @@ import { createRouter } from "~/lib/create-app"
 import { db } from "~/lib/db"
 import { userLsWithCount_isFriend_by_currentUserId } from "~/lib/db/q/user/friend"
 import { friendNotification_table } from "~/lib/db/schema/notification"
-import { user_table } from "~/lib/db/schema/user"
+import { user } from "~/lib/db/schema/user"
 import { get_current_user_and_res } from "~/lib/middleware/auth"
 import jsonContent from "~/lib/openapi/helpers/json-content"
 import createMessageObjectSchema from "~/lib/openapi/schemas/create-message-object"
@@ -42,7 +42,7 @@ router.openapi(createRoute({
   tags: ['friend'],
   method: "get", path: "/friend/notification/list",
   summary: "列出好友通知",
-  request: {query: offset_limit_query_schema },
+  request: { query: offset_limit_query_schema },
   responses: {
     [200]: jsonContent(z.object({
       notifications: z.array(z.object({
@@ -79,7 +79,7 @@ router.openapi(createRoute({
 
   const { offset, limit } = c.req.valid("query")
 
-  const sender_table = aliasedTable(user_table, 'sender')
+  const sender_table = aliasedTable(user, 'sender')
   const notificationsQuery = db.select({
     notification: friendNotification_table,
     sender: {
@@ -89,21 +89,21 @@ router.openapi(createRoute({
       image: sender_table.image,
     },
     receiver: {
-      id: user_table.id,
-      name: user_table.name,
-      nickname: user_table.nickname,
-      image: user_table.image,
+      id: user.id,
+      name: user.name,
+      nickname: user.nickname,
+      image: user.image,
     },
   }).from(friendNotification_table)
     .leftJoin(sender_table, eq(friendNotification_table.sender_id, sender_table.id))
-    .leftJoin(user_table, eq(friendNotification_table.receiver_id, user_table.id))
+    .leftJoin(user, eq(friendNotification_table.receiver_id, user.id))
     .where(or(eq(friendNotification_table.receiver_id, auth_user.id), eq(friendNotification_table.sender_id, auth_user.id)))
 
   const count = (await notificationsQuery).length
 
   const notifications = await notificationsQuery.offset(offset).limit(limit);
 
-  return c.json({notifications, count}, 200)
+  return c.json({ notifications, count }, 200)
 })
 
 export default router

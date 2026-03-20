@@ -4,7 +4,7 @@ import { listMessageWithSender_by_chatId, listMessageWithSender_by_chatId_cursor
 import { db } from "~/lib/db"
 import { eq, and, sql, or, is, InferSelectModel } from "drizzle-orm"
 import { message_table, chat_table } from "~/lib/db/schema/message"
-import { user_table } from "~/lib/db/schema/user"
+import { user } from "~/lib/db/schema/user"
 import httpStatus from "~/lib/http-status-codes"
 import { createRouter } from "~/lib/create-app"
 import { createRoute, z } from "@hono/zod-openapi"
@@ -45,23 +45,23 @@ router.openapi(createRoute({
   const { target_id, content, target_type } = c.req.valid("json");
 
   // try {
-    const message = await sendMessage({
-      sender_id: current_user.id,
-      content: content,
-    }, target_id, target_type);
-    return c.json(message, httpStatus.CREATED);
+  const message = await sendMessage({
+    sender_id: current_user.id,
+    content: content,
+  }, target_id, target_type);
+  return c.json(message, httpStatus.CREATED);
   // } catch (error: any) {
   //   // return c.json({ message: error.message }, httpStatus.INTERNAL_SERVER_ERROR);
   // }
 });
 
 router.openapi(createRoute({
-  tags: ["chats"],description: `Get list of messages`,
+  tags: ["chats"], description: `Get list of messages`,
   method: "get", path: "/chats/{chat_id}/messages",
   request: {
     params: z.object({
       chat_id: z.string()
-    }), 
+    }),
     query: offset_limit_query_schema
   },
   responses: {
@@ -132,12 +132,12 @@ export interface Msg {
     id: string;
     name: string;
     email?: string | null;
-    image?: string|null;
-    nickname?: string | null ;
+    image?: string | null;
+    nickname?: string | null;
   } | null;
   content: string;
   created_at: Date;
-  updated_at?: Date | null ;
+  updated_at?: Date | null;
 }
 export type MsgLsCursor = z.infer<typeof msgLsCursorSchema>;
 export interface MsgLsCursorI {
@@ -149,12 +149,12 @@ export interface MsgLsCursorI {
 }
 
 router.openapi(createRoute({
-  tags: ["chats"],description: `Get list of messages`,
+  tags: ["chats"], description: `Get list of messages`,
   method: "get", path: "/chats/{chat_id}/msgs/cursor",
   request: {
     params: z.object({
       chat_id: z.string()
-    }), 
+    }),
     query: z.object({
       limit: z.coerce.number().int().min(1).max(100).default(30),
       cursor_id: z.string().nullable().optional(),
@@ -173,14 +173,14 @@ router.openapi(createRoute({
 
   const { chat_id } = c.req.valid("param");
   const { cursor_id, cursor_created_at, limit } = c.req.valid("query");
-  const cursor = cursor_created_at && cursor_id  ? { id: cursor_id, created_at: new Date(cursor_created_at) } : undefined;
+  const cursor = cursor_created_at && cursor_id ? { id: cursor_id, created_at: new Date(cursor_created_at) } : undefined;
 
   // 查询聊天是否存在
   const [chat] = await db.select().from(chat_table).where(eq(chat_table.id, chat_id))
   if (!chat) return c.json({ message: "Chat not found" }, httpStatus.NOT_FOUND);
 
   // 查询聊天的消息列表
-  const { items, next_cursor } = await listMessageWithSender_by_chatId_cursor(chat_id, {limit, cursor})
+  const { items, next_cursor } = await listMessageWithSender_by_chatId_cursor(chat_id, { limit, cursor })
 
   return c.json({ items, next_cursor }, httpStatus.OK);
 });

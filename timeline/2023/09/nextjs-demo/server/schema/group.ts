@@ -1,7 +1,7 @@
 import { z } from "@hono/zod-openapi";
 
 export const group_meta_schema = z.object({
-  id: z.string().uuid(),
+  id: z.string().text(),
   name: z.string(),
   email: z.string().nullable(),
   image: z.string().nullable(),

@@ -8,7 +8,7 @@ import { notFoundSchema } from "~/lib/constans";
 import IdUUIDParamsSchema from "~/lib/openapi/schemas/id-uuid-params";
 import createErrorSchema from "~/lib/openapi/schemas/create-error-schema";
 import NameParamsSchema from "~/lib/openapi/schemas/name-params";
-import { idCardInfo_table, user_table } from "~/lib/db/schema/user";
+import { idCardInfo_table, user } from "~/lib/db/schema/user";
 import { eq, getTableColumns } from "drizzle-orm";
 
 const router = createRouter()
@@ -28,10 +28,10 @@ router.openapi(createRoute({
 }), async (c) => {
   // 关联查询身份证信息
   const dbUsers = await db.select({
-    ...getTableColumns(user_table),
-    // {...user_table},
+    ...getTableColumns(user),
+    // {...user},
     id_card_info: idCardInfo_table
-  }).from(user_table).leftJoin(idCardInfo_table, eq(user_table.id, idCardInfo_table.user_id))
+  }).from(user).leftJoin(idCardInfo_table, eq(user.id, idCardInfo_table.user_id))
   // const dbUsers = await db.query.user.findMany({
   //   with: {
   //     id_card_info: true, // 
@@ -57,13 +57,13 @@ router.openapi(createRoute({
       'User not found; 用户未找到'
     ),
     [httpStatus.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(IdUUIDParamsSchema), 
+      createErrorSchema(IdUUIDParamsSchema),
       'The validation error(s); 验证错误'
     ),
   }
 }), async (c) => {
   const { id } = c.req.valid("param")
-  const dbUser = await db.query.user_table.findFirst({
+  const dbUser = await db.query.user.findFirst({
     where: (user, { eq }) => eq(user.id, id),
     with: {
       id_card_info: true, // 关联查询身份证信息
@@ -92,13 +92,13 @@ router.openapi(createRoute({
       'User not found; 用户未找到'
     ),
     [httpStatus.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(NameParamsSchema), 
+      createErrorSchema(NameParamsSchema),
       'The validation error(s); 验证错误'
     ),
   }
 }), async (c) => {
   const { name } = c.req.valid("param")
-  const dbUser = await db.query.user_table.findFirst({
+  const dbUser = await db.query.user.findFirst({
     where: (user, { eq }) => eq(user.name, name),
     with: {
       id_card_info: true, // 关联查询身份证信息
@@ -111,7 +111,7 @@ router.openapi(createRoute({
 })
 
 export const userMetaWithStatus_schema = z.object({
-  id: z.string().uuid(),
+  id: z.string().text(),
   name: z.string(),
   email: z.string().nullable().optional(), // nullable -> 可以为 null, optional -> 可以不传(不传时为 undefined)
   image: z.string().nullable(),
@@ -138,20 +138,20 @@ router.openapi(createRoute({
       'User not found; 用户未找到'
     ),
     [httpStatus.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(NameParamsSchema), 
+      createErrorSchema(NameParamsSchema),
       'The validation error(s); 验证错误'
     ),
   }
 }), async (c) => {
   const { name } = c.req.valid("param")
   const [dbUser] = await db.select({
-    id: user_table.id,
-    name: user_table.name,
-    email: user_table.email,
-    image: user_table.image,
-    nickname: user_table.nickname,
-    status: user_table.status,
-  }).from(user_table).where(eq(user_table.name, name))
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    image: user.image,
+    nickname: user.nickname,
+    status: user.status,
+  }).from(user).where(eq(user.name, name))
 
   if (!dbUser) {
     return c.json({ message: `User not found: ${name}` }, httpStatus.NOT_FOUND)

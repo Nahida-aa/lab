@@ -9,7 +9,7 @@ import { sql } from "drizzle-orm";
 import { createRoute } from "@hono/zod-openapi";
 import jsonContent from "~/lib/openapi/helpers/json-content";
 import createMessageObjectSchema from "~/lib/openapi/schemas/create-message-object";
-import { user_table } from "~/lib/db/schema/user";
+import { user } from "~/lib/db/schema/user";
 import { group_table } from "~/lib/db/schema/group";
 
 const router = createRouter()
@@ -23,7 +23,7 @@ router.openapi(createRoute({
     params: NameParamsSchema
   },
   responses: {
-    [httpStatus.NO_CONTENT]: {description: "204 说明 auth_user 关注了 user"},
+    [httpStatus.NO_CONTENT]: { description: "204 说明 auth_user 关注了 user" },
     [httpStatus.NOT_FOUND]: jsonContent(createMessageObjectSchema("auth_user 没有关注 user"), "auth_user 没有关注 user"),
   }
 }), async (c) => {
@@ -32,7 +32,7 @@ router.openapi(createRoute({
   const current_user = CU_ret.user
 
   const { name } = c.req.valid("param")
-  const [q_user] = await db.select({id: user_table.id}).from(user_table).where(sql`${user_table.name} = ${name}`)
+  const [q_user] = await db.select({ id: user.id }).from(user).where(sql`${user.name} = ${name}`)
   if (!q_user) return c.json({ message: `user: ${name} 不存在` }, httpStatus.NOT_FOUND)
   // 检测 auth_user 是否关注 user
   const is_following = await db.select().from(follow_table).where(

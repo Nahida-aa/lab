@@ -5,7 +5,7 @@ import { createRoute } from "@hono/zod-openapi";
 import httpStatus from "~/lib/http-status-codes"
 import { db } from "~/lib/db";
 import { eq, sql } from "drizzle-orm";
-import { user_table } from "~/lib/db/schema/user";
+import { user } from "~/lib/db/schema/user";
 import { group_table } from "~/lib/db/schema/group";
 import { follow_table } from "~/lib/db/schema/follow";
 import { StatusCode } from "hono/utils/http-status";
@@ -35,7 +35,7 @@ router.openapi(createRoute({
   // follow user
   const { message, success, status } = await follow_a_user(name, current_user)
   if (!success) return c.json({ message }, status as StatusCode)
-  return c.json(undefined,httpStatus.NO_CONTENT)
+  return c.json(undefined, httpStatus.NO_CONTENT)
 })
 
 async function follow_a_user(user_name: string, follower_user: { id: string, name: string }): Promise<{ message: string, success: boolean, status: number }> {
@@ -43,7 +43,7 @@ async function follow_a_user(user_name: string, follower_user: { id: string, nam
   if (user_name === follower_user.name) return { message: `不能关注自己`, success: false, status: httpStatus.BAD_REQUEST }
 
   // 查询用户是否存在
-  const target_user = await db.query.user_table.findFirst({ where: eq(user_table.name, user_name) })
+  const target_user = await db.query.user.findFirst({ where: eq(user.name, user_name) })
   if (!target_user) return { message: `用户 ${user_name} 不存在`, success: false, status: httpStatus.NOT_FOUND }
 
   // 查询是否已经关注
@@ -59,15 +59,15 @@ async function follow_a_user(user_name: string, follower_user: { id: string, nam
       target_type: 'user'
     }).execute()
     // 被关注用户的粉丝数加1
-    await tx.update(user_table).set({ 
-      followers_count: sql`${user_table.followers_count}+1`,
-    }).where(eq(user_table.id, target_user.id)).execute()
+    await tx.update(user).set({
+      followers_count: sql`${user.followers_count}+1`,
+    }).where(eq(user.id, target_user.id)).execute()
     // 用户的关注数加1
-    await tx.update(user_table).set({ 
-      following_count: sql`${user_table.following_count}+1`,
-    }).where(eq(user_table.id, follower_user.id)).execute()
+    await tx.update(user).set({
+      following_count: sql`${user.following_count}+1`,
+    }).where(eq(user.id, follower_user.id)).execute()
   })
-  return { message: `followed ${user_name}` , success: true, status: httpStatus.NO_CONTENT }
+  return { message: `followed ${user_name}`, success: true, status: httpStatus.NO_CONTENT }
 }
 
 router.openapi(createRoute({
@@ -92,13 +92,13 @@ router.openapi(createRoute({
   // follow group
   const { message, success, status } = await follow_a_group(name, current_user)
   if (!success) return c.json({ message }, status as StatusCode)
-  return c.json(undefined,httpStatus.NO_CONTENT)
+  return c.json(undefined, httpStatus.NO_CONTENT)
 })
 
 // TODO: 目标是将 follower_id 和 target_id 作为联合主键, 我感觉可能会冲突, 应该再加上 target_type, 不过另外一方面我设计的 user 和 group 的 name 是唯一的, 所以 可以考虑不用 id 作为主键
 export async function follow_a_group(group_name: string, follower_user: { id: string, name: string }): Promise<{ message: string, success: boolean, status: number }> {
   // 查询group是否存在
-  const target_group = await db.query.group_table.findFirst({ where: eq(user_table.name, group_name) })
+  const target_group = await db.query.group_table.findFirst({ where: eq(user.name, group_name) })
   if (!target_group) return { message: `group: ${group_name} 不存在`, success: false, status: httpStatus.NOT_FOUND }
 
   // 查询是否已经关注
@@ -114,15 +114,15 @@ export async function follow_a_group(group_name: string, follower_user: { id: st
       target_type: 'group'
     }).execute()
     // 被关注 group 的粉丝数加1
-    await tx.update(group_table).set({ 
+    await tx.update(group_table).set({
       followers_count: sql`${group_table.followers_count}+1`,
     }).where(eq(group_table.id, target_group.id)).execute()
     // 用户的关注数加1
-    await tx.update(user_table).set({ 
-      following_count: sql`${user_table.following_count}+1`,
-    }).where(eq(user_table.id, follower_user.id)).execute()
+    await tx.update(user).set({
+      following_count: sql`${user.following_count}+1`,
+    }).where(eq(user.id, follower_user.id)).execute()
   })
-  return { message: `followed ${group_name}` , success: true, status: httpStatus.NO_CONTENT }
+  return { message: `followed ${group_name}`, success: true, status: httpStatus.NO_CONTENT }
 }
 
 export default router

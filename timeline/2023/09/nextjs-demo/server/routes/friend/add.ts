@@ -11,8 +11,8 @@ import createErrorSchema from "~/lib/openapi/schemas/create-error-schema";
 const router = createRouter()
 
 const add_friend_send_request_schema = z.object({
-  receiver_id: z.string().uuid().openapi({example: '00000000-0000-0000-0000-000000000000'}), // 接收者id
-  content: z.string().nullable().optional().openapi({example: 'hello'}) // 验证信息
+  receiver_id: z.string().text().openapi({ example: '00000000-0000-0000-0000-000000000000' }), // 接收者id
+  content: z.string().nullable().optional().openapi({ example: 'hello' }) // 验证信息
 })
 export type AddFriendSendRequest = z.infer<typeof add_friend_send_request_schema>
 
@@ -20,9 +20,9 @@ router.openapi(createRoute({
   tags: ['friend'],
   method: "post", path: "/user/friend/request/send",
   request: {
-    cookies: z.object({session_token: z.string().optional()}),
-    headers: z.object({"authorization": z.string().optional()}),
-    body: jsonContent(add_friend_send_request_schema,'add friend send request')
+    cookies: z.object({ session_token: z.string().optional() }),
+    headers: z.object({ "authorization": z.string().optional() }),
+    body: jsonContent(add_friend_send_request_schema, 'add friend send request')
   },
   responses: {
     [200]: jsonContent(z.object({
@@ -39,7 +39,7 @@ router.openapi(createRoute({
   let { receiver_id, content } = c.req.valid("json")
   if (!content) content = ''
   console.log('content:', content)
-  
+
   // 获取(检查)好友关系状态
   const friendship = await getFriendship(sender_id, receiver_id)
   if (friendship) return c.json({ message: "Friend already exists" }, 409)
@@ -75,7 +75,7 @@ router.openapi(createRoute({
   const receiver_id = auth_user.id
   let { notification_id, sender_id, content } = c.req.valid("json")
   if (!content) content = "我们已经成功添加为好友,现在可以开始聊天啦~"
-  
+
   await acceptFriendRequest(notification_id, sender_id, receiver_id, content)
   return c.json({}, 200)
 })

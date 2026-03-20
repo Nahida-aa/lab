@@ -1,7 +1,7 @@
 import { z } from "@hono/zod-openapi";
 
 const IdUUIDParamsSchema = z.object({
-  id: z.string().uuid().openapi({
+  id: z.string().text().openapi({
     param: {
       name: "id",
       in: "path",
