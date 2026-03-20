@@ -20,7 +20,7 @@ export const GET = async () => {
     port: process.env.PORT || "unknown",
     uptime: process.uptime(),
     APP_URL: env.NEXT_PUBLIC_APP_URL,
-    API_URL: env.NEXT_PUBLIC_API_URL
+    // API_URL: env.NEXT_PUBLIC_API_URL
   };
   return NextResponse.json(healthStatus);
 };
