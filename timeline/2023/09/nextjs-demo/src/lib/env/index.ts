@@ -27,7 +27,7 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     // NEXT_PUBLIC_S3_URL: process.env.NEXT_PUBLIC_S3_URL,
     NEXT_PUBLIC_APP_URL: dev ? `http://localhost:${process.env.PORT || 3000}` :
-      process.env.NEXT_PUBLIC_APP_URL,
+      `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`,
     // NEXT_PUBLIC_API_URL: dev ? `http://localhost:4000` : process.env.NEXT_PUBLIC_API_URL,
     // NEXT_PUBLIC_PARTYKIT_HOST: process.env.NEXT_PUBLIC_PARTYKIT_HOST ?? '127.0.0.1:1999',
     NEXT_PUBLIC_VERSION: packageJson.version,
