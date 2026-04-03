@@ -2,11 +2,6 @@
 
 An example demonstrating integration with oRPC for type-safe APIs.
 
-[![Bun](https://img.shields.io/badge/bun-%23000000.svg?style=flat&logo=bun&logoColor=white)](https://bun.sh)
-[![TanStack Start](https://img.shields.io/badge/TanStack%20Start-latest-blue)](https://github.com/TanStack/start)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-latest-blue)](https://www.postgresql.org/)
-
 ## 📋 Overview
 
 **api-start** is a production-ready starter template combining **TanStack Start** and **oRPC**. It demonstrates best practices for:
@@ -176,10 +171,9 @@ Explore working examples at http://localhost:3210/demo/:
 - **/demo/better-auth** — Authentication flows and session management
 
 ### API Documentation
-- **[/api](http://localhost:3210/api)** — oRPC OpenAPI schema (machine-readable)
-- **[/api/auth/reference](http://localhost:3210/api/auth/reference)** — Better Auth endpoints
+- **[/api](http://localhost:3210/api)** — oRPC OpenAPI 
+- **[/api/auth/reference](http://localhost:3210/api/auth/reference)** 
 
-> Use [Swagger UI](https://swagger.io/tools/swagger-ui/), [Postman](https://www.postman.com/), or [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) with these endpoints to explore and test APIs
 
 ## 📝 RPC Definition & Usage
 
