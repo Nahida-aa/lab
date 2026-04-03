@@ -1,270 +1,339 @@
-Welcome to your new TanStack Start app! 
+# 🚀 TanStack Start × oRPC API Starter
 
-# Getting Started
+> A modern, opinionated **full-stack template** combining **TanStack Start** and **oRPC** for rapid API and full-stack development with integrated authentication, database schema validation, OpenAPI documentation, and real-time API exploration.
 
-To run this application:
+[![Bun](https://img.shields.io/badge/bun-%23000000.svg?style=flat&logo=bun&logoColor=white)](https://bun.sh)
+[![TanStack Start](https://img.shields.io/badge/TanStack%20Start-latest-blue)](https://github.com/TanStack/start)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-latest-blue)](https://www.postgresql.org/)
+
+## 📋 Overview
+
+**api-start** is a production-ready starter template combining **TanStack Start** and **oRPC**. It demonstrates best practices for:
+
+- ✅ **Full-stack TypeScript** — End-to-end type safety with TanStack Start
+- ✅ **Type-Safe APIs** — oRPC for zero-distance RPC + automatic OpenAPI documentation
+- ✅ **Authentication** — Better Auth integration with OpenAPI reference docs
+- ✅ **Database** — Drizzle ORM with PostgreSQL for rapid iteration
+- ✅ **Modern DX** — Vite hot reloading, Tailwind CSS, Biome linting
+- ✅ **Live API Docs** — Self-documenting OpenAPI endpoints
+
+Perfect for:
+- 🏗️ Building type-safe full-stack applications
+- 📚 Learning RPC-first API design patterns
+- 🔬 Prototyping and verifying database schemas rapidly
+- 🚀 Creating self-documenting APIs with OpenAPI
+- 🎯 Exploring TanStack + oRPC integration patterns
+
+## 🎯 Quick Start
+
+### Prerequisites
+- [Bun](https://bun.sh) (recommended) or Node.js 18+
+- PostgreSQL 12+
+
+### Installation
 
 ```bash
+# Clone and install
+git clone https://github.com/Nahida-aa/api-start.git
+cd api-start
 bun install
-bun --bun run dev
+
+# Start development server
+bun dev
 ```
 
-## pgsql
+Your app is now running at **http://localhost:3210**
 
-```sh
-# 安装
+### 📖 Explore APIs
+
+Once running, visit these endpoints:
+
+- **[http://localhost:3210/api](http://localhost:3210/api)** — oRPC OpenAPI documentation (JSON schema)
+- **[http://localhost:3210/api/auth/reference](http://localhost:3210/api/auth/reference)** — Better Auth API reference
+
+Use these to understand available endpoints and test requests directly in your browser or API client.
+
+### Setup PostgreSQL
+
+```bash
+# macOS (Homebrew)
+brew install postgresql
+brew services start postgresql
+
+# Linux (Arch)
 sudo pacman -S postgresql
-# 初始化
 sudo -u postgres initdb -D /var/lib/postgres/data
-# 启动服务
 sudo systemctl enable --now postgresql
-# 创建数据库
-sudo -u postgres createdb <你的数据库名>
-```
-设置密码:
-```sh
-# 进入 PostgreSQL 控制台
+
+# All platforms: Create database and user
 sudo -u postgres psql
-# 设置密码
+CREATE DATABASE api_start_dev;
 ALTER USER postgres WITH PASSWORD 'your_password';
 \q
 ```
 
-# Building For Production
+### Environment Variables
 
-To build this application for production:
+Create `.env.local`:
 
-```bash
-bun --bun run build
+```env
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/api_start_dev
+BETTER_AUTH_SECRET=$(bunx @better-auth/cli secret)
+VITE_API_URL=http://localhost:3210
 ```
 
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### Generate Better Auth Secret
 
 ```bash
-bun --bun run test
+bunx @better-auth/cli secret
 ```
 
-## Styling
+## 🏗️ Project Structure
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+```
+src/
+├── routes/                 # TanStack Router file-based routing
+│   ├── api.$.ts           # API gateway route
+│   ├── api.rpc.$.ts       # oRPC endpoints
+│   └── demo/              # Demo pages and patterns
+├── lib/
+│   ├── auth.ts            # Better Auth configuration
+│   └── utils.ts           # Shared utilities
+├── features/
+│   └── demo/              # Feature module
+├── components/
+│   ├── app/               # App-specific components
+│   └── ui/                # Reusable UI components
+├── db.ts                  # Database client
+├── db.schema.ts           # Drizzle ORM schema definitions
+└── env.ts                 # Environment variables (validated with T3 env)
+```
 
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `bun install @tailwindcss/vite tailwindcss -D`
-
-## Linting & Formatting
-
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
+## 🔧 Available Scripts
 
 ```bash
-bun --bun run lint
-bun --bun run format
-bun --bun run check
+# Development
+bun dev              # Start dev server with hot reload
+
+# Building
+bun build            # Production build
+
+# Database
+bun db:generate      # Generate migrations
+bun db:migrate       # Run migrations
+bun db:push          # Push schema to database
+bun db:studio        # Open Drizzle Studio (visual DB explorer)
+
+# Code Quality
+bun lint             # Biome linting
+bun format           # Format with Biome
+bun check            # Full Biome check
+
+# Testing
+bun test             # Run Vitest tests
+
+# Skills & Documentation
+bun intent:list      # List available skills for this project
+bun intent:validate  # Validate agent configuration
 ```
 
+## 🔑 Key Features
 
-## Setting up Better Auth
+### 1. **Type-Safe APIs with oRPC**
+- Zero-distance RPC (client and server share types)
+- Automatic OpenAPI/Swagger documentation
+- Built-in query and mutation routers
+- Zod validation for all inputs/outputs
+- Request/response caching strategies
 
-1. Generate and set the `BETTER_AUTH_SECRET` environment variable in your `.env.local`:
+### 2. **Authentication (Better Auth)**
+- Email/password auth with session management
+- OpenAPI-documented auth endpoints
+- Easy integration with middleware
+- User context available throughout the app
 
-   ```bash
-   bunx --bun @better-auth/cli secret
-   ```
+### 3. **Database (Drizzle ORM + PostgreSQL)**
+- Type-safe schema definitions
+- Built-in migrations with drizzle-kit
+- Visual database explorer (Drizzle Studio)
+- Ready for rapid schema iteration
 
-2. Visit the [Better Auth documentation](https://www.better-auth.com) to unlock the full potential of authentication in your app.
+### 4. **Developer Experience**
+- **Vite 7** with hot module reloading
+- **TypeScript 6.0** with strict mode
+- **Biome** for blazing-fast linting/formatting
+- **Tailwind CSS 4** with JIT compilation
+- **Vitest** for unit testing
 
-### Adding a Database (Optional)
+## 📚 Demo Pages & Documentation
 
-Better Auth can work in stateless mode, but to persist user data, add a database:
+### Live Demos
+Explore working examples at http://localhost:3210/demo/:
+
+- **/demo/orpc-todo** — Full oRPC example with queries and mutations
+- **/demo/drizzle** — Database operations and schema patterns
+- **/demo/better-auth** — Authentication flows and session management
+
+### API Documentation
+- **[/api](http://localhost:3210/api)** — oRPC OpenAPI schema (machine-readable)
+- **[/api/auth/reference](http://localhost:3210/api/auth/reference)** — Better Auth endpoints
+
+> Use [Swagger UI](https://swagger.io/tools/swagger-ui/), [Postman](https://www.postman.com/), or [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) with these endpoints to explore and test APIs
+
+## 📝 RPC Definition & Usage
+
+### Defining RPC Procedures
 
 ```typescript
-// src/lib/auth.ts
-import { betterAuth } from "better-auth";
-import { Pool } from "pg";
+// src/features/demo/demo.api.ts
+import { eq } from 'drizzle-orm';
+import z from 'zod';
+import { todo } from '#/db.schema';
+import { db } from '#/db.server';
+import { authFn, Fn } from '#/orpc.base';
 
-export const auth = betterAuth({
-  database: new Pool({
-    connectionString: process.env.DATABASE_URL,
-  }),
-  // ... rest of config
+export const listTodo = Fn.route({ method: 'GET' }).handler(async () => {
+	const ret = await db.select().from(todo);
+	return ret;
 });
+
+export const addTodo = Fn.input(z.object({ title: z.string() })).handler(
+	async ({ input }) => {
+		const newTodo = { title: input.title };
+		const [ret] = await db.insert(todo).values(newTodo).returning();
+		return { success: true, id: ret.id };
+	},
+);
 ```
 
-Then run migrations:
+### Direct RPC Usage (Client)
 
-```bash
-bunx --bun @better-auth/cli migrate
+```typescript
+// Direct call without React Query
+import { client } from '@/lib/orpc.client';
+
+const result = await client.listTodo.call() 
 ```
 
+### RPC with TanStack Query Integration
 
-## T3Env
-
-- You can use T3Env to add type safety to your environment variables.
-- Add Environment variables to the `src/env.mjs` file.
-- Use the environment variables in your code.
-
-### Usage
-
-```ts
-import { env } from "#/env";
-
-console.log(env.VITE_APP_TITLE);
-```
+```typescript
+// Using @orpc/tanstack-query adapter for automatic caching, refetching, etc.
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { orpc } from '@/lib/orpc.client';
 
 
+export function TodoListWithQuery({ userId }: { userId: string }) {
+  // Query: Automatic caching, refetching, stale-while-revalidate
+  const { data: todos, isLoading } = useQuery(orpc.demo.listTodo.queryOptions()));
 
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
+  // Mutation: With optimistic updates and invalidation
+  const { mutate: createTodo } = useMutation(orpc.demo.addTodo.mutationOptions({
+    onSuccess: () => {
+      // Automatically refetch todos after creation
+      queryClient.invalidateQueries({ queryKey: orpc.demo.listTodo.queryKey() });
     },
-  },
-})
-```
+  }));
 
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
   return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
+    <div>
+      {isLoading ? (
+        <Skeleton />
+      ) : (
+        <>
+          <ul>
+            {todos?.map(t => (
+              <li key={t.id}>{t.title}</li>
+            ))}
+          </ul>
+          <button onClick={() => createTodo('New todo')}>
+            Add Todo
+          </button>
+        </>
+      )}
+    </div>
+  );
 }
-```
+``` 
 
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
+## 🚀 Deployment
+
+See [TanStack Start deployment docs](https://tanstack.com/start/latest/docs/deployment) for setup details.
+
+## 🛠️ API Architecture
+
+**oRPC**: Type-safe RPC queries and mutations with automatic OpenAPI documentation
+- 📍 Endpoint: `/api` (OpenAPI schema)
+- 🔗 Client: `@orpc/client` with React Query integration
+- 📚 Routes: Modular router composition with Zod validation
+
+**Better Auth**: User authentication and session management
+- 📍 Endpoint: `/api/auth/*` with reference docs at `/api/auth/reference`
+- 🔑 Features: Email/password, sessions, middleware integration
+
+**Server Functions**: Direct server invocation from client
+- 🔄 Seamless client-server communication
+- 📦 Optional Zod validation
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 19, TanStack Router, TanStack Query |
+| **Full-Stack** | TanStack Start, TypeScript 6 |
+| **RPC & APIs** | **oRPC** with OpenAPI, h3, Server Functions |
+| **Auth** | **Better Auth** with reference docs |
+| **Database** | PostgreSQL, Drizzle ORM, Drizzle Kit |
+| **Styling** | Tailwind CSS 4, Shadcn/UI |
+| **Tooling** | Vite 7, Biome, Vitest |
+| **Runtime** | Bun (or Node.js) |
+
+## 📖 Learning Resources
+
+### Primary Documentation
+- **[oRPC Docs](https://orpc.io)** — Main RPC framework (queries, mutations, OpenAPI)
+- **[TanStack Start Docs](https://tanstack.com/start/latest)** — Full-stack framework
+- **[Better Auth Docs](https://www.better-auth.com)** — Authentication system
+
+### Supporting Libraries
+- [TanStack Router Guide](https://tanstack.com/router/latest) — Routing and data loading
+- [Drizzle ORM Docs](https://orm.drizzle.team) — Database schema and migrations
+- [TanStack Query Docs](https://tanstack.com/query/latest) — Client-side state management
+
+## 🤝 Contributing
+
+This template is designed for rapid experimentation. Since the project has no production users yet:
+
+- ✨ **Free to modify**: Change database schemas liberally
+- 🔄 **Iterate quickly**: Test new patterns and architectures
+- 📝 **Document learnings**: Share findings in the AGENTS.md file
+
+## 🎓 Agent Skills
+
+This project is configured with AI coding agent skills for:
+
+- TanStack Router setup and routing patterns
+- Server function and API endpoint development
+- Route protection and authentication
+- Code splitting and lazy loading
+- Environment variable management
+
+See [AGENTS.md](./AGENTS.md) for skill-to-task mappings.
+
+## 📄 License
+
+MIT — Feel free to use this template for personal and commercial projects.
+
+## 🙋 Support
+
+- **Issues**: [Create an issue](https://github.com/yourusername/api-start/issues)
+- **Discussions**: Start a discussion for questions and ideas
+- **Templates**: Use this as a base for your own projects
+
+---
+
+**Built with ❤️ for TanStack + oRPC developers**
 
 # Demo files
 
