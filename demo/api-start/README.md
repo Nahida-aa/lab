@@ -1,6 +1,6 @@
 # 🚀 TanStack Start × oRPC API Starter
 
-> A modern, opinionated **full-stack template** combining **TanStack Start** and **oRPC** for rapid API and full-stack development with integrated authentication, database schema validation, OpenAPI documentation, and real-time API exploration.
+An example demonstrating integration with oRPC for type-safe APIs.
 
 [![Bun](https://img.shields.io/badge/bun-%23000000.svg?style=flat&logo=bun&logoColor=white)](https://bun.sh)
 [![TanStack Start](https://img.shields.io/badge/TanStack%20Start-latest-blue)](https://github.com/TanStack/start)
