@@ -6,7 +6,7 @@
     "#/*": "./src/*"
   },
   "scripts": {
-    "dev": "vite dev --port 3210",
+    "dev": "bun --bun vite dev --port 3210",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -16,6 +16,11 @@
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
     "db:auth:gen": "bun x @better-auth/cli@latest generate",
+    "intent:list": "bun x @tanstack/intent@latest list",
+    "intent:install": "bun x @tanstack/intent@latest install",
+    "intent:scaffold": "bun x @tanstack/intent@latest scaffold",
+    "intent:validate": "bun x @tanstack/intent@latest validate",
+    "intent:stale": "bun x @tanstack/intent@latest stale",
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check"
