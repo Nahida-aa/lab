@@ -1,0 +1,8 @@
+{
+  "cSpell.words": [
+    "gradlew",
+    "springframework"
+  ],
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "interactive"
+}

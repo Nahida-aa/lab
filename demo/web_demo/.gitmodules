@@ -1,0 +1,3 @@
+[submodule "examples/nextjs-hono"]
+	path = examples/nextjs-demo
+	url = git@github.com:Nahida-aa/nextjs-demo.git

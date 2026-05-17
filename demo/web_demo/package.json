@@ -1,0 +1,21 @@
+{
+  "name": "wen-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "spring-dev": "cd spring_demo && ./gradlew bootRun --continuous"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "bun@1.3.2",
+  "devDependencies": {
+    "turbo": "^2.8.0"
+  }
+}
