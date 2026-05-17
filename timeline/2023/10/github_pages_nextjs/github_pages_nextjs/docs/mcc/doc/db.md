@@ -1,5 +1,0 @@
-# db
-
-## table schema
-
-
