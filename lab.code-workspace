@@ -1,0 +1,22 @@
+{
+  "folders": [
+    {"path": "timeline/2026/05",},
+    {"path": ".",},
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.tanstack": true,
+      "**/.output": true,
+      // "**/node_modules": true,
+      "**/.turbo": true,
+      "demo": true,
+      "timeline":true,
+      // "**/apps/web": true,
+      "**/.git": true,
+      "**/.next": true,
+      "**/.content-collections": true,
+      // "**/paraglide": true,
+    },
+    "typescript.native-preview.tsdk": "/home/aa/repos/mc_ls/mcc/apps/web/node_modules/@typescript/native-preview"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "projectName": "start-ai-react",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "bun",
+  "includeExamples": true,
+  "tailwind": true,
+  "addOnOptions": {
+    "drizzle": {
+      "database": "postgresql"
+    }
+  },
+  "envVarValues": {},
+  "git": false,
+  "install": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "nitro",
+    "ai",
+    "compiler",
+    "db",
+    "drizzle",
+    "form",
+    "shadcn",
+    "better-auth",
+    "store",
+    "tanstack-query"
+  ]
+}
