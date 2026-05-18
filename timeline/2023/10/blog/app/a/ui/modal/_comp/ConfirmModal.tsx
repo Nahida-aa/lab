@@ -8,16 +8,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  AlertTriangle,
-  CheckCircle,
-  Info,
-  XCircle,
-  Loader2,
-} from "lucide-react";
+} from "../../../../../components/ui/dialog";
+import { AlertTriangle, CheckCircle, Info, XCircle, Loader2 } from "lucide-react";
+import { Button } from "@/app/a/ui/base/html";
 
+export type ConfirmVariant = "info" | "destructive" | "warning";
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,7 +21,7 @@ interface ConfirmModalProps {
   onConfirm?: () => void | Promise<void>;
   confirmText?: string;
   cancelText?: string;
-  variant?: "default" | "destructive" | "warning";
+  variant?: ConfirmVariant;
 }
 
 export function ConfirmModal({
@@ -37,20 +32,22 @@ export function ConfirmModal({
   onConfirm,
   confirmText = "确定",
   cancelText = "取消",
-  variant = "default",
+  variant,
 }: ConfirmModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const getIcon = () => {
-    switch (variant) {
-      case "destructive":
-        return <XCircle className="w-5 h-5 text-destructive" />;
-      case "warning":
-        return <AlertTriangle className="w-5 h-5 text-orange-500" />;
-      default:
-        return <Info className="w-5 h-5 text-blue-500" />;
-    }
-  };
+  // const getIcon = () => {
+  //   switch (variant) {
+  //     case "destructive":
+  //       return <XCircle className="w-5 h-5 text-destructive" />;
+  //     case "warning":
+  //       return <AlertTriangle className="w-5 h-5 text-orange-500" />;
+  //     case "info":
+  //       return <Info className="w-5 h-5 text-blue-500" />;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   const getVariantStyle = () => {
     switch (variant) {
@@ -89,27 +86,22 @@ export function ConfirmModal({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {getIcon()}
+            {/* {getIcon()} */}
             {title}
           </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={handleCancel} disabled={isLoading}>
+          <Button variant="secondary" onClick={handleCancel} disabled={isLoading}>
             {cancelText}
           </Button>
           <Button
             variant={getVariantStyle() as any}
             onClick={handleConfirm}
-            disabled={isLoading}
-            className="min-w-[80px]"
+            pending={isLoading}
           >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              confirmText
-            )}
+            {confirmText}
           </Button>
         </DialogFooter>
       </DialogContent>

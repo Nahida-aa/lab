@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "../../../../../components/ui/dialog";
 
 interface FormModalProps {
   open: boolean;

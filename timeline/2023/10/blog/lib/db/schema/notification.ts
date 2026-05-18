@@ -9,8 +9,14 @@ import {
   varchar,
   uuid,
 } from "drizzle-orm/pg-core";
-import { uuidWithTimestamps } from "../columnsHelpers";
+import { uuidWithTimestamps } from "../helpers";
 import { user } from "./auth-schema";
+import type {
+  ActionStatus,
+  NotificationContent,
+  NotificationType,
+} from "@/lib/services/notification/index.t";
+import { relations } from "drizzle-orm";
 
 // 通知表 - 一条通知可以发给多个用户
 export const notification = pgTable(
@@ -18,11 +24,11 @@ export const notification = pgTable(
   {
     ...uuidWithTimestamps,
     // 通知内容
-    type: varchar("type", { length: 255 }).notNull(), // project_member_join_invite, invite_accepted, invite_rejected, project_join_request, request_approved, request_rejected, project_update, version_published, comment_received, etc.
+    type: text("type").$type<NotificationType>().notNull(), // project_member_join_invite, invite_accepted, invite_rejected, project_join_request, request_approved, request_rejected, project_update, version_published, comment_received, etc.
 
-    senderId: varchar("sender_id", { length: 255 }).references(() => user.id),
+    senderId: text("sender_id").references(() => user.id),
     content: jsonb("content")
-      .$type<Record<string, any>>()
+      .$type<NotificationContent[NotificationType]>()
       .default({})
       .notNull(), // 通知内容，JSON格式，包含标题、描述等信息
   },
@@ -32,6 +38,13 @@ export const notification = pgTable(
     index("notification_created_at_idx").on(table.createdAt),
   ],
 );
+export const notificationRelations = relations(notification, ({ one, many }) => ({
+  sender: one(user, {
+    fields: [notification.senderId],
+    references: [user.id],
+  }),
+  receiver: many(notificationReceiver),
+}));
 
 // 通知接收记录表 - 记录每个用户对通知的阅读状态
 export const notificationReceiver = pgTable(
@@ -41,13 +54,18 @@ export const notificationReceiver = pgTable(
     notificationId: uuid("notification_id")
       .notNull()
       .references(() => notification.id, { onDelete: "cascade" }),
-    userId: varchar("user_id", { length: 255 })
+    userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
 
     // 接收状态
     isRead: boolean("is_read").default(false).notNull(),
-    readAt: timestamp("read_at"), // 最后阅读时间
+    readAt: timestamp("read_at").$onUpdate(() => new Date()), // 最后阅读时间
+    actionStatus: text("action_status")
+      .$type<ActionStatus>()
+      .default("pending")
+      .notNull(),
+    actionAt: timestamp("action_at"),
   },
   (table) => [
     uniqueIndex("notification_receiver_unique_idx").on(
@@ -57,6 +75,15 @@ export const notificationReceiver = pgTable(
     index("notification_receiver_user_idx").on(table.userId),
     index("notification_receiver_is_read_idx").on(table.isRead),
   ],
+);
+export const notificationReceiverRelations = relations(
+  notificationReceiver,
+  ({ one }) => ({
+    notification: one(notification, {
+      fields: [notificationReceiver.notificationId],
+      references: [notification.id],
+    }),
+  }),
 );
 
 // 通知设置表
@@ -69,21 +96,11 @@ export const notificationSettings = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
 
     // 项目相关通知
-    project_invite_received: boolean("project_invite_received")
-      .default(true)
-      .notNull(), // 收到项目邀请
-    project_invite_accepted: boolean("project_invite_accepted")
-      .default(true)
-      .notNull(), // 项目邀请被接受
-    project_invite_rejected: boolean("project_invite_rejected")
-      .default(false)
-      .notNull(), // 项目邀请被拒绝
-    project_request_received: boolean("project_request_received")
-      .default(true)
-      .notNull(), // 收到项目申请
-    project_request_approved: boolean("project_request_approved")
-      .default(true)
-      .notNull(), // 项目申请被批准
+    project_invite_received: boolean("project_invite_received").default(true).notNull(), // 收到项目邀请
+    project_invite_accepted: boolean("project_invite_accepted").default(true).notNull(), // 项目邀请被接受
+    project_invite_rejected: boolean("project_invite_rejected").default(false).notNull(), // 项目邀请被拒绝
+    project_request_received: boolean("project_request_received").default(true).notNull(), // 收到项目申请
+    project_request_approved: boolean("project_request_approved").default(true).notNull(), // 项目申请被批准
     project_request_rejected: boolean("project_request_rejected")
       .default(false)
       .notNull(), // 项目申请被拒绝
@@ -105,9 +122,7 @@ export const notificationSettings = pgTable(
     community_request_approved: boolean("community_request_approved")
       .default(true)
       .notNull(), // 社区申请被批准
-    community_member_joined: boolean("community_member_joined")
-      .default(true)
-      .notNull(), // 有新成员加入社区
+    community_member_joined: boolean("community_member_joined").default(true).notNull(), // 有新成员加入社区
 
     // 互动相关通知
     comment_received: boolean("comment_received").default(true).notNull(), // 收到评论或回复

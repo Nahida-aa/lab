@@ -12,10 +12,12 @@ import {
   primaryKey,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
-import { uuidWithTimestamps } from "../columnsHelpers";
+import { uuidWithTimestamps } from "../helpers";
 import { user } from "./auth-schema";
 import { PermissionPresets } from "@/lib/services/community/permissions";
 import type { FileShow } from "@/lib/upload/types";
+import { relations } from "drizzle-orm";
+import type { JoinMethodType } from "@/lib/services/community/join.t";
 
 // 社区表 - 类似Discord 服务器(server\guild)，与项目/组织1对1对应
 export const community = pgTable(
@@ -47,13 +49,30 @@ export const community = pgTable(
   ],
 );
 
+export type PermissionOverwrite = {
+  id: string; // 角色ID或用户ID
+  type: "role" | "member";
+  allow: string[]; // 允许的权限
+  deny: string[]; // 拒绝的权限
+};
+export type ChannelType =
+  | "chat"
+  | "discussion" // 讨论,评论,社区
+  | "readme" //  自述文件, 自我介绍
+  | "forum" // 论坛
+  | "welcome" // 欢迎
+  | "announcement" // 公告
+  | "guide" // 指南: 可以是其他人提供的攻略
+  | "release" // 发布会, 发布版本,用户侧
+  | "dm" // 私信
+  | "group_dm"; // 群组私信
 // 频道表 - 属于社区
 export const channel = pgTable(
   "channel",
   {
     ...uuidWithTimestamps,
     // 频道类型 不按照 discord 的分类
-    type: text("type").default("chat").notNull(), // discussion{讨论,评论,社区} readme{简介}, forum, welcome, announcement, guide{可以是其他人提供的攻略}, release{发布版本,用户侧}, dm | group_dm
+    type: text("type").$type<ChannelType>().default("chat").notNull(),
     communityId: uuid("community_id").references(() => community.id, {
       onDelete: "cascade",
     }),
@@ -64,17 +83,9 @@ export const channel = pgTable(
     sort: integer("sort").default(0).notNull(),
 
     isPrivate: boolean("is_private").default(false).notNull(),
-    // 频道权限覆写 - 覆盖默认权限 用于给 频道的 角色或成员设置特定权限
+    // 频道权限 覆写 - 覆盖默认权限 用于给 频道的 角色或成员设置特定权限
     permissionOverwrites: jsonb("permission_overwrites")
-      .$type<
-        Array<{
-          // ts 层, 数据库中仍是 jsonb: ''
-          id: string; // 角色ID或用户ID
-          type: "role" | "member";
-          allow: string[]; // 允许的权限
-          deny: string[]; // 拒绝的权限
-        }>
-      >()
+      .$type<PermissionOverwrite[]>()
       .default([])
       .notNull(),
 
@@ -88,6 +99,9 @@ export const channel = pgTable(
     index("channel_sort_idx").on(table.communityId, table.sort),
   ],
 );
+export const channelRelations = relations(channel, ({ many }) => ({
+  members: many(dmChannelMember),
+}));
 // 频道消息表
 export const channelMessage = pgTable(
   "channel_message",
@@ -95,12 +109,12 @@ export const channelMessage = pgTable(
     ...uuidWithTimestamps,
     channelId: uuid("channel_id").notNull(),
     // userId: varchar('user_id', { length: 255 }).notNull().references(() => user.id, { onDelete: 'set null' }), // 消息不应该因为 用户删除而删除
-    userId: varchar("user_id", { length: 255 })
-      .notNull()
-      .references(() => user.id), // 消息不应该因为 用户删除而删除
+    userId: text("user_id")
+      // .notNull()
+      .references(() => user.id, { onDelete: "set null" }), // 消息不应该因为 用户删除而删除,因此需要id 可空
 
     content: text("content"),
-    contentType: varchar("content_type", { length: 20 }).default("text").notNull(),
+    contentType: text("content_type").default("text").notNull(),
 
     // 消息关联
     replyToId: uuid("reply_to_id").references((): AnyPgColumn => channelMessage.id),
@@ -168,7 +182,7 @@ export const communityMember = pgTable(
     status: varchar("status", { length: 20 }).default("active").notNull(), // active, inactive, banned, pending
 
     // 加入方式/方法
-    joinMethod: varchar("join_method", { length: 20 }).default("discover").notNull(), // invite, manual_review, discover, system
+    joinMethod: text("join_method").$type<JoinMethodType>().default("discover").notNull(), // invite, manual_review, discover, system
     inviterId: varchar("inviter_id", { length: 255 }).references(() => user.id), // 邀请者ID（如果通过邀请加入）
 
     // joinedAt == createdAt
@@ -216,10 +230,11 @@ export const communityRole = pgTable(
 // }, (t) => [
 //   index("dm_channel_user_idx").on(t.id, t.type),
 // ])
-// 私聊频道参与者  用于私聊和群私聊
-export const dmChannelParticipant = pgTable(
-  "dm_channel_participant",
+// 私聊频道成员  用于私聊和群私聊
+export const dmChannelMember = pgTable(
+  "dm_channel_member",
   {
+    ...uuidWithTimestamps,
     channelId: uuid("channel_id")
       .notNull()
       .references(() => channel.id, { onDelete: "cascade" }),
@@ -227,8 +242,18 @@ export const dmChannelParticipant = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
-  (t) => [primaryKey({ columns: [t.channelId, t.userId] })],
+  (t) => [uniqueIndex("dm_channel_member_unique_idx").on(t.channelId, t.userId)],
 );
+export const dmChannelMemberRelations = relations(dmChannelMember, ({ one }) => ({
+  channel: one(channel, {
+    fields: [dmChannelMember.channelId],
+    references: [channel.id],
+  }),
+  user: one(user, {
+    fields: [dmChannelMember.userId],
+    references: [user.id],
+  }),
+}));
 
 export const userReadState = pgTable(
   "user_read_state",

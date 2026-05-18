@@ -1,4 +1,4 @@
-import { s3PublicUrl } from "../../constants";
+import { s3PublicUrl } from "@/lib/config";
 import type { Accept } from "react-dropzone";
 
 /**
@@ -108,5 +108,4 @@ export const imageAccept: Accept = {
  * @param storageKey 存储键名
  * @returns 公共访问URL
  */
-export const buildFileUrl = (storageKey: string) =>
-  `${s3PublicUrl}/${storageKey}`;
+export const buildFileUrl = (storageKey: string) => `${s3PublicUrl}/${storageKey}`;

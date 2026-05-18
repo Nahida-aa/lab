@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "../../../../../components/ui/dialog";
 import { Loader2 } from "lucide-react";
 
 interface LoadingModalProps {
@@ -33,9 +33,7 @@ export function LoadingModal({
                     }}
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {Math.round(progress)}%
-                </p>
+                <p className="text-xs text-muted-foreground">{Math.round(progress)}%</p>
               </div>
             )}
           </div>

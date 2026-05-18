@@ -1,5 +1,5 @@
 // import { createSubApp } from "../app/create";
-// import { createRoute, z } from "@hono/zod-openapi";
+// import { createRoute, z } from "zod";
 // import { db } from ".";
 
 // import {

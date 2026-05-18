@@ -10,6 +10,7 @@ import {
   channelMessage,
   userReadState,
   channel,
+  dmChannelMember,
   project,
   projectMember,
   projectVersion,
@@ -17,6 +18,7 @@ import {
   user,
   organization,
   friend,
+  notification,
 } from "./schema";
 import { eq, and, desc, sql, type SQL } from "drizzle-orm";
 import type { z } from "zod";
@@ -72,7 +74,7 @@ export const projectMemberSelect = createSelectSchema(projectMember);
 export type ProjectMemberSelect = typeof projectMember.$inferSelect;
 export const _projectMemberUpdate = createUpdateSchema(projectMember);
 export type _ProjectMemberUpdate = z.infer<typeof _projectMemberUpdate>;
-
+// community
 export const communityInsertSchema = createInsertSchema(community);
 export type CommunityInsert = typeof community.$inferInsert;
 export const communitySelectSchema = createInsertSchema(community);
@@ -91,16 +93,26 @@ export type CommunityMemberSelect = typeof communityMember.$inferSelect;
 export const communityMemberUpdateSchema = createUpdateSchema(communityMember);
 export const insertCommunityMember = async (db: Db, data: CommunityMemberInsert) =>
   await db.insert(communityMember).values(data).returning();
-
+// channel
 export const channelSelectSchema = createSelectSchema(channel);
 export type ChannelSelect = typeof channel.$inferSelect;
 export const channelInsertSchema = createInsertSchema(channel);
 export type ChannelInsert = typeof channel.$inferInsert;
 export const insertChannel = async (db: Db, data: ChannelInsert[]) =>
   await db.insert(channel).values(data).returning();
+// dm channel member
+export type DmChannelMemberInsert = typeof dmChannelMember.$inferInsert;
+export const insertDmChannelMember = async (db: Db, data: DmChannelMemberInsert[]) =>
+  await db.insert(dmChannelMember).values(data).returning();
+export const dmChannelMemberSelectSchema = createSelectSchema(dmChannelMember);
+export type DmChannelMemberSelect = typeof dmChannelMember.$inferSelect;
 // msg
 export const channelMessageInsertZ = createInsertSchema(channelMessage);
 export type ChannelMessageInsert = typeof channelMessage.$inferInsert;
 export const channelMessageSelectZ = createSelectSchema(channelMessage);
 export type ChannelMessageSelect = typeof channelMessage.$inferSelect;
 export const channelMessageUpdateSchema = createUpdateSchema(channelMessage);
+
+// notification
+export const notificationSelectZ = createSelectSchema(notification);
+export type NotificationSelect = typeof notification.$inferSelect;

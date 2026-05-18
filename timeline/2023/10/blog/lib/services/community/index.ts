@@ -3,8 +3,13 @@ import { and, asc, eq } from "drizzle-orm";
 import { db, type Tx } from "@/lib/db";
 import { channel, community, communityMember } from "@/lib/db/schema";
 import { _addMember } from "@/lib/services/community/join";
-import { insertChannel, updateCommunity, type CommunityInsert } from "@/lib/db/service";
-import { joinMethod } from "@/api/community/member/z.schema";
+import {
+  insertChannel,
+  updateCommunity,
+  type ChannelInsert,
+  type CommunityInsert,
+} from "@/lib/db/service";
+import { joinMethod } from "@/lib/services/community/join.t";
 
 export const createCommunity = async (tx: Tx, data: CommunityInsert) => {
   // insert community , 暂时用于提供 一个社区空间
@@ -12,7 +17,7 @@ export const createCommunity = async (tx: Tx, data: CommunityInsert) => {
     .insert(community)
     .values(data)
     .returning({ id: community.id });
-  const channels = [
+  const channels: ChannelInsert[] = [
     {
       communityId: initCommunity.id,
       name: "讨论",

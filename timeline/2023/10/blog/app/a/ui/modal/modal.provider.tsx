@@ -1,5 +1,12 @@
 "use client";
 
+import { BugReportDialog } from "@/app/a/ui/form/dialog/page";
+import { AlertModal } from "@/app/a/ui/modal/_comp/AlertModal";
+import { ConfirmModal, type ConfirmVariant } from "@/app/a/ui/modal/_comp/ConfirmModal";
+import { InputModal } from "@/app/a/ui/modal/_comp/InputModal";
+import { LoadingModal } from "@/app/a/ui/modal/_comp/LoadingModal";
+import { Modal } from "@/app/a/ui/modal/_comp/Modal";
+import { SignOutModal } from "@/app/a/ui/modal/_comp/SignOutModal";
 import React, {
   createContext,
   useContext,
@@ -7,17 +14,7 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
-import { GlobalModalRenderer } from "./GlobalModalRenderer";
-
-// 模态框类型定义
-export type ModalType =
-  | "signOut"
-  | "confirm"
-  | "alert"
-  | "prompt"
-  | "loading"
-  | "custom"
-  | "createProject";
+import type z from "zod";
 
 // 模态框数据接口
 export interface ModalData {
@@ -31,13 +28,13 @@ export interface ModalData {
   onCancel?: () => void;
   confirmText?: string;
   cancelText?: string;
-  variant?: "default" | "destructive" | "warning";
+  variant?: ConfirmVariant;
 
-  // 提示模态框
+  // input 模态框
   onSubmit?: (value: string) => void | Promise<void>;
   placeholder?: string;
   defaultValue?: string;
-  inputType?: "text" | "email" | "password" | "number";
+  inputSchema?: z.ZodString;
 
   // 加载模态框
   loadingText?: string;
@@ -62,7 +59,8 @@ export interface ModalData {
 // Context 类型定义
 interface ModalContextType {
   // 当前模态框状态
-  isOpen: boolean;
+  open: boolean;
+  setOpen: (open: boolean) => void;
   type: ModalType | null;
   data: ModalData | null;
 
@@ -77,17 +75,19 @@ interface ModalContextType {
     title: string,
     description?: string,
     onConfirm?: () => void | Promise<void>,
-    variant?: "default" | "destructive" | "warning",
+    variant?: ConfirmVariant,
   ) => void;
-  showPrompt: (
+  showInput: (
     title: string,
     placeholder?: string,
     onSubmit?: (value: string) => void | Promise<void>,
     defaultValue?: string,
+    inputSchema?: z.ZodString,
   ) => void;
   showLoading: (text?: string, progress?: number) => void;
   showSignOut: (userName?: string) => void;
   showCreateProject: () => void;
+  showBugReport: () => void;
 }
 
 // 创建 Context
@@ -99,23 +99,20 @@ interface ModalProviderProps {
 }
 
 export const ModalProvider = ({ children }: ModalProviderProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [type, setType] = useState<ModalType | null>(null);
   const [data, setData] = useState<ModalData | null>(null);
 
   // 打开模态框
-  const openModal = useCallback(
-    (modalType: ModalType, modalData?: ModalData) => {
-      setType(modalType);
-      setData(modalData || {});
-      setIsOpen(true);
-    },
-    [],
-  );
+  const openModal = useCallback((modalType: ModalType, modalData?: ModalData) => {
+    setType(modalType);
+    setData(modalData || {});
+    setOpen(true);
+  }, []);
 
   // 关闭模态框
   const closeModal = useCallback(() => {
-    setIsOpen(false);
+    setOpen(false);
     // 延迟重置状态，等待动画完成
     setTimeout(() => {
       setType(null);
@@ -147,14 +144,15 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
       title: string,
       description?: string,
       onConfirm?: () => void | Promise<void>,
-      variant: "default" | "destructive" | "warning" = "default",
+      variant?: ConfirmVariant,
+      confirmText?: string,
     ) => {
       openModal("confirm", {
         title,
         description,
         onConfirm,
         variant,
-        confirmText: variant === "destructive" ? "删除" : "确定",
+        confirmText: confirmText || variant === "destructive" ? "删除" : "确定",
         cancelText: "取消",
         closable: true,
       });
@@ -163,18 +161,20 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   );
 
   // 显示输入提示模态框
-  const showPrompt = useCallback(
+  const showInput = useCallback(
     (
       title: string,
       placeholder?: string,
       onSubmit?: (value: string) => void | Promise<void>,
       defaultValue?: string,
+      inputSchema?: z.ZodString,
     ) => {
-      openModal("prompt", {
+      openModal("input", {
         title,
         placeholder,
         onSubmit,
         defaultValue,
+        inputSchema,
         confirmText: "确定",
         cancelText: "取消",
         closable: true,
@@ -214,8 +214,15 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     });
   }, [openModal]);
 
+  const showBugReport = useCallback(() => {
+    openModal("bugReport", {
+      closable: true,
+    });
+  }, [openModal]);
+
   const value: ModalContextType = {
-    isOpen,
+    open,
+    setOpen,
     type,
     data,
     openModal,
@@ -223,10 +230,11 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     updateModal,
     showAlert,
     showConfirm,
-    showPrompt,
+    showInput,
     showLoading,
     showSignOut,
     showCreateProject,
+    showBugReport,
   };
 
   return (
@@ -236,6 +244,97 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     </ModalContext.Provider>
   );
 };
+// 模态框类型定义
+export type ModalType =
+  | "signOut"
+  | "confirm"
+  | "alert"
+  | "input"
+  | "loading"
+  | "custom"
+  | "createProject"
+  | "bugReport";
+
+export function GlobalModalRenderer() {
+  const { open, setOpen, type, data, closeModal } = useModal();
+
+  if (!open || !type || !data) {
+    return null;
+  }
+
+  // 根据类型渲染不同的模态框
+  switch (type) {
+    case "signOut":
+      return <SignOutModal isOpen={open} onClose={closeModal} userName={data.userName} />;
+
+    case "confirm":
+      return (
+        <ConfirmModal
+          isOpen={open}
+          onClose={closeModal}
+          title={data.title || "确认操作"}
+          description={data.description}
+          onConfirm={data.onConfirm}
+          confirmText={data.confirmText}
+          cancelText={data.cancelText}
+          variant={data.variant}
+        />
+      );
+
+    case "alert":
+      return (
+        <AlertModal
+          isOpen={open}
+          onClose={closeModal}
+          title={data.title || "提示"}
+          description={data.description}
+          confirmText={data.confirmText}
+        />
+      );
+
+    case "input":
+      return (
+        <InputModal
+          isOpen={open}
+          onClose={closeModal}
+          title={data.title || "输入信息"}
+          placeholder={data.placeholder}
+          onSubmit={data.onSubmit}
+          defaultValue={data.defaultValue}
+          inputSchema={data.inputSchema}
+          confirmText={data.confirmText}
+          cancelText={data.cancelText}
+        />
+      );
+
+    case "loading":
+      return (
+        <LoadingModal isOpen={open} text={data.loadingText} progress={data.progress} />
+      );
+    case "bugReport":
+      return <BugReportDialog isOpen={open} onOpenChange={setOpen} />;
+    // case "createProject":
+    //   return (
+    //     <CreateProjectModal
+    //       open={isOpen}
+    //       onOpenChange={(open) => {
+    //         if (!open) closeModal();
+    //       }}
+    //     />
+    //   );
+
+    case "custom":
+      // return data.component || null;
+      return (
+        <Modal open={open} onOpenChange={setOpen} title={data.title}>
+          {data.component || null}
+        </Modal>
+      );
+
+    default:
+      return null;
+  }
+}
 
 // Hook for using modal context
 export function useModal() {
@@ -257,9 +356,9 @@ export function useConfirm() {
   return showConfirm;
 }
 
-export function usePrompt() {
-  const { showPrompt } = useModal();
-  return showPrompt;
+export function useInput() {
+  const { showInput } = useModal();
+  return showInput;
 }
 
 export function useLoading() {

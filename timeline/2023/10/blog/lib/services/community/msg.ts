@@ -2,7 +2,7 @@
 import { and, eq, desc } from "drizzle-orm";
 import { db, type Db } from "@/lib/db";
 import { channelMessage, userReadState } from "@/lib/db/schema";
-import { broadcastToChannel, broadcastToCommunity } from "@/api/ws/router";
+// import { broadcastToChannel, broadcastToCommunity } from "@/api/ws/router";
 import type { ListIn } from "@/lib/client/zod";
 import type { MsgInput } from "@/lib/services/community/msg.t";
 
@@ -41,10 +41,7 @@ export const onUserClickChannel = async (
 // TODO: 细节, logic
 // sendMessage ToChannel - 发送消息到频道
 export const sendMsg = async (data: MsgInput) => {
-  console.log(
-    "/home/aa/repos/mc_ls/mcc-next/src/api/community/channel/message/service.ts sendMsg:data:",
-    data,
-  );
+  console.log("services sendMsg sendMsg:data:", data);
   const { communityId, ...msg } = data;
   return await db.transaction(async (tx) => {
     // 发送消息到频道
@@ -56,29 +53,30 @@ export const sendMsg = async (data: MsgInput) => {
 
     // 更新用户的最后阅读状态
     await setUserReadState(tx, {
-      userId: newMessage.userId,
+      userId: newMessage.userId!,
       channelId: newMessage.channelId,
       lastReadMessageId: newMessage.id,
     });
 
     // 2. 通过 WebSocket 实时推送给频道或社区内的用户
-    if (!communityId) {
-      console.log(
-        "/home/aa/repos/mc_ls/mcc-next/src/api/community/channel/message/service.ts sendMsg:broadcastToChannel:",
-      );
-      broadcastToChannel(newMessage.channelId, {
-        op: "newMessage",
-        d: newMessage,
-      });
-    } else {
-      console.log(
-        "/home/aa/repos/mc_ls/mcc-next/src/api/community/channel/message/service.ts sendMsg:broadcastToCommunity:",
-      );
-      broadcastToCommunity(communityId, {
-        op: "newMessage",
-        d: { communityId, ...newMessage },
-      });
-    }
+    io?.emit("msg", { ...newMessage, communityId });
+    // if (!communityId) {
+    //   console.log(
+    //     "/home/aa/repos/mc_ls/mcc-next/src/api/community/channel/message/service.ts sendMsg:broadcastToChannel:",
+    //   );
+    //   broadcastToChannel(newMessage.channelId, {
+    //     op: "newMessage",
+    //     d: newMessage,
+    //   });
+    // } else {
+    //   console.log(
+    //     "/home/aa/repos/mc_ls/mcc-next/src/api/community/channel/message/service.ts sendMsg:broadcastToCommunity:",
+    //   );
+    //   broadcastToCommunity(communityId, {
+    //     op: "newMessage",
+    //     d: { communityId, ...newMessage },
+    //   });
+    // }
 
     return newMessage;
   });

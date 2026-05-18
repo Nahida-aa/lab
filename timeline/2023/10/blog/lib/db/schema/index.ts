@@ -8,3 +8,4 @@ export * from "./friend";
 export * from "./notification";
 
 // 如果需要添加其他schema，在这里导出
+// .notNull().default(`anon_${nanoid()}`)

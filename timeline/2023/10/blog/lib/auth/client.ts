@@ -23,7 +23,10 @@ export const authClient = createAuthClient({
     organizationClient(),
   ],
 });
-
+export type AuthType = {
+  user: typeof authClient.$Infer.Session.user | null;
+  session: typeof authClient.$Infer.Session.session | null;
+};
 // export const {
 //   signIn,
 //   signOut,

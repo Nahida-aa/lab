@@ -11,7 +11,7 @@ import {
   uuid,
   unique,
 } from "drizzle-orm/pg-core";
-import { uuidWithTimestamps } from "../columnsHelpers";
+import { uuidWithTimestamps } from "../helpers";
 import { user } from "./auth-schema";
 import { relations } from "drizzle-orm";
 import { organization } from "./auth-schema";

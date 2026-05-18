@@ -19,7 +19,7 @@ import {
 } from "next/navigation";
 import type { ForwardRefExoticComponent, JSX, RefAttributes } from "react";
 import { BetterTooltip } from "../BetterTooltip";
-import { addSearchParams } from "@/lib/utils/url";
+import { addSearchParams } from "@/app/a/utils/url";
 import { DocumentTextIcon } from "@/components/icons";
 import { Button } from "./html";
 import { cn } from "@/lib/utils";

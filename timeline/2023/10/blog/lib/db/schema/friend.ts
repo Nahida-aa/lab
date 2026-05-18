@@ -7,7 +7,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { uuidWithTimestamps } from "../columnsHelpers";
+import { uuidWithTimestamps } from "../helpers";
 import { user } from ".";
 import type { FriendStatus } from "@/lib/services/user/friend.t";
 
@@ -52,7 +52,7 @@ export const friendGroup = pgTable(
     ...uuidWithTimestamps,
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" }), // 自己
     name: text("name").default("default").notNull(), // e.g., "所有好友"
     order: integer("order").default(0).notNull(), // 排序值：越小越前（用户可改）
     // 可选：加描述或图标

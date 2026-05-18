@@ -45,7 +45,7 @@ import {
 import { ChevronUp, FileClock, Gauge, Home, User2 } from "lucide-react";
 import { Avatar } from "@/app/a/ui/base/image/avatar";
 import { NoStyleLink } from "@/app/a/ui/base/html";
-import { addSearchParams } from "@/lib/utils/url";
+import { addSearchParams } from "@/app/a/utils/url";
 
 export function AppSidebar({ user }: any) {
   const router = useRouter();

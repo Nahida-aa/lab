@@ -14,7 +14,7 @@ import type {
   VersionFileCreate,
 } from "./version.t";
 import type { UpdateVersion } from "@/lib/db/service";
-import { inferProjectType } from "../../utils/project/inferType";
+import { inferProjectType } from "@/lib/utils/project/inferType";
 import { mutPrepareVersionFiles } from "@/lib/services/project/version.tool";
 import { AppErr } from "@/lib/types";
 

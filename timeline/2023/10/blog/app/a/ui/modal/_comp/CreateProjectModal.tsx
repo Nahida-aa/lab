@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../../../components/ui/button";
 import {
   Form,
   FormControl,
@@ -9,17 +9,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "../../../../../components/ui/form";
+import { Input } from "../../../../../components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { getBasePath } from "@/lib/utils/url.client";
+} from "../../../../../components/ui/select";
+import { Textarea } from "../../../../../components/ui/textarea";
+import { getBasePath } from "@/app/a/utils/url.client";
 import { zodResolver } from "@hookform/resolvers/zod"; // bun add @hookform/resolvers zod
 import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -30,10 +30,7 @@ import { FormModal } from "./FormModal";
 
 // 表单验证 Schema
 const createProjectSchema = z.object({
-  name: z
-    .string()
-    .min(1, "项目名称不能为空")
-    .max(100, "项目名称不能超过100个字符"),
+  name: z.string().min(1, "项目名称不能为空").max(100, "项目名称不能超过100个字符"),
   slug: z
     .string()
     .min(1, "项目标识符不能为空")
@@ -55,10 +52,7 @@ interface CreateProjectModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateProjectModal({
-  open,
-  onOpenChange,
-}: CreateProjectModalProps) {
+export function CreateProjectModal({ open, onOpenChange }: CreateProjectModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const showAlert = useAlert();
   const { showLoading, hideLoading } = useLoading();
@@ -127,123 +121,114 @@ export function CreateProjectModal({
       throw error;
     }
   };
-  return <FormModal
-    open={open}
-    onOpenChange={handleClose}
-    title="创建项目"
-    // description="填写下面的信息来创建您的新项目。带 * 的字段为必填项。"
-    size="xl"
-  >
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
-        {/* 项目名称 */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>名称 *</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="输入项目名"
-                  onChange={(e) => {
-                    field.onChange(e);
-                    handleNameChange(e.target.value);
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* URL */}
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL *</FormLabel>
-              <FormControl>
-                <div className="flex items-center h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-                  <span className="text-muted-foreground">
-                    {basePath}/project/
-                  </span>
-                  <input
-                    {...field}
-                    placeholder="my-mod"
-                    className="flex-1 bg-transparent outline-none text-foreground"
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* 可见性 */}
-        <FormField
-          control={form.control}
-          name="visibility"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>项目可见性 *</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
+  return (
+    <FormModal
+      open={open}
+      onOpenChange={handleClose}
+      title="创建项目"
+      // description="填写下面的信息来创建您的新项目。带 * 的字段为必填项。"
+      size="xl"
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
+          {/* 项目名称 */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>名称 *</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择可见性" />
-                  </SelectTrigger>
+                  <Input
+                    {...field}
+                    placeholder="输入项目名"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleNameChange(e.target.value);
+                    }}
+                  />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="public">公开</SelectItem>
-                  <SelectItem value="unlisted">不列出</SelectItem>
-                  <SelectItem value="private">私有</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="summary"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>简介 *</FormLabel>
-              <FormControl>
-                <Textarea
-                  {...field}
-                  placeholder="描述您的项目的一两句话"
-                  rows={3}
-                />
-              </FormControl>
-              <FormDescription>{field.value.length}/500 字符</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex gap-2">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <FormMessage />
+              </FormItem>
             )}
-            创建项目
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleClose}
-            disabled={isSubmitting}
-          >
-            取消
-          </Button>
-        </div>
-      </form>
-    </Form>
-  </FormModal>
+          />
+
+          {/* URL */}
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>URL *</FormLabel>
+                <FormControl>
+                  <div className="flex items-center h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                    <span className="text-muted-foreground">{basePath}/project/</span>
+                    <input
+                      {...field}
+                      placeholder="my-mod"
+                      className="flex-1 bg-transparent outline-none text-foreground"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* 可见性 */}
+          <FormField
+            control={form.control}
+            name="visibility"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>项目可见性 *</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="选择可见性" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="public">公开</SelectItem>
+                    <SelectItem value="unlisted">不列出</SelectItem>
+                    <SelectItem value="private">私有</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="summary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>简介 *</FormLabel>
+                <FormControl>
+                  <Textarea {...field} placeholder="描述您的项目的一两句话" rows={3} />
+                </FormControl>
+                <FormDescription>{field.value.length}/500 字符</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex gap-2">
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              创建项目
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={isSubmitting}
+            >
+              取消
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </FormModal>
+  );
 }

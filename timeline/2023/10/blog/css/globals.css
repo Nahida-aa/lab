@@ -35,6 +35,56 @@ body {
     );
 }
 
+@utility glow-purple-box-shadow {
+  box-shadow:
+    0 0 2px #0e002000,
+    0 0 7px #780afe75,
+    0 0 5px #780afe75,
+    0 0 18px #780afe75;
+}
+
+@utility glow-purple {
+  color: #f4edf7;
+  text-shadow:
+    0 0 2px #0e002000,
+    0 0 7px #780afe75,
+    0 0 5px #780afe75,
+    0 0 18px #780afe75;
+}
+
+@utility aa-scroll {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式 滚动条宽度 */
+    @apply w-1 bg-transparent transition-all duration-300 ease-in-out;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块 滚动条滑块 */
+    @apply cursor-pointer rounded-lg duration-150;
+    background: rgba(var(--mio-text-default), 0.4);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    /* 滚动条轨道背景透明 */
+    /* background: transparent;  */
+    @apply rounded-lg bg-black/5;
+    box-shadow: inset 0 0 5px rgba(85, 42, 241, 0.1);
+  }
+
+  /*滚动条整体样式 滑块悬停时背景 */
+  /* &::-webkit-scrollbar-thumb:hover {
+    @apply w-1 bg-[#a394fc33];
+  } */
+}
+
+@utility aa-scroll-hidden {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式 滚动条宽度 */
+    @apply w-0;
+  }
+}
 :root {
   /* --sidebar-width: 14.5rem;  */
   --navbar-height: 48px;
@@ -71,3 +121,29 @@ html {
   text-wrap: balance;
 }
 
+  /* .bg-m {
+    background: linear-gradient(
+      to bottom right,
+      var(--background-1),
+      var(--background-2),
+      var(--background-3),
+      var(--background-4),
+      var(--background-5),
+      var(--background-6)
+    );
+    min-height: 100vh; 
+    background-attachment: fixed; 
+  } */
+  .bg-content {
+    background: linear-gradient(
+      to bottom right,
+      var(--background-1),
+      var(--background-2),
+      var(--background-3),
+      var(--background-4),
+      var(--background-5),
+      var(--background-6)
+    );
+    background-attachment: fixed;
+    /* 确保背景渐变固定在视口上 */
+  }

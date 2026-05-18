@@ -1,14 +1,7 @@
 "use server";
 import React from "react";
-import { text2slug } from "@/lib/utils/slug";
-import {
-  Heading1,
-  Heading2,
-  Heading3,
-  Heading4,
-  Heading5,
-  Heading6,
-} from "lucide-react";
+import { text2slug } from "@/app/a/utils/slug";
+import { Heading1, Heading2, Heading3, Heading4, Heading5, Heading6 } from "lucide-react";
 
 function createHeading(level: number) {
   const Heading = ({

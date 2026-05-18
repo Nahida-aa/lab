@@ -11,6 +11,8 @@ import type {
   ReactNode,
 } from "react";
 import Link, { type LinkProps } from "next/link";
+import { Spinner } from "@heroui/react";
+import { Loader2 } from "lucide-react";
 
 export const Main = ({
   className = "",
@@ -21,10 +23,7 @@ export const Main = ({
 }) => (
   <main
     {...props}
-    className={cn(
-      " h-fit rounded-md bg-card text-card-foreground shadow-sm ",
-      className,
-    )}
+    className={cn(" h-fit rounded-md bg-card text-card-foreground shadow-sm ", className)}
   >
     <MagicCard
       className={MagicCardClass}
@@ -86,10 +85,7 @@ export const TooltipText = ({
   );
 };
 
-export const Row = ({
-  className = "",
-  ...props
-}: HTMLAttributes<HTMLDivElement>) => {
+export const Row = ({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       {...props}
@@ -124,49 +120,62 @@ type NoStyleLinkProps = LinkProps &
     className?: string;
   };
 
-export const NoStyleLink = ({
-  children,
-  className,
-  ...props
-}: NoStyleLinkProps) => {
+export const NoStyleLink = ({ children, className, ...props }: NoStyleLinkProps) => {
   return (
     <Link
       {...props}
-      className={cn(
-        "text-inherit no-underline inline-flex items-center",
-        className,
-      )}
+      className={cn("text-inherit no-underline inline-flex items-center", className)}
     >
       {children}
     </Link>
   );
 };
 
-interface ButtonProps extends ComponentProps<typeof UiButton> {
+export interface ButtonProps extends ComponentProps<typeof UiButton> {
   href?: string;
+  pending?: boolean;
+  Icon?: ReactNode;
 }
-
 export const Button = ({
   children,
   className,
   variant,
   href,
+  pending,
+  disabled,
+  Icon,
   ...props
 }: ButtonProps) => {
   variant = href && !variant ? "ghost" : variant;
-  const Comp = () => (
+  const content = (
     <UiButton
       className={cn(
-        "z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu  cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 text-small gap-2 [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover rounded-md w-fit leading-[1.15]  text-inherit font-semibold bg-transparent",
-        "active:scale-97 transition-transform duration-100", // data-[pressed=true]:scale-[0.97]
+        "appearance-none select-none subpixel-antialiased overflow-hidden  transform-gpu  cursor-pointer   px-4     leading-[1.15]",
+        "active:scale-95 transition-transform duration-100", // data-[pressed=true]:scale-[0.97]
+        {
+          "justify-start": href && variant === "ghost",
+        },
         className,
       )}
       variant={variant}
+      disabled={pending || disabled}
       {...props}
     >
+      {Icon ? (
+        <span className={cn("shrink-0", { "animate-spin": pending })}>{Icon}</span>
+      ) : (
+        pending && <Loader2 className="shrink-0 animate-spin" />
+      )}
       {children}
     </UiButton>
   );
 
-  return href ? <NoStyleLink href={href}>{Comp()}</NoStyleLink> : Comp();
+  return href ? (
+    <NoStyleLink className="flex w-full justify-start" href={href}>
+      {content}
+    </NoStyleLink>
+  ) : (
+    content
+  );
 };
+Button.displayName = "Button"; // forwardRef 需要

@@ -1,4 +1,4 @@
-import { ModalExamples } from "@/components/examples/ModalExamples";
+import { ModalExamples } from "./ModalExamples";
 
 export default function Page() {
   return <ModalExamples />;

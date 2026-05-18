@@ -1,7 +1,8 @@
-import { z } from "@hono/zod-openapi";
-import { userBaseSchema } from "../../../api/auth/model";
-import { createSelectSchema } from "../../../api/openapi/helpers/create";
-import { notification } from "@/lib/db/schema";
+import { z } from "zod";
+import { notification, notificationReceiver } from "@/lib/db/schema";
+import { createSelectSchema } from "drizzle-zod";
+import { notificationSelectZ } from "@/lib/db/service";
+import { userItemZ } from "@/lib/services/user/index.t";
 
 // export type NotificationType =
 //   | 'invite_project_member'
@@ -33,13 +34,76 @@ export const notificationType = {
   followed_project: "followed_project",
   friend_request: "friend_request",
 } as const;
-export type NotificationType = keyof typeof notificationType;
+// type -> content
+// 1. 集中定义所有 content 结构（易扩展：加新类型只需加属性）
+export interface NotificationContent {
+  default: Record<string, never>;
+  friend_request: {
+    targetId: string;
+    friendTableId: string;
+    username: string;
+    image?: string | null;
+    msg: string;
+  };
+  invite_join_project: {
+    projectId: string;
+    projectSlug: string;
+    projectIcon: string | null;
+    // role: "member" | "admin";
+    // msg: string; // 邀请你加入"
+  };
+  invite_accepted: {
+    projectId: string;
+    inviteId: string;
+  };
+  invite_rejected: {
+    projectId: string;
+    inviteId: string;
+    reason?: string;
+  };
 
-export const notificationSelectSchema = createSelectSchema(notification);
-export type NotificationSelect = typeof notification.$inferSelect;
+  // 示例：加一个新类型
+  comment_received: {
+    projectId: string;
+    versionId: string;
+    commentId: string;
+    body: string;
+  };
+}
 
-export const notificationSchema = notificationSelectSchema.extend({
+// 2. 从 NotificationContent 的键自动生成 NotificationType（零维护！）
+export type NotificationType = keyof NotificationContent;
+// 3. 完整的 payload 类型（discriminated union：type 决定 content 形状）
+export type NotificationPayload<T extends NotificationType = NotificationType> = {
+  type: T;
+  senderId: string;
+  content: NotificationContent[T]; // 根据 T 精确约束！
+};
+
+// 4. build 函数：用泛型重载，签名不变，但类型安全
+export const buildNotificationInsert = <T extends NotificationType>(
+  type: T,
+  senderId: string,
+  content: NotificationContent[T], // 自动匹配：e.g., type='friend_request' 时 content 必须有 targetId 等
+): NotificationPayload<T> => {
+  return {
+    type,
+    senderId,
+    content,
+  };
+};
+
+export const notificationZ = notificationSelectZ.extend({
   isRead: z.boolean(),
   readAt: z.date().nullable(),
-  sender: userBaseSchema.nullable(),
+  sender: userItemZ.nullable(),
 });
+
+export type ActionStatus = "pending" | "accepted" | "rejected" | "ignored";
+export const notificationReceiverFields = {
+  id: true,
+  isRead: true,
+  readAt: true,
+  actionStatus: true,
+  actionAt: true,
+} as const;

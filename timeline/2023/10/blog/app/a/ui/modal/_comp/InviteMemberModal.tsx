@@ -12,10 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+} from "../../../../../components/ui/form";
+import { Input } from "../../../../../components/ui/input";
+import { Button } from "../../../../../components/ui/button";
+import { DialogFooter } from "../../../../../components/ui/dialog";
 import { Loader2, UserPlus } from "lucide-react";
 
 // 邀请成员表单验证
@@ -109,11 +109,7 @@ export function InviteMemberModal({
               <FormItem>
                 <FormLabel>用户名 *</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="username"
-                    disabled={isSubmitting}
-                  />
+                  <Input {...field} placeholder="username" disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,9 +126,7 @@ export function InviteMemberModal({
               取消
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <UserPlus className="mr-2 h-4 w-4" />
               发送邀请
             </Button>

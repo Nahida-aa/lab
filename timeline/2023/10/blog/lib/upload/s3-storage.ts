@@ -1,11 +1,6 @@
 import "dotenv/config";
-import { s3PublicUrl } from "../../constants";
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"; // bun add @aws-sdk/client-s3
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"; // bun add @aws-sdk/s3-request-presigner
 import assert from "node:assert";
 
 // R2 配置

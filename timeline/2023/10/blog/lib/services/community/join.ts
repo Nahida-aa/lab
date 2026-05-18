@@ -1,20 +1,20 @@
 "use server";
 import { eq, and, desc, inArray, sql, count } from "drizzle-orm";
 import type { CommunityMemberWithInviter } from "./member.t";
-import { UserBase } from "../../../api/auth/model";
-import { requiresApproval, validateJoinData } from "../../../api/community/util/join";
 import type { InsertCommunityMember } from "./member.t";
 import {
   joinMethod,
+  requiresApproval,
+  validateJoinData,
   type JoinMethodType,
   type MemberJoinStats,
-} from "../../../api/community/member/z.schema";
+} from "./join.t";
 import { community, communityMember, user } from "@/lib/db/schema";
 // import type { Db, Tx } from "@/api/db";
-import { broadcastToChannel } from "../../../api/ws/router";
+// import { broadcastToChannel } from "../../../api/ws/router";
 import { db, type Db } from "@/lib/db";
-import { withAuth, withLogin } from "@/lib/auth/server";
 import { AppErr } from "@/lib/types";
+import { withAuth } from "@/lib/client/action";
 
 // 检查是否存在成员
 export const checkMemberExisting = async (
@@ -34,12 +34,8 @@ export const checkMemberExisting = async (
   return existingMember.length > 0;
 };
 
-type AddMemberParams = Omit<InsertCommunityMember, "joinMethod"> & {
-  joinMethod: JoinMethodType;
-};
-
-export const _addMember = async (db: Db, data: AddMemberParams) => {
-  const { joinMethod, inviterId } = data;
+export const _addMember = async (db: Db, data: InsertCommunityMember) => {
+  const { joinMethod = "discover", inviterId } = data;
 
   // 验证加入数据
   const validation = validateJoinData({ joinMethod, inviterId });
@@ -59,15 +55,15 @@ export const _addMember = async (db: Db, data: AddMemberParams) => {
   if (!communityExisting) throw AppErr("社区不存在", 404);
   // 添加成员（使用用户指定的状态，不做自动判断）
   const [newMember] = await db.insert(communityMember).values(data).returning();
-  if (communityExisting.defaultChannelId) {
-    broadcastToChannel(communityExisting.defaultChannelId, {
-      op: "userJoined",
-      d: {
-        communityId: communityExisting.id,
-        userId: newMember.userId,
-      },
-    });
-  }
+  // if (communityExisting.defaultChannelId) {
+  //   broadcastToChannel(communityExisting.defaultChannelId, {
+  //     op: "userJoined",
+  //     d: {
+  //       communityId: communityExisting.id,
+  //       userId: newMember.userId,
+  //     },
+  //   });
+  // }
 
   // 获取完整的成员信息
   return newMember;
@@ -78,11 +74,11 @@ export const _joinDiscoveredCommunity = async (userId: string, communityId: stri
   return await _addMember(db, {
     communityId,
     userId,
-    joinMethod: joinMethod.DISCOVER,
+    joinMethod: "discover",
     status: "active", // 发现加入直接激活
   });
 };
-export const joinDiscoveredCommunity = withLogin(_joinDiscoveredCommunity);
+export const joinDiscoveredCommunity = withAuth(_joinDiscoveredCommunity);
 /**
  *用户sendInvitation 邀请其他用户加入社区, 需要 被邀请用户 的 id
  */
@@ -108,7 +104,7 @@ export const acceptInviteAndJoin = async (
   return await _addMember(db, {
     communityId,
     userId,
-    joinMethod: joinMethod.INVITE,
+    joinMethod: "invite",
     inviterId,
     status: "active", // 接受邀请直接激活
   });
@@ -121,7 +117,7 @@ export async function submitJoinRequest(communityId: string, userId: string) {
   return await _addMember(db, {
     communityId,
     userId,
-    joinMethod: joinMethod.MANUAL_REVIEW,
+    joinMethod: "manual_review",
     status: "pending", // 申请状态为待审核
   });
 }
@@ -152,7 +148,7 @@ export async function getMemberWithInviter(
 /**
  * 获取社区成员加入统计
  */
-export async function getMemberJoinStats(communityId: string): Promise<MemberJoinStats> {
+export async function statMemberJoin(communityId: string): Promise<MemberJoinStats> {
   // 获取总成员数
   const [totalResult] = await db
     .select({

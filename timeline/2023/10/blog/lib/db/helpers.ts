@@ -40,6 +40,30 @@ export const autoIncrementWithTimestamps = {
 
 export const uuidWithTimestamps = {
   id: uuid().primaryKey().notNull().defaultRandom(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).$onUpdate(() => new Date().toISOString()).notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" })
+    .$onUpdate(() => new Date().toISOString())
+    .notNull(),
+};
+
+// 选全部列, 使用官方助手: getTableColumns
+// 用于 drizzle-orm 的 db.select() 助手
+export const pickColumns = <
+  TTable extends Record<string, any>,
+  // TCols extends Partial<Record<keyof TTable, boolean>>,
+  TCols extends Partial<Record<keyof TTable["_"]["columns"], boolean>>,
+  // TCols extends { [K in keyof TTable]?: boolean },
+>(
+  table: TTable,
+  columns: TCols,
+): {
+  [K in keyof TTable as TCols[K] extends true ? K : never]: TTable[K];
+} => {
+  const result = {} as any;
+  for (const key in columns) {
+    if (columns[key]) {
+      result[key] = table[key];
+    }
+  }
+  return result;
 };
