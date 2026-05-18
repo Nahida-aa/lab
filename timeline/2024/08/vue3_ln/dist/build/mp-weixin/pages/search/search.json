@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "搜索",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "uni-search-bar": "../../node-modules/@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar",
+    "uni-icons": "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",
+    "uv-empty": "../../node-modules/@climblee/uv-ui/components/uv-empty/uv-empty",
+    "uni-load-more": "../../node-modules/@dcloudio/uni-ui/lib/uni-load-more/uni-load-more"
+  }
+}

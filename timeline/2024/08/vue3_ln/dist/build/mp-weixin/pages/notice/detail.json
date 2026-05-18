@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "公告详情",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "uni-tag": "../../node-modules/@dcloudio/uni-ui/lib/uni-tag/uni-tag",
+    "uni-dateformat": "../../node-modules/@dcloudio/uni-ui/lib/uni-dateformat/uni-dateformat",
+    "markdown": "../../components/markdown/markdown"
+  }
+}

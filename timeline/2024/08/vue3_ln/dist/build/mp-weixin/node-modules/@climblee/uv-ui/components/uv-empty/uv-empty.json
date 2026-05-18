@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "uv-icon": "../uv-icon/uv-icon"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "custom-nav-bar": "../../components/custom-nav-bar/custom-nav-bar",
+    "uni-icons": "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",
+    "uni-dateformat": "../../node-modules/@dcloudio/uni-ui/lib/uni-dateformat/uni-dateformat",
+    "common-title": "../../components/common-title/common-title",
+    "topic-item": "../../components/topic-item/topic-item"
+  }
+}
