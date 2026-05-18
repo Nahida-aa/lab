@@ -1,0 +1,43 @@
+<h1>登录</h1>
+<form id="loginForm">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" required>
+    <br><br>
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required>
+    <br><br>
+    <button type="submit">登录</button>
+</form>
+<p id="message" style="color: red;"></p>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // 阻止表单默认提交行为
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // 将 token 存储到 Local Storage
+                localStorage.setItem("token", data.token);
+                alert("登录成功！Token 已保存到 Local Storage。");
+            } else {
+                const errorData = await response.json();
+                document.getElementById("message").textContent = errorData.error || "登录失败";
+            }
+        } catch (error) {
+            console.error("请求失败:", error);
+            document.getElementById("message").textContent = "网络错误，请稍后再试。";
+        }
+    });
+</script>
