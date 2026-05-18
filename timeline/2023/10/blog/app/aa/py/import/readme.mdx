@@ -1,0 +1,284 @@
+---
+title: 关于 import
+created_at: 2024-11-23T01:08:07.000Z
+pushed_at: '2024-11-28T18:14:45Z'
+updated_at: '2025-02-11T06:19:37Z'
+authors: '[[object Object]]'
+private: false
+svg: null
+image: null
+tags: '[python, import, module, package]'
+description: importing
+draft: false
+---
+# 关于 import
+
+## module
+
+An object that serves as an organizational unit of Python code. 
+Modules have a namespace containing arbitrary Python objects. 
+Modules are loaded into Python by the process of [importing](#importing).
+
+See also [package](#package).
+
+>- 一个(作为 Python 代码组织单元的) `object`。(可以包含多个 Python object, 通常是一个 .py 文件)
+>- Modules 有一个包含任意 Python 对象的 `namespace`。(自己独立构成一个命名空间)
+>- Modules 通过[importing](#importing)的过程加载到 Python 中。
+>- module 是一个 python runtime 的概念(保存在内存中, 而文件是一个操作系统的概念, 需要通过 `import` 语句加载到内存中, 即从一个文件里生成一个 module 对象)
+
+## package
+
+A Python [module](#module) which can contain submodules or recursively, subpackages. Technically, a package is a Python module with a `__path__` attribute.
+
+See also regular package and namespace package.
+
+>- 一个(可以包含 (子模块或递归地子包) 的) Python [module](#module)。(是一种特殊的 module, 对于操作系统往往是一个文件夹)
+>- 从技术上讲, 一个 package 是一个带有 `__path__` 属性的 Python module。
+>- python3 中, 一个 package 无论是否有 `__init__.py` 文件, 都可以被当作 package 对待, 但是 python2 中, 必须有 `__init__.py` 文件才能被当作 package 对待。
+
+## importing
+The process by which Python code in one module is made available to Python code in another module.
+>- 将一个模块中的代码提供给另一个模块使用的过程(将 文件或文件夹 转换为 module 或 package 对象的过程)
+
+### example
+[example.py](./example.py)
+```python name="example.py"
+import test
+```
+#### 过程
+0. step0: 拿到 "test" 字符串, name = "test"
+1. step1: 检查缓存是否存在 name == "test" 的 module 对象, if yes: test = 缓存中的 module 对象, else: 
+    - 1.1 检查是否是 built-in module, if yes: test = built-in module (name=="test"), else: 从 sys.path 中找(按照顺序) 可以被 load() 为 test 的 文件, e.g: test.py
+
+    ```sh
+    python
+    import sys
+    sys.path
+    ```
+    ```sh
+    ['', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\python310.zip', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\DLLs', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\lib', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310', 
+    'C:\\Users\\aa\\AppData\\Roaming\\Python\\Python310\\site-packages', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\lib\\site-packages', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\lib\\site-packages\\win32', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\lib\\site-packages\\win32\\lib', 
+    'C:\\Users\\aa\\.conda\\envs\\vits_310\\lib\\site-packages\\Pythonwin']
+    ```
+    e.g: example.py
+    ```python name="example.py"
+    from multiprocessing import Process
+    ```
+    ```yml
+    example.py
+    multiprocessing.py
+    ```
+    ```sh
+    (base) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+    Traceback (most recent call last):
+      File "d:\github\outsource\blog\blog\src\app\aa\py\import\example.py", line 2, in <module>
+        from multiprocessing import Process
+    ImportError: cannot import name 'Process' from 'multiprocessing' (d:\github\outsource\blog\blog\src\app\aa\py\import\multiprocessing.py)
+    ```
+    e.g: 找到 在 sys.path 找到 符合条件的文件(e.g: ./test.py)
+    ```py name="example.py"
+    import test
+    ```
+    ```py name="test.py"
+    class A:
+      pass
+    ```
+    1.1.1: 新建一个 module 对象, 并在 module 中定义 class A, 最后更新一下缓存, 然后 test = module 对象, 此时就可以打印 test
+    ```py name="example.py"
+    import test
+
+    print(test)
+    print(test.A)
+    ```
+    ```sh
+    (vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+    <module 'test' from 'd:\\github\\outsource\\blog\\blog\\src\\app\\aa\\py\\import\\test.py'>
+    <class 'test.A'>
+    ```
+    e.g:
+    ```py name="test.py"
+    class A:
+      pass  
+
+    print("test is imported")
+    ```
+    ```py name="example.py"
+    import test
+    import test
+    import test
+    ```
+    ```sh
+    (vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+    test is imported
+    ```
+    只会执行一次, 因为已经 将 test.py 文件转换为 module 对象, 并 此对象 缓存到 变量 test 中。 对于 importing 过程 name 发挥了两种作用: 
+      - 作为查找 module 的 name
+      - 作为 缓存 module 的 variable name
+
+    那么可以将这这两种作用分开, 通过 `import test as t`  即用 test 去找，用 t 去缓存
+    
+    e.g: `from test import A`
+    依然会 load(test) 即会刷新缓存, 但是不会将 module 对象缓存到变量中, test module中名为 A 的变量 赋值到当前 module 中的 A 变量中
+    同样的, `from test import A` A 发挥了两种作用, 可以拆开: `from test import A as MyA`
+  
+#### `import package`
+package 是一个特殊的 module
+- `import module` 时: 会将 module.py 中的程序在一个单独的命名空间中运行, 然后构成一个 module 对象
+- `import package` 时: 会将 package 文件夹中的 `__init__.py` 文件中的程序在一个单独的命名空间中运行, if 没有 `__init__.py` 文件, 则不会run 任何额外的代码, 但是会构成一个 package 对象
+
+e.g: 导入 package, 无 `__init__.py` 文件, 也无其他文件, 即空文件夹
+```py name="example.py"
+import mypackage
+
+print(mypackage)
+```
+```yml
+example.py
+mypackage/
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+<module 'mypackage' (<_frozen_importlib_external._NamespaceLoader object at 0x00000193DA51F220>)>
+```
+e.g: 导入 package, 有 `__init__.py` 文件
+会用 `mypackage/__init__.py` 这个命名空间来构建一个 module 对象(package 对象)
+```py name="mypackage/__init__.py"
+print("mypackage is imported")
+```
+```py name="example.py"
+import mypackage
+
+print(mypackage)
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+mypackage is imported
+<module 'mypackage' from 'd:\\github\\outsource\\blog\\blog\\src\\app\\aa\\py\\import\\mypackage\\__init__.py'>
+```
+e.g: 导入 package, 有 `__init__.py` 文件, 且有其他文件
+```yml
+example.py
+mypackage/
+  __init__.py
+  mymodule.py
+```
+```
+```py name="mypackage/__init__.py"
+class B:
+    pass
+```
+```py name="example.py"
+import mypackage
+
+print(mypackage)
+print(mypackage.B)
+print(dir(mypackage))
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+<module 'mypackage' from 'd:\\github\\outsource\\blog\\blog\\src\\app\\aa\\py\\import\\mypackage\\__init__.py'>
+<class 'mypackage.B'>
+['B', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__path__', '__spec__']
+```
+发现 mymodule 不在 dir(mypackage) 中, 说明 mymodule.py 中的代码并没有运行, 但是 mypackage.B 在 dir(mypackage) 中, 说明 `mypackage/__init__.py` 中的代码运行了, 并且构成了一个 name==mypackage 的 module 对象
+
+如果想要 import mymodule.py 中的代码, 可以使用 `import mypackage.mymodule` 或者 `from mypackage import mymodule`
+
+e.g: `import mypackage.mymodule`
+- 拿到字符串 "mypackage.mymodule", 作为 module 的 identifier, 
+- 在 sys.path 中找到 mypackage 文件夹, 并在这个文件夹中找到 mymodule.py 文件
+- 会 load(mypackage): 更新缓存, 在 mypackage 中增加一个属性 mymodule => mymodule 的 module 对象
+```py name="example.py"
+import mypackage.mymodule
+
+print(dir(mypackage))
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+['B', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__path__', '__spec__', 'mymodule']
+```
+but:
+e.g: `import mypackage.mymodule as m`
+```py name="example.py"
+import mypackage.mymodule as m
+
+print(dir(mypackage))
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+Traceback (most recent call last):
+  File "d:\github\outsource\blog\blog\src\app\aa\py\import\example.py", line 16, in <module>
+    print(dir(mypackage))
+NameError: name 'mypackage' is not defined
+```
+
+以上都是 absolute import, 即通过一个 确定的 string 去寻找 module
+
+#### relative import
+
+e.g:
+```yml
+example.py
+mypackage/
+  __init__.py
+  mymodule.py
+  util.py
+```
+```py name="mypackage/mymodule.py"
+from mypackage.util import f
+
+class C:
+    pass
+```
+```py name="mypackage/util.py"
+def f():
+    pass
+```
+一些可能的问题:
+- mypackage 改名了
+- util.py 或 mymodule.py 所在位置非常深, 对于人需要知道 更多信息才能拿到 f
+
+```py name="mypackage/mymodule.py"
+from .util import f
+
+class C:
+    pass
+```
+relative import 会先找到绝对路径, 然后按照 absolute import 的方式去找
+- 根据 module 的 `__package__` 变量去计算绝对路径
+```py name="example.py"
+import mypackage.mymodule
+
+print(mypackage.mymodule.__package__)
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/example.py
+mypackage
+```
+
+but: 当直接运行 mymodule.py 时, 会报错, 因为 会将 mymodule.py 当作一个 main module, 而不是一个 package 中的 module
+```py name="mypackage/mymodule.py"
+print(__package__)
+from .util import f
+
+class C:
+    pass
+```
+```sh
+(vits_310) D:\github\outsource\blog\blog>C:/Users/aa/.conda/envs/vits_310/python.exe d:/github/outsource/blog/blog/src/app/aa/py/import/mypackage/mymodule.py
+None
+Traceback (most recent call last):
+  File "d:\github\outsource\blog\blog\src\app\aa\py\import\mypackage\mymodule.py", line 2, in <module>
+    from .util import f
+ImportError: attempted relative import with no known parent package
+```
+
+因此 relative import 适用于 package 中的 module, 而不适用于 main module,
+因为直接运行 main module 时, 会将 main module 并不知道自己属于哪个 package, 因此无法计算绝对路径

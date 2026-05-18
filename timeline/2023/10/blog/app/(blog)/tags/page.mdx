@@ -1,0 +1,35 @@
+---
+title: aa
+pushed_at: '2024-10-05'
+tags: '[mdx, markdown, jsx]'
+description: 学习 MDX
+updated_at: '2025-02-11T06:19:37Z'
+---
+
+{/* // import { BlogPosts } from '@/app/(blog)/aa/_components/posts' */}
+
+export const metadata = {
+  title: 'Tags',
+  pushed_at: "2024-10-05",
+  description: 'Read my blog.',
+}
+
+# this is a MDX ?
+
+```python
+def foo():
+  print('foo')
+```
+
+```javascript
+export  function Page() {
+  return (
+    <section>
+      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">My Blog</h1>
+      <BlogPosts />
+    </section>
+  )
+}
+```
+
+## 行内`code`代码

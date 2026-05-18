@@ -1,0 +1,271 @@
+import { auth } from "@/lib/auth";
+import { act } from "@/lib/safe-action";
+import { createMiddleware } from "next-safe-action";
+import { cookies, headers } from "next/headers";
+import { z, type ZodType } from "zod";
+
+interface BaseContext<TInput = undefined, TOutput = undefined> {
+  input: TInput;
+  output?: TOutput;
+}
+// Default: no extra fields are present unless injected by pre middlewares
+// No extra fields by default
+type DefaultExtra = Record<never, never>;
+type Context<
+  TInput = undefined,
+  TOutput = undefined,
+  TExtra = DefaultExtra,
+> = BaseContext<TInput, TOutput> & TExtra;
+
+/**
+ * Defines a function that takes a context and returns a promise of output.
+ * @example
+ * // generic usage
+ * const demoZ = z.object({ a: z.coerce.number(), b: z.number() });
+ * const demo = defAct(demoZ)(async (c) => c.input.a + c.input.b);
+ * // demo: (input: { a: unknown; b: number }) => Promise<number>
+ * // c.input is inferred as { a: number; b: number }
+ *
+ * // no schema
+ * const _demo = (c: { input: { a: number; b: number } }) => c.input.a + c.input.b;
+ * const demo1 = defAct()(_demo);
+ * // (input: { a: number; b: number }) => Promise<number>
+ *
+ * // pre handler middleware
+ * const demo2 = defAct(demoZ).pre(async (c) => {
+ *   console.log("ctx in mw:", c);
+ *   return { id: "mw-id" };
+ * })(async (c) => {
+ *   console.log("handler sees id ", c.id);
+ *   return c.input.a + c.input.b;
+ * });
+ * // (input: { a: unknown; b: number }) => Promise<number>
+ * // c.input is inferred as { a: number; b: number }, c.id is inferred as string
+ *
+ * // custom pre handler middleware
+ * export const injectCookie = defPre(() => ({ cookies }));
+ * export const injectHeaders = defPre(() => ({ headers }));
+ * export const authMw = defPre(async () => {
+ *   const session = await auth.api.getSession({ headers: await headers() });
+ *   console.log("session:", session);
+ *   if (!session) throw new Error("NoAuth");
+ *   return { authId: session.user.id };
+ * });
+ * const demo3 = defAct().pre(authMw)(_demo);
+ * // (input: { a: number; b: number }) => Promise<number>
+ * // c.input is inferred as { a: number; b: number }, c.authId is inferred as string
+ */
+// Overloads:
+// - schema provided: defAct(schema) -> Input is z.infer<typeof schema>
+// - generic provided without schema: defAct<TInput>() -> Input is TInput
+export function defAct<S extends z.ZodTypeAny, TExtra = DefaultExtra>(
+  schema: S,
+): ReturnType<typeof createFactoryWithSchema<S, TExtra>>;
+export function defAct<TInput, TExtra = DefaultExtra>(): ReturnType<
+  typeof createFactoryNoSchema<TInput, TExtra>
+>;
+export function defAct(schema?: ZodType) {
+  // runtime: schema may be schema or undefined
+  if (schema) return createFactoryWithSchema(schema);
+  return createFactoryNoSchema();
+}
+
+// 预处理钩子(中间件)：接收 ctx（ctx.input 已为 Input），返回一个可合并的对象
+type PreMw<
+  Input,
+  CurrExtra,
+  Out extends Record<string, unknown> = Record<string, unknown>,
+> = (ctx: Context<Input, unknown, CurrExtra>) => Out | Promise<Out>;
+
+type CombinePreMwOutputs<Arr extends readonly unknown[]> = Arr extends [
+  infer H,
+  ...infer R,
+]
+  ? H extends PreMw<any, any, infer Out>
+    ? R extends readonly unknown[]
+      ? Out & CombinePreMwOutputs<R>
+      : Out
+    : CombinePreMwOutputs<R>
+  : Record<string, never>;
+
+// If handler H has param type P, ExtraMismatch<H, CurrExtra> is the set of keys in P
+// that are not present in CurrExtra. If it's 'never', there is no mismatch.
+// If handler param is un-annotated (any) we treat it as allowed (don't force error).
+type ExtraMismatch<H, CurrExtra> = H extends (c: infer P) => any
+  ? [P] extends [any]
+    ? never
+    : Exclude<keyof P, keyof CurrExtra>
+  : never;
+
+function createFactoryWithSchema<S extends z.ZodTypeAny, TExtra = DefaultExtra>(
+  schema: S,
+) {
+  type Input = z.infer<S>;
+
+  interface Factory<CurrExtraT> {
+    <H extends (c: Context<Input, any, CurrExtraT>) => any>(
+      handler: H,
+    ): (input: z.input<S>) => Promise<Awaited<ReturnType<H>>>;
+    pre: <Mws extends readonly PreMw<Input, CurrExtraT, any>[]>(
+      ...mws: Mws
+    ) => Factory<CurrExtraT & CombinePreMwOutputs<Mws>>;
+  }
+
+  function createFactory<CurrExtra = TExtra>(
+    pres: readonly PreMw<Input, CurrExtra, any>[] = [],
+  ): Factory<CurrExtra> {
+    const factory = <H extends (c: Context<Input, any, CurrExtra>) => any>(
+      handler: H,
+    ) => {
+      return async (input: z.input<S>): Promise<Awaited<ReturnType<H>>> => {
+        const parsedInput = schema ? schema.parse(input) : (input as unknown as Input);
+        const ctx = { input: parsedInput } as Context<
+          Input,
+          any,
+          CurrExtra & Record<string, any>
+        >;
+
+        for (const mw of pres) {
+          const out = await mw(ctx as any);
+          if (out && typeof out === "object") Object.assign(ctx, out);
+          else throw new Error("Pre must return an object");
+        }
+
+        try {
+          return (await handler(ctx)) as Awaited<ReturnType<H>>;
+        } catch (err) {
+          console.error("Action failed:", err);
+          throw err;
+        }
+      };
+    };
+
+    (factory as any).pre = <Mws extends readonly PreMw<Input, CurrExtra, any>[]>(
+      ...mws: Mws
+    ) => {
+      return createFactory<CurrExtra & CombinePreMwOutputs<Mws>>([...pres, ...mws]);
+    };
+
+    return factory as unknown as Factory<CurrExtra>;
+  }
+
+  return createFactory();
+}
+
+function createFactoryNoSchema<Input = undefined, TExtra = DefaultExtra>() {
+  // 如果 handler 的参数包含 input 字段，则返回 (input: In) => Promise<R>
+  // 否则返回 () => Promise<R>
+  type HandlerToFn<H, CurrExtraT> = H extends (c: infer P) => infer R
+    ? P extends { input: infer In }
+      ? (input: In) => R
+      : () => R
+    : () => unknown;
+
+  interface Factory<CurrExtraT> {
+    // Only accept a handler H when all keys it expects are present in CurrExtraT
+    <H>(
+      handler: ExtraMismatch<H, CurrExtraT> extends never ? H : never,
+    ): HandlerToFn<H, CurrExtraT>;
+    pre: <Mws extends readonly PreMw<Input, CurrExtraT, any>[]>(
+      ...mws: Mws
+    ) => Factory<CurrExtraT & CombinePreMwOutputs<Mws>>;
+  }
+
+  function createFactory<CurrExtra = TExtra>(
+    pres: readonly PreMw<Input, CurrExtra, any>[] = [],
+  ): Factory<CurrExtra> {
+    const factory = <H extends (c: any) => any>(handler: H) => {
+      return async (input: any): Promise<any> => {
+        const parsedInput = input as Input;
+
+        const ctx = { input: parsedInput } as Context<
+          Input,
+          any,
+          CurrExtra & Record<string, any>
+        >;
+
+        for (const mw of pres) {
+          const out = await mw(ctx as any);
+          if (out && typeof out === "object") Object.assign(ctx, out);
+          else throw new Error("Pre must return an object");
+        }
+
+        try {
+          return await handler(ctx);
+        } catch (err) {
+          console.error("Action failed:", err);
+          throw err;
+        }
+      };
+    };
+
+    factory.pre = <Mws extends readonly PreMw<Input, CurrExtra, any>[]>(...mws: Mws) => {
+      return createFactory<CurrExtra & CombinePreMwOutputs<Mws>>([...pres, ...mws]);
+    };
+
+    return factory as Factory<CurrExtra>;
+  }
+
+  return createFactory();
+}
+
+export const defPreMw = <T>(preMw: T) => preMw;
+
+// generic usage
+const demoZ = z.object({ a: z.coerce.number(), b: z.number() });
+
+const demo = defAct(demoZ)(async (c) => c.input.a + c.input.b);
+// (input: { a: unknown; b: number }) => Promise<number>
+// c.input is inferred as { a: number; b: number }
+
+// no schema
+const demo1 = defAct()(() => 1); // () => Promise<number>
+const _demo = async (c: { input: { a: number; b: number } }) => c.input.a + c.input.b;
+const demo2 = defAct()(_demo); // (input: { a: number; b: number }) => Promise<number>
+const demo3 = defAct().pre((c) => {})((c: { id: string }) => {
+  c.id;
+}); // () => Promise<string>
+const demo4 = defAct().pre((c) => {
+  return { id: "mw-id" };
+})((c: { id: string }) => c.id); // () => Promise<string>
+
+// pre handler middleware
+const demo5 = defAct(demoZ).pre(async (c) => {
+  console.log("ctx in mw:", c);
+  return { id: "mw-id" };
+})(async (c) => {
+  console.log("handler sees id ", c.id);
+  return c.input.a + c.input.b;
+});
+// (input: { a: unknown; b: number }) => Promise<number>
+// c.input is inferred as { a: number; b: number }, c.id is inferred as string
+
+// custom pre handler middleware
+export const injectCookie = defPreMw(() => ({ cookies }));
+export const injectHeaders = defPreMw(() => ({ headers }));
+export const authMw = defPreMw(async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  console.log("session:", session);
+  if (!session) throw new Error("NoAuth");
+  return { authId: session.user.id };
+});
+const demo6 = defAct().pre(authMw)(_demo);
+
+// 泛型教学
+// 函数的 泛型 源自参数或显式声明
+function wrap<T>(value: T): T[] {
+  return [value];
+}
+const result = wrap(123); // T 被推断为 number, 鼠标悬停 wrap 变量时，会显示 T 变成了 number
+
+// 竞品
+const authActMw = createMiddleware().define(async ({ next, ctx }) => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  console.log("session:", session);
+  if (!session) throw new Error("NoAuth");
+  return next({ ctx: { authId: session.user.id } });
+});
+
+const deleteUser = act.use(authActMw).action(async ({ parsedInput, ctx }) => {});
+
+const { data, serverError, validationErrors } = await deleteUser();

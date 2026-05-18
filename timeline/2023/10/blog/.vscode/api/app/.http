@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:3000
+@api = http://localhost:3000/api
+@cookie = better-auth.session_token=YnVl90T3ZTqKLqcYKlR4g0oEVwKStKia.d9RkwoXMpNOvZfynTqVyTzXmwrs1dLN26Z%2BNTSOFa8Y%3D
+
+
+GET {{api}}/auth/get-session
+# Cookie: {{cookie}}
+
+### sign in anonymously
+POST {{api}}/auth/sign-in/anonymous
+
+### list project members
+http://localhost:3000/api/projects/baedb12e-aa53-4100-8d7e-0697d961b3cb/members
+Cookie: {{cookie}}
+
+###
+@channelId = 55d6fd41-36bf-474c-8697-e3ddf826b675
+GET {{api}}/channel/{{channelId}}/members?limit=10&offset=0
+Cookie: {{cookie}}
+
+###
+GET {{api}}/project?type=community&offset=0&s=relevance&q=b
+
+###
+GET http://localhost:4000/api/author/list?name1=test
+
+###
+POST {{baseUrl}}/api/demo?limit=10
+Content-Type: application/json
+
+{
+  "name": "test"
+}

@@ -1,0 +1,149 @@
+@import './theme/color.css';
+@import './theme/font.css';
+@import './md/base.css';
+@import './md/code.css';
+@import '../../public/katex/katex.min.css';
+@import './glow/base.css';
+@import './glow/cursor.css';
+@import './glow/animate.css';
+@import './tailwindcss.css';
+
+@font-face {
+  font-family: 'XiaolaiMonoSC';
+  src: url('/fonts/XiaolaiMonoSC-Regular.ttf') format('truetype');
+  font-weight: normal; /* 默认权重: 400 | bold:700 | bolder: 比父元素更粗 */ 
+  font-style: normal; /* 默认样式 */
+}
+body {
+  font-family: 'XiaolaiMonoSC', monospace;
+  font-feature-settings: 'calt', 'liga', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09';
+  /* color: rgb(var(--foreground-rgb)); */
+  /* background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb)); */
+
+  background: linear-gradient(to bottom right,
+    var(--background-1),
+    var(--background-2),
+    var(--background-3),
+    var(--background-4),
+    var(--background-5),
+    var(--background-6)
+    );
+}
+
+@utility glow-purple-box-shadow {
+  box-shadow:
+    0 0 2px #0e002000,
+    0 0 7px #780afe75,
+    0 0 5px #780afe75,
+    0 0 18px #780afe75;
+}
+
+@utility glow-purple {
+  color: #f4edf7;
+  text-shadow:
+    0 0 2px #0e002000,
+    0 0 7px #780afe75,
+    0 0 5px #780afe75,
+    0 0 18px #780afe75;
+}
+
+@utility aa-scroll {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式 滚动条宽度 */
+    @apply w-1 bg-transparent transition-all duration-300 ease-in-out;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块 滚动条滑块 */
+    @apply cursor-pointer rounded-lg duration-150;
+    background: rgba(var(--mio-text-default), 0.4);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    /* 滚动条轨道背景透明 */
+    /* background: transparent;  */
+    @apply rounded-lg bg-black/5;
+    box-shadow: inset 0 0 5px rgba(85, 42, 241, 0.1);
+  }
+
+  /*滚动条整体样式 滑块悬停时背景 */
+  /* &::-webkit-scrollbar-thumb:hover {
+    @apply w-1 bg-[#a394fc33];
+  } */
+}
+
+@utility aa-scroll-hidden {
+  &::-webkit-scrollbar {
+    /*滚动条整体样式 滚动条宽度 */
+    @apply w-0;
+  }
+}
+:root {
+  /* --sidebar-width: 14.5rem;  */
+  --navbar-height: 48px;
+}
+/* body {
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+/* .transition-brightness {
+  transition: filter 0.1s ease-in-out;
+} */
+
+pre {
+  font-family: "CodeNewRoman Nerd Font Mono", monospace;
+}
+code {
+  font-family: "CodeNewRoman Nerd Font Mono", monospace;
+}
+
+
+
+/* 学习模板的代码 */
+::selection {
+  background-color: #47a3f3;
+  color: #fefefe;
+}
+
+html {
+  min-width: 360px;
+}
+
+/* 其他非 MDX 相关样式 */
+.title {
+  text-wrap: balance;
+}
+
+  /* .bg-m {
+    background: linear-gradient(
+      to bottom right,
+      var(--background-1),
+      var(--background-2),
+      var(--background-3),
+      var(--background-4),
+      var(--background-5),
+      var(--background-6)
+    );
+    min-height: 100vh; 
+    background-attachment: fixed; 
+  } */
+  .bg-content {
+    background: linear-gradient(
+      to bottom right,
+      var(--background-1),
+      var(--background-2),
+      var(--background-3),
+      var(--background-4),
+      var(--background-5),
+      var(--background-6)
+    );
+    background-attachment: fixed;
+    /* 确保背景渐变固定在视口上 */
+  }
